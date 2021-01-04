@@ -1,31 +1,34 @@
 #include "list.hpp"
+#include <iostream>
 
 // constructors
-list::list(): lst(new t_list[0]), size(0)
+ft::list::list(): lst(new t_list[0]), size(0)
 {
 }
 
-list::list(size_t n, const int val)
+ft::list::list(size_t n, const int val)
 {
+    this->size = 0;
     for (size_t i = 0; i < n; i++)
+    {
         this->push_back(val);
-    this->size = n;
+    }
 }
 
 // element access
 // Calling these functions (front & back) on an empty container causes undefined behavior (cplusplus.com)
 
-int &list::front()
+int &ft::list::front()
 {
     return this->lst->content;
 }
 
-const int &list::front() const
+const int &ft::list::front() const
 {
     return this->lst->content;
 }
 
-int &list::back()
+int &ft::list::back()
 {
     t_list *tmp;
     tmp = this->lst;
@@ -34,7 +37,7 @@ int &list::back()
     return tmp->content;
 }
 
-const int &list::back() const
+const int &ft::list::back() const
 {
     t_list *tmp;
     tmp = this->lst;
@@ -45,7 +48,7 @@ const int &list::back() const
 
 // modifiers
 
-void list::push_back(const int &val)
+void ft::list::push_back(const int &val)
 {
     if (this->empty())
     {
@@ -64,9 +67,10 @@ void list::push_back(const int &val)
     prev = tmp;
     tmp = tmp->next;
     tmp->prev = prev;
+    this->size++;
 }
 
-bool list::empty() const
+bool ft::list::empty() const
 {
     if (size == 0)
         return true;

@@ -15,6 +15,8 @@ typedef struct s_list
 
 t_list *ft_lst_new(const int &val);
 
+namespace ft
+{
 class list
 {
 private:
@@ -30,8 +32,8 @@ public:
     // constructors
     explicit list ();
     explicit list (size_t n, const int val = int());
-    template <class InputIterator>
-    list (InputIterator first, InputIterator last);
+    // template <class InputIterator>
+    // list (InputIterator first, InputIterator last);
     list (const list& x);
 
     // element access
@@ -45,6 +47,7 @@ public:
     bool empty() const;
 
 };
+}
 
 
 #endif
