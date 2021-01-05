@@ -2,12 +2,13 @@
 #define LIST_HPP
 
 #include <memory>
+#include <iostream>
 
 // list of int (1st param of template = int, and second param is set to default)
 
 typedef struct s_list
 {
-    int content; // plutot mettre une ref / un pointeur -> voir comment faire
+    int content; // stl containers internally store copies
     struct s_list *prev;
     struct s_list *next;
 } t_list;
@@ -32,10 +33,11 @@ public:
     // constructors & destructor
     explicit list ();
     explicit list (size_t n, const int val = int());
-    // template <class InputIterator>
-    // list (InputIterator first, InputIterator last);
-    //list (const list& x);
+    template <class InputIterator>
+    list (InputIterator first, InputIterator last);
+    list (const list& x);
     ~list();
+    list& operator= (const list& x);
 
     //capacity
     bool empty() const;
@@ -49,9 +51,27 @@ public:
 
     // modifiers
     void push_back(const int& val);
+    // void assign (size_t n, const value_type& val);
+    // template <class InputIterator>
+    // void assign (InputIterator first, InputIterator last);
+
+
+    // debug
+    void displaylist();
+    void displaylist_reverse();
 
 };
 }
 
+template <class InputIterator>
+ft::list::list (InputIterator first, InputIterator last)
+{
+    std::cout << "inside inputit constructor" << std::endl;
+    for (InputIterator tmp = first; tmp != last; tmp++)
+    {
+        this->push_back(*tmp);
+    }
+    
+}
 
 #endif
