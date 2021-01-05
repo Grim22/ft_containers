@@ -21,6 +21,7 @@ void ft::list::clear_list()
         delete del;
     }
     this->num = 0;
+    this->lst = NULL;
 }
 
 
@@ -147,44 +148,62 @@ void ft::list::push_back(const int &val)
     new_elem->prev = tmp;
     this->num++;
 }
-// void ft::list::pop_back()
-// {
-//     t_list *tmp(this->lst);
-//     while (tmp->next)
-//     {
-        
-//     }
-    
-// }
 
-// void ft::list::push_front (const value_type& val)
-// {
+void ft::list::pop_back()
+{
+    t_list *tmp(this->lst);
+    t_list *old(NULL);
+    while (tmp->next)
+    {
+        old = tmp;
+        tmp = tmp->next;
+    }
+    delete tmp;
+    if (old)
+        old->next = NULL;
+    this->num--;
+    if (this->num == 0)
+        this->lst = NULL;
+}
 
-// }
+void ft::list::push_front (const value_type& val)
+{
+    if (this->empty())
+    {
+        this->lst = ft_lst_new(val);
+        this->num = 1;
+        return ;
+    }
+    t_list *tmp(this->lst);
+    this->lst = ft_lst_new(val);
+    this->lst->next = tmp;
+    tmp->prev = this->lst;
+    this->num++;
+}
 
-// void ft::list::pop_front()
-// {
-
-// }
+void ft::list::pop_front()
+{
+    if (this->num == 1)
+    {
+        this->num--;
+        delete this->lst;
+        this->lst = NULL;
+        return ;
+    }
+    t_list *tmp(this->lst->next);
+    delete this->lst;
+    this->lst = tmp;
+    this->lst->prev = NULL;
+    this->num--;
+}
 
 void ft::list::assign(size_t n, const value_type& val)
 {
     // delete old list
-    t_list *tmp;
-    t_list *del;
-    tmp = this->lst;
-    for (size_t i = 0; i < this->num; i++)
-    {
-        del = tmp;
-        tmp = del->next;
-        delete del;
-    }
+    this->clear_list();
     // assign new list
-    this->num = 0;
     for (size_t i = 0; i < n; i++)
-    {
         this->push_back(val);
-    }
 }
 
 //debug

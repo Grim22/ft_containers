@@ -60,8 +60,6 @@ public:
     template <class InputIterator>
     void assign (InputIterator first, InputIterator last);
 
-
-
     // debug
     void displaylist();
     void displaylist_reverse();
@@ -72,7 +70,6 @@ public:
 template <class InputIterator>
 ft::list::list (InputIterator first, InputIterator last)
 {
-    std::cout << "inside inputit constructor" << std::endl;
     for (InputIterator tmp = first; tmp != last; tmp++)
     {
         this->push_back(*tmp);
@@ -83,7 +80,6 @@ ft::list::list (InputIterator first, InputIterator last)
 template <class InputIterator>
 void ft::list::assign (InputIterator first, InputIterator last)
 {
-    std::cout << "inside inputit assign" << std::endl;
     this->clear_list();
     for (InputIterator tmp = first; tmp != last; tmp++)
     {

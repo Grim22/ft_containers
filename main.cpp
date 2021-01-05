@@ -24,15 +24,25 @@ int main()
 
     int tab[3] = {1, 2, 3};
     list lst(tab, tab + 3);
-    lst.displaylist();
+    lst.push_front(5);
+    // lst.displaylist();
+    lst.pop_back();
+    lst.pop_back();
+    lst.pop_back();
+    lst.pop_back();
+    // lst.displaylist();
 
     int tab2[4] = {1, 2, 3, 8};
     list lst2;
+    lst2.push_front(22);
     lst2.push_back(5);
+    lst2.pop_front();
+    lst2.displaylist();
     lst2.assign(tab2 + 1, tab2 + 4);
-    lst2.displaylist();
+    // lst2.displaylist();
+
     lst2 = lst;
-    lst2.displaylist();
+    // lst2.displaylist();
 
     // Fixed a;
     // Fixed b;
