@@ -1,6 +1,31 @@
 #include "list.hpp"
 
+t_list *ft_lst_new(const int &val)
+{
+    t_list *elem = new t_list;
+    elem->content = val;
+    elem->next = NULL;
+    elem->prev = NULL;
+    return elem;
+}
+
+void ft::list::clear_list()
+{
+    t_list *tmp;
+    t_list *del;
+    tmp = this->lst;
+    for (size_t i = 0; i < this->num; i++)
+    {
+        del = tmp;
+        tmp = del->next;
+        delete del;
+    }
+    this->num = 0;
+}
+
+
 // constructors & destructors
+
 ft::list::list(): lst(NULL), num(0)
 {
 }
@@ -26,16 +51,9 @@ ft::list::list(const list& x): num(0)
 
 ft::list& ft::list::operator=(const list& x)
 {
+    this->clear_list();
+    
     t_list *tmp;
-    t_list *del;
-    tmp = this->lst;
-    for (size_t i = 0; i < this->num; i++)
-    {
-        del = tmp;
-        tmp = del->next;
-        delete del;
-    }
-    this->num = 0;
     tmp = x.lst;
     for (size_t i = 0; i < x.num; i++)
     {
@@ -56,11 +74,10 @@ ft::list::~list()
         tmp = del->next;
         delete del;
     }
-    
 }
 
-//capacity
 
+//capacity
 
 size_t ft::list::size() const
 {
@@ -107,6 +124,7 @@ const int &ft::list::back() const
     return tmp->content;
 }
 
+
 // modifiers
 
 void ft::list::push_back(const int &val)
@@ -129,21 +147,45 @@ void ft::list::push_back(const int &val)
     new_elem->prev = tmp;
     this->num++;
 }
+// void ft::list::pop_back()
+// {
+//     t_list *tmp(this->lst);
+//     while (tmp->next)
+//     {
+        
+//     }
+    
+// }
 
-t_list *ft_lst_new(const int &val)
-{
-    t_list *elem = new t_list;
-    elem->content = val;
-    elem->next = NULL;
-    elem->prev = NULL;
-    return elem;
-}
-
-// void ft::list::assign(size_t n, const value_type& val)
+// void ft::list::push_front (const value_type& val)
 // {
 
 // }
 
+// void ft::list::pop_front()
+// {
+
+// }
+
+void ft::list::assign(size_t n, const value_type& val)
+{
+    // delete old list
+    t_list *tmp;
+    t_list *del;
+    tmp = this->lst;
+    for (size_t i = 0; i < this->num; i++)
+    {
+        del = tmp;
+        tmp = del->next;
+        delete del;
+    }
+    // assign new list
+    this->num = 0;
+    for (size_t i = 0; i < n; i++)
+    {
+        this->push_back(val);
+    }
+}
 
 //debug
 
@@ -172,6 +214,4 @@ void ft::list::displaylist_reverse()
         std::cout << tmp->content << std::endl;
         tmp = tmp->prev;
     }
-    
-
 }

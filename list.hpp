@@ -23,6 +23,7 @@ class list
 private:
     t_list *lst;
     size_t num;
+    void clear_list();
 
     /* data */
 public:
@@ -51,9 +52,14 @@ public:
 
     // modifiers
     void push_back(const int& val);
-    // void assign (size_t n, const value_type& val);
-    // template <class InputIterator>
-    // void assign (InputIterator first, InputIterator last);
+    void pop_back(); 
+    void push_front (const value_type& val);
+    void pop_front(); 
+
+    void assign (size_t n, const value_type& val);
+    template <class InputIterator>
+    void assign (InputIterator first, InputIterator last);
+
 
 
     // debug
@@ -72,6 +78,18 @@ ft::list::list (InputIterator first, InputIterator last)
         this->push_back(*tmp);
     }
     
+}
+
+template <class InputIterator>
+void ft::list::assign (InputIterator first, InputIterator last)
+{
+    std::cout << "inside inputit assign" << std::endl;
+    this->clear_list();
+    for (InputIterator tmp = first; tmp != last; tmp++)
+    {
+        this->push_back(*tmp);
+    }
+
 }
 
 #endif
