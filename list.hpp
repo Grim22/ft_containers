@@ -20,29 +20,29 @@ namespace ft
 {
 class list
 {
+    // member types
+    typedef int value_type; // 1st param of template
+    typedef unsigned long size_type;
 private:
     t_list *lst;
-    size_t num;
-    void clear_list();
+    size_type num;
 
     /* data */
 public:
 
-    // member types
-    typedef int value_type; // 1st param of template
 
     // constructors & destructor
     explicit list ();
-    explicit list (size_t n, const int val = int());
-    template <class InputIterator>
-    list (InputIterator first, InputIterator last);
+    explicit list (size_type n, const int val = int());
+    // template <class InputIterator>
+    // list (InputIterator first, InputIterator last);
     list (const list& x);
     ~list();
     list& operator= (const list& x);
 
     //capacity
     bool empty() const;
-    size_t size() const;
+    size_type size() const;
 
     // element access
     int &front();
@@ -55,10 +55,11 @@ public:
     void pop_back(); 
     void push_front (const value_type& val);
     void pop_front(); 
+    void clear();
 
-    void assign (size_t n, const value_type& val);
-    template <class InputIterator>
-    void assign (InputIterator first, InputIterator last);
+    void assign (size_type n, const value_type& val);
+    // template <class InputIterator>
+    // void assign (InputIterator first, InputIterator last);
 
     // debug
     void displaylist();
@@ -67,25 +68,23 @@ public:
 };
 }
 
-template <class InputIterator>
-ft::list::list (InputIterator first, InputIterator last)
-{
-    for (InputIterator tmp = first; tmp != last; tmp++)
-    {
-        this->push_back(*tmp);
-    }
+// template <class InputIterator>
+// ft::list::list (InputIterator first, InputIterator last): num(0)
+// {
+//     for (InputIterator tmp = first; tmp != last; tmp++)
+//         this->push_back(*tmp);
     
-}
+// }
 
-template <class InputIterator>
-void ft::list::assign (InputIterator first, InputIterator last)
-{
-    this->clear_list();
-    for (InputIterator tmp = first; tmp != last; tmp++)
-    {
-        this->push_back(*tmp);
-    }
+// template <class InputIterator>
+// void ft::list::assign (InputIterator first, InputIterator last)
+// {
+//     this->clear_list();
+//     for (InputIterator tmp = first; tmp != last; tmp++)
+//     {
+//         this->push_back(*tmp);
+//     }
 
-}
+// }
 
 #endif
