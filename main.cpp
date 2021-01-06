@@ -7,19 +7,19 @@ using namespace ft;
 
 int main()
 {
-    list lst;
-    lst.push_back(9);
-    lst.push_back(19);
-    lst.push_back(49);
-    lst.displaylist_reverse();
+    // list lst;
+    // lst.push_back(9);
+    // lst.push_back(19);
+    // lst.push_back(49);
+    // lst.displaylist_reverse();
 
-    list lst2(5, 7);
-    std::cout << lst2.size() << std::endl;
+    // list lst2(5, 7);
+    // std::cout << lst2.size() << std::endl;
 
-    list lst3(lst2);
-    std::cout << lst3.size() << std::endl;
-    lst3 = lst;
-    std::cout << lst3.size() << std::endl;
+    // list lst3(lst2);
+    // std::cout << lst3.size() << std::endl;
+    // lst3 = lst;
+    // std::cout << lst3.size() << std::endl;
 
     // int tab[3] = {1, 2, 3};
     // list lst(tab, tab + 3);
@@ -43,11 +43,9 @@ int main()
     // lst2 = lst;
     // lst2.displaylist();
 
-    // Fixed a;
-    // Fixed b;
-    // list<int> lst3(&a, &b);
+    list lst(4, 8);
+    list lst2(3, 7);
+    lst.swap(lst2);
+    lst.displaylist();
 
-    // char c = 'c';
-    // char d = 'd';
-    // std::cout << lst.size() << std::endl;
 }

@@ -56,6 +56,7 @@ public:
     void push_front (const value_type& val);
     void pop_front(); 
     void clear();
+    void swap (list& x);
 
     void assign (size_type n, const value_type& val);
     // template <class InputIterator>

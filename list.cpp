@@ -206,6 +206,14 @@ void ft::list::assign(size_type n, const value_type& val)
         this->push_back(val);
 }
 
+void ft::list::swap (list& x)
+{
+    list tmp;
+    tmp = *this;
+    *this = x;
+    x = tmp;
+}
+
 //debug
 
 void ft::list::displaylist()
