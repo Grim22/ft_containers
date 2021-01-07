@@ -28,6 +28,7 @@ void ft::list::delete_node(t_list *node)
     this->num--;
 }
 
+// node a and b are contiguousm a is before b
 void ft::list::swap_nodes(t_list *a, t_list *b)
 {
     t_list *tmp;
@@ -51,6 +52,34 @@ void ft::list::swap_nodes(t_list *a, t_list *b)
     // std::cout << "tmp->prev " << tmp << std::endl;
 
 }
+
+// NOT WORKING: swap for reverse
+// version for two nodes that are not contiguous
+// void ft::list::swap_nodes(t_list *a, t_list *b)
+// {
+//     t_list *tmp_prev;
+//     t_list *tmp_next;
+
+//     // std::cout << "swap " << a->content << " " << b->content << std::endl << std::endl;
+//     if (a->prev)
+//         a->prev->next = b;
+//     else
+//         this->lst = b; // if a was the first element, we need to update this->lst 
+    
+//     if (b->next)
+//         b->next->prev = a;
+    
+//     tmp_prev = a->prev;
+//     tmp_next = a->next;
+//     // std::cout << "tmp->prev " << tmp << std::endl;
+//     a->prev = b->prev;
+//     a->next = b->next;
+    
+//     b->next = tmp_next;
+//     b->prev = tmp_prev;
+//     // std::cout << "tmp->prev " << tmp << std::endl;
+
+// }
 
 t_list *ft::list::get_last_node()
 {
@@ -331,6 +360,18 @@ void ft::list::sort()
             tmp = tmp->next;
     }
 }
+
+// void ft::list::reverse()
+// {
+//     t_list *first(this->lst);
+//     t_list *last(this->get_last_node());
+//     for (size_type i = 0; i < this->num / 2; i++)
+//     {
+//         this->swap_nodes(first, last);
+//         first = first->next;
+//         last = last->prev;
+//     }
+// }
 
 //debug
 

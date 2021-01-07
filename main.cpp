@@ -26,6 +26,11 @@ struct is_odd
 bool same_parity (int first, int second)
 { return ( first % 2 == second % 2 ); }
 
+// a binary comp function
+bool compare_custom(int first, int second)
+{
+    return (first % 10 > second % 10);
+}
 
 int main()
 {
@@ -129,7 +134,6 @@ int main()
     // lst12.displaylist();
 
     // sort
-
     list lst13;
     lst13.push_back(5);
     lst13.push_back(8);
@@ -140,6 +144,26 @@ int main()
     lst13.displaylist();
     // std::cout << lst13.size() << std::endl;
 
+    // sort with binary compare
+    list lst14;
+    lst14.push_back(18);
+    lst14.push_back(48);
+    lst14.push_back(42);
+    lst14.push_back(1000);
+    lst14.push_back(188);
+    lst14.displaylist();
+    lst14.sort(compare_custom);
+    lst14.displaylist();
+
+    // reverse
+    // list lst15;
+    // lst15.push_back(4);
+    // lst15.push_back(22);
+    // lst15.push_back(12);
+    // lst15.reverse();
+    // lst15.displaylist();
+
+    // sort REAL
     // std::list<int> lst;
     // lst.push_back(5);
     // lst.push_back(8);

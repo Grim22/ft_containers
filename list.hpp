@@ -116,6 +116,22 @@ void ft::list::unique (BinaryPredicate binary_pred)
             tmp = tmp->next;
     }
 }
+    
+template <class Compare>
+void ft::list::sort (Compare comp)
+{
+    t_list *tmp(this->lst);
+    while (tmp->next)
+    {
+        if (comp(tmp->content, tmp->next->content))
+        {
+            this->swap_nodes(tmp, tmp->next);
+            tmp = this->lst;
+        }
+        else
+            tmp = tmp->next;
+    }
+}
 
 // template <class InputIterator>
 // ft::list::list (InputIterator first, InputIterator last): num(0)
