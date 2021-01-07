@@ -38,6 +38,16 @@ t_list *ft::list::get_last_node()
     return tmp;
 }
 
+t_list *ft::list::get_last_node() const
+{
+    t_list *tmp(this->lst);
+    if (tmp == NULL)
+        return NULL;
+    while (tmp->next)
+        tmp = tmp->next;
+    return tmp;
+}
+
 // constructors & destructors
 
 ft::list::list(): lst(NULL), num(0)
@@ -122,20 +132,12 @@ const int &ft::list::front() const
 
 int &ft::list::back()
 {
-    t_list *tmp;
-    tmp = this->lst;
-    while (tmp->next)
-        tmp = tmp->next;
-    return tmp->content;
+    return this->get_last_node()->content;
 }
 
 const int &ft::list::back() const
 {
-    t_list *tmp;
-    tmp = this->lst;
-    while (tmp->next)
-        tmp = tmp->next;
-    return tmp->content;
+    return this->get_last_node()->content;
 }
 
 
@@ -150,15 +152,11 @@ void ft::list::push_back(const int &val)
         return ;
     }
     // add elem at the end
-    t_list *tmp;
-    t_list *new_elem;
-    tmp = this->lst;
-    new_elem = ft_lst_new(val);
-    while (tmp->next)
-        tmp = tmp->next;
-    tmp->next = new_elem;
+    t_list *last(this->get_last_node());
+    t_list *new_elem(ft_lst_new(val));
+    last->next = new_elem;
     // set last elem->prev
-    new_elem->prev = tmp;
+    new_elem->prev = last;
     this->num++;
 }
 
@@ -177,10 +175,10 @@ void ft::list::pop_back()
     // this->num--;
     // if (this->num == 0)
     //     this->lst = NULL;
-    t_list *tmp(this->lst);
-    while (tmp->next)
-        tmp = tmp->next;
-    this->delete_node(tmp);
+    // t_list *tmp(this->lst);
+    // while (tmp->next)
+    //     tmp = tmp->next;
+    this->delete_node(this->get_last_node());
 }
 
 void ft::list::push_front (const value_type& val)
