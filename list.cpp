@@ -13,25 +13,30 @@ void ft::list::delete_node(t_list *node)
 {
     if (node == NULL)
         return;
+
     if (node->prev)
         node->prev->next = node->next;
+    else // if we are deleting the first element of the list, we need to update this->lst
+        this->lst = node->next;
+
     if (node->next)
         node->next->prev = node->prev;
+    
     delete node;
-    if (this->num == 1)
+    if (this->num == 1) // if there will be no more element left on the list, set this->lst to NULL
         this->lst = NULL;
     this->num--;
 }
 
-// t_list *ft::list::get_last_node()
-// {
-//     t_list *tmp(this->lst);
-//     if (tmp == NULL)
-//         return NULL;
-//     while (tmp->next)
-//         tmp = tmp->next;
-//     return tmp;
-// }
+t_list *ft::list::get_last_node()
+{
+    t_list *tmp(this->lst);
+    if (tmp == NULL)
+        return NULL;
+    while (tmp->next)
+        tmp = tmp->next;
+    return tmp;
+}
 
 // constructors & destructors
 
@@ -159,19 +164,23 @@ void ft::list::push_back(const int &val)
 
 void ft::list::pop_back()
 {
+    // t_list *tmp(this->lst);
+    // t_list *old(NULL);
+    // while (tmp->next)
+    // {
+    //     old = tmp;
+    //     tmp = tmp->next;
+    // }
+    // delete tmp;
+    // if (old)
+    //     old->next = NULL;
+    // this->num--;
+    // if (this->num == 0)
+    //     this->lst = NULL;
     t_list *tmp(this->lst);
-    t_list *old(NULL);
     while (tmp->next)
-    {
-        old = tmp;
         tmp = tmp->next;
-    }
-    delete tmp;
-    if (old)
-        old->next = NULL;
-    this->num--;
-    if (this->num == 0)
-        this->lst = NULL;
+    this->delete_node(tmp);
 }
 
 void ft::list::push_front (const value_type& val)
@@ -191,18 +200,19 @@ void ft::list::push_front (const value_type& val)
 
 void ft::list::pop_front()
 {
-    if (this->num == 1)
-    {
-        this->num--;
-        delete this->lst;
-        this->lst = NULL;
-        return ;
-    }
-    t_list *tmp(this->lst->next);
-    delete this->lst;
-    this->lst = tmp;
-    this->lst->prev = NULL;
-    this->num--;
+    // if (this->num == 1)
+    // {
+    //     this->num--;
+    //     delete this->lst;
+    //     this->lst = NULL;
+    //     return ;
+    // }
+    // t_list *tmp(this->lst->next);
+    // delete this->lst;
+    // this->lst = tmp;
+    // this->lst->prev = NULL;
+    // this->num--;
+    this->delete_node(this->lst);
 }
 
 void ft::list::clear()

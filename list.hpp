@@ -27,7 +27,7 @@ private:
     t_list *lst;
     size_type num;
     void delete_node(t_list *node); // cant change node itself (needed in case this->lst needs to be updated)
-    // t_list *get_last_node();
+    t_list *get_last_node();
 
     /* data */
 public:
