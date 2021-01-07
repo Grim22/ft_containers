@@ -28,6 +28,30 @@ void ft::list::delete_node(t_list *node)
     this->num--;
 }
 
+void ft::list::swap_nodes(t_list *a, t_list *b)
+{
+    t_list *tmp;
+
+    // std::cout << "swap " << a->content << " " << b->content << std::endl << std::endl;
+    if (a->prev)
+        a->prev->next = b;
+    else
+        this->lst = b; // if a was the first element, we need to update this->lst 
+    
+    if (b->next)
+        b->next->prev = a;
+    
+    tmp = a->prev;
+    // std::cout << "tmp->prev " << tmp << std::endl;
+    a->prev = b;
+    a->next = b->next;
+    
+    b->next = a;
+    b->prev = tmp;
+    // std::cout << "tmp->prev " << tmp << std::endl;
+
+}
+
 t_list *ft::list::get_last_node()
 {
     t_list *tmp(this->lst);
@@ -276,6 +300,37 @@ void ft::list::remove(const value_type& val)
     }
 }
 
+void ft::list::unique()
+{
+    t_list *tmp(this->lst);
+    while (tmp->next)
+    {
+        if (tmp->content == tmp->next->content)
+        {
+            this->delete_node(tmp->next);
+            tmp = this->lst;
+        }
+        else
+            tmp = tmp->next;
+    }
+}
+
+void ft::list::sort()
+{
+    t_list *tmp(this->lst);
+    while (tmp->next)
+    {
+        // this->displaylist();
+        // std::cout << "1st elem " << this->lst->prev << std::endl;
+        if (tmp->content > tmp->next->content)
+        {
+            this->swap_nodes(tmp, tmp->next);
+            tmp = this->lst;
+        }
+        else
+            tmp = tmp->next;
+    }
+}
 
 //debug
 

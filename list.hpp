@@ -26,7 +26,8 @@ class list
 private:
     t_list *lst;
     size_type num;
-    void delete_node(t_list *node); // cant change node itself (needed in case this->lst needs to be updated)
+    void delete_node(t_list *node);
+    void swap_nodes(t_list *a, t_list *b);
     t_list *get_last_node();
     t_list *get_last_node() const;
 
@@ -71,6 +72,14 @@ public:
     void remove (const value_type& val);
     template <class Predicate>
     void remove_if (Predicate pred);
+    void unique();
+    template <class BinaryPredicate>
+    void unique (BinaryPredicate binary_pred);
+    void sort();
+    template <class Compare>
+    void sort (Compare comp);
+    void reverse();
+
 
     // debug
     void displaylist();
@@ -89,6 +98,22 @@ void ft::list::remove_if (Predicate pred)
         tmp = tmp->next;
         if (pred(old->content))
             this->delete_node(old);
+    }
+}
+
+template <class BinaryPredicate>
+void ft::list::unique (BinaryPredicate binary_pred)
+{
+    t_list *tmp(this->lst);
+    while (tmp->next)
+    {
+        if (binary_pred(tmp->content, tmp->next->content))
+        {
+            this->delete_node(tmp->next);
+            tmp = this->lst;
+        }
+        else
+            tmp = tmp->next;
     }
 }
 
