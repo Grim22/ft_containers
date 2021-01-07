@@ -26,6 +26,8 @@ class list
 private:
     t_list *lst;
     size_type num;
+    void delete_node(t_list *node); // cant change node itself (needed in case this->lst needs to be updated)
+    // t_list *get_last_node();
 
     /* data */
 public:
@@ -52,11 +54,12 @@ public:
 
     // modifiers
     void push_back(const int& val);
-    void pop_back(); 
+    void pop_back(); // refaire em utilisant delete _node ?
     void push_front (const value_type& val);
-    void pop_front(); 
+    void pop_front(); // refaire em utilisant delete _node ? 
     void clear();
     void swap (list& x);
+    void resize (size_type n, value_type val = value_type());
 
     void assign (size_type n, const value_type& val);
     // template <class InputIterator>

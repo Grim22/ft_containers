@@ -9,21 +9,29 @@ t_list *ft_lst_new(const int &val)
     return elem;
 }
 
-void ft::list::clear()
+void ft::list::delete_node(t_list *node)
 {
-    t_list *tmp;
-    t_list *del;
-    tmp = this->lst;
-    for (size_type i = 0; i < this->num; i++)
-    {
-        del = tmp;
-        tmp = del->next;
-        delete del;
-    }
-    this->num = 0;
-    this->lst = NULL;
+    if (node == NULL)
+        return;
+    if (node->prev)
+        node->prev->next = node->next;
+    if (node->next)
+        node->next->prev = node->prev;
+    delete node;
+    if (this->num == 1)
+        this->lst = NULL;
+    this->num--;
 }
 
+// t_list *ft::list::get_last_node()
+// {
+//     t_list *tmp(this->lst);
+//     if (tmp == NULL)
+//         return NULL;
+//     while (tmp->next)
+//         tmp = tmp->next;
+//     return tmp;
+// }
 
 // constructors & destructors
 
@@ -197,6 +205,22 @@ void ft::list::pop_front()
     this->num--;
 }
 
+void ft::list::clear()
+{
+    t_list *tmp;
+    t_list *del;
+    tmp = this->lst;
+    for (size_type i = 0; i < this->num; i++)
+    {
+        del = tmp;
+        tmp = del->next;
+        delete del;
+    }
+    this->num = 0;
+    this->lst = NULL;
+}
+
+
 void ft::list::assign(size_type n, const value_type& val)
 {
     // delete old list
@@ -212,6 +236,20 @@ void ft::list::swap (list& x)
     tmp = *this;
     *this = x;
     x = tmp;
+}
+    
+void ft::list::resize (size_type n, value_type val)
+{
+    if (n > this->num)
+    {
+        while (this->num != n)
+            this->push_back(val);
+    }
+    else
+    {
+        while (this->num != n)
+            this->pop_back();
+    }
 }
 
 //debug

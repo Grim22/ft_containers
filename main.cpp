@@ -21,31 +21,42 @@ int main()
     // lst3 = lst;
     // std::cout << lst3.size() << std::endl;
 
-    // int tab[3] = {1, 2, 3};
-    // list lst(tab, tab + 3);
-    // lst.push_front(5);
-    // lst.displaylist();
-    // lst.pop_back();
-    // lst.pop_back();
-    // lst.pop_back();
-    // lst.pop_back();
-    // // lst.displaylist();
+    list lst4(4, 8);
+    lst4.push_front(5);
+    lst4.displaylist();
+    lst4.pop_back();
+    lst4.pop_back();
+    lst4.pop_back();
+    lst4.pop_back();
+    lst4.pop_back();
+    lst4.displaylist();
 
-    // int tab2[4] = {1, 2, 3, 8};
-    // list lst2;
-    // lst2.push_front(22);
-    // lst2.push_back(50);
-    // lst2.pop_front();
-    // lst2.displaylist();
-    // lst2.assign(tab2 + 1, tab2 + 4);
-    // lst2.displaylist();
+    list lst5;
+    lst5.push_front(22);
+    lst5.push_back(50);
+    lst5.pop_front();
+    lst5.pop_front();
+    lst5.displaylist();
+    lst5.assign(4, 9);
+    lst5.displaylist();
 
-    // lst2 = lst;
-    // lst2.displaylist();
+    lst5 = lst4;
+    lst5.displaylist();
 
-    list lst(4, 8);
-    list lst2(3, 7);
-    lst.swap(lst2);
-    lst.displaylist();
+    // list lst6(4, 8);
+    // list lst7(3, 7);
+    // lst6.swap(lst7);
+    // lst6.displaylist();
+    // lst7.displaylist();
+
+    // list lst8;
+    // lst8.push_front(2);
+    // lst8.push_front(22);
+    // lst8.push_front(222);
+    // lst8.push_front(2222);
+    // lst8.resize(8, 3);
+    // lst8.displaylist();
+    // lst8.resize(1);
+    // lst8.displaylist();
 
 }
