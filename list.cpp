@@ -260,6 +260,23 @@ void ft::list::resize (size_type n, value_type val)
     }
 }
 
+
+// operations
+
+void ft::list::remove(const value_type& val)
+{
+    t_list *tmp(this->lst);
+    t_list *old(NULL);
+    while (tmp)
+    {
+        old = tmp;
+        tmp = tmp->next;
+        if (old->content == val)
+            this->delete_node(old);
+    }
+}
+
+
 //debug
 
 void ft::list::displaylist()

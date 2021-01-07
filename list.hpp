@@ -66,11 +66,30 @@ public:
     // template <class InputIterator>
     // void assign (InputIterator first, InputIterator last);
 
+
+    //operations
+    void remove (const value_type& val);
+    template <class Predicate>
+    void remove_if (Predicate pred);
+
     // debug
     void displaylist();
     void displaylist_reverse();
 
 };
+}
+template <class Predicate>
+void ft::list::remove_if (Predicate pred)
+{
+    t_list *tmp(this->lst);
+    t_list *old(NULL);
+    while (tmp)
+    {
+        old = tmp;
+        tmp = tmp->next;
+        if (pred(old->content))
+            this->delete_node(old);
+    }
 }
 
 // template <class InputIterator>
