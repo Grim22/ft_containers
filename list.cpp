@@ -292,6 +292,27 @@ ft::list::const_iterator ft::list::end() const
     return const_iterator(NULL);
 }
 
+ft::list::reverse_iterator ft::list::rbegin()
+{
+    return reverse_iterator(this->get_last_node());
+}
+
+ft::list::const_reverse_iterator ft::list::rbegin() const
+{
+    return const_reverse_iterator(this->get_last_node());
+}
+
+ft::list::reverse_iterator ft::list::rend()
+{
+    return reverse_iterator(NULL);
+}
+
+ft::list::const_reverse_iterator ft::list::rend() const
+{
+    return const_reverse_iterator(NULL);
+}
+
+
 //capacity
 
 ft::list::size_type ft::list::size() const

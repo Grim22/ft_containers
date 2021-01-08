@@ -57,7 +57,7 @@ public:
             bool operator!=(const iterator &rhs) const;
     };
     
-    class const_iterator//: public std::iterator<std::bidirectional_iterator_tag, int> // has typedefs (cf iterator_traits cplusplus)
+    class const_iterator: public std::iterator<std::bidirectional_iterator_tag, int> // has typedefs (cf iterator_traits cplusplus)
     {
         private:
             const t_list *ptr; // difference(1) with iterator
@@ -78,6 +78,10 @@ public:
             bool operator!=(const const_iterator &rhs) const;
     };
 
+    typedef std::reverse_iterator<iterator> reverse_iterator;    
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
+
+
     // constructors & destructor
     explicit list ();
     explicit list (size_type n, const int val = int());
@@ -92,6 +96,10 @@ public:
     iterator end();
     const_iterator begin() const;
     const_iterator end() const;
+    reverse_iterator rbegin();
+    const_reverse_iterator rbegin() const;
+    reverse_iterator rend();
+    const_reverse_iterator rend() const;
 
     //capacity
     bool empty() const;

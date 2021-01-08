@@ -174,13 +174,25 @@ int main()
     //     std::cout << *it << std::endl;
     // }
 
-    // const iterator
-    list lst17(4, 8);
-    const list lst18(lst17);
-    for (list::const_iterator it = lst18.begin(); it != lst18.end(); it++)
+    // // const iterator
+    // list lst17(4, 8);
+    // const list lst18(lst17);
+    // for (list::const_iterator it = lst18.begin(); it != lst18.end(); it++)
+    // {
+    //     std::cout << *it << std::endl;
+    // }
+
+    // reverse iterator
+    list lst19;
+    lst19.push_back(4);
+    lst19.push_back(3);
+    lst19.push_back(1);
+    lst19.push_back(9);
+    for (list::reverse_iterator it = lst19.rbegin(); it != lst19.rend(); it++)
     {
         std::cout << *it << std::endl;
     }
+    
 
 
     // sort REAL
