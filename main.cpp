@@ -164,7 +164,7 @@ int main()
     // lst15.reverse();
     // lst15.displaylist();
 
-    // // iterator
+    // iterator
     // list lst16;
     // lst16.push_back(2);
     // lst16.push_back(4);
@@ -182,17 +182,63 @@ int main()
     //     std::cout << *it << std::endl;
     // }
 
-    // reverse iterator
-    list lst19;
-    lst19.push_back(4);
-    lst19.push_back(3);
-    lst19.push_back(1);
-    lst19.push_back(9);
-    for (list::reverse_iterator it = lst19.rbegin(); it != lst19.rend(); it++)
-    {
-        std::cout << *it << std::endl;
-    }
+    // reverse iterator NOT READY
+    // list lst19;
+    // lst19.push_back(4);
+    // lst19.push_back(3);
+    // lst19.push_back(1);
+    // lst19.push_back(9);
+    // for (list::reverse_iterator it = lst19.rbegin(); it != lst19.rend(); it++)
+    // {
+    //     std::cout << *it << std::endl;
+    // }
+
+    // // iterator constructor
+    // list lst20;
+    // lst20.push_back(12);
+    // lst20.push_back(14);
+    // lst20.push_back(134);
+    // lst20.push_back(1354);
+    // lst20.displaylist();
+    // ft::list::iterator it = lst20.begin();
+    // ft::list::iterator it2(it);
+    // it2++;
+    // list lst21(it, it2); // works fine
+    // lst21.displaylist();
+    // // ERROR CASES
+    // list lst21b(it, ++it); // 1st arg is also incremented: both args are ++it
+    // list lst21b(it, it++); // 1st arg is incremented but second arg is not
+    // lst21b.displaylist();
     
+    // // iterator assign
+    // list lst22(2, 4);
+    // lst22.assign(it, lst20.end());
+    // lst22.displaylist();
+
+    // // insert
+    // ft::list lst23;
+    // lst23.push_back(12);
+    // lst23.push_back(122);
+    // lst23.push_back(212);
+    // lst23.push_back(12222);
+    // ft::list::iterator it = lst23.begin();
+    // it++;
+    // it = lst23.insert(it, 88);
+    // lst23.displaylist();
+    // std::cout << *it << std::endl;
+    // it++;
+    // std::cout << *it++ << std::endl;
+    // // list lst24(it, ++it);
+    // // lst24.displaylist();
+
+    // insert multiple
+    ft::list lst25;
+    lst25.push_back(3);
+    lst25.push_back(6);
+    lst25.push_back(0);
+    lst25.insert(lst25.begin(), 3, 8);
+    lst25.displaylist();
+    // does not work to insert at the end of the list, whereas it works with STL list
 
 
     // sort REAL
@@ -213,4 +259,27 @@ int main()
     
 //     it = lst.begin();
 //     std::cout << *it << std::endl;
+
+    // iterator constructor REAL
+    // std::list<int> lst;
+    // lst.push_back(3);
+    // lst.push_back(4);
+    // lst.push_back(5);
+    // std::list<int>::iterator it3 = lst.begin();
+    // it3++;
+    // std::list<int> lst2(it3, ++it3);
+    // for (std::list<int>::iterator it = lst2.begin(); it != lst2.end(); it++)
+    // {
+    //     std::cout << *it << std::endl;
+    // }
+    
+    // insert REAL
+    // std::list<int> lst;
+    // lst.push_back(8);
+    // lst.insert(++lst.begin(), 3, 1);
+    // for (std::list<int>::iterator it = lst.begin(); it != lst.end(); it++)
+    // {
+    //     std::cout << *it << std::endl;
+    // }
+
 }

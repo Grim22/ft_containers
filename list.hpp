@@ -1,7 +1,6 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
-#include <memory>
 #include <iostream>
 #include <iterator>
 
@@ -32,6 +31,7 @@ private:
     // void swap_nodes(t_list *a, t_list *b);
     t_list *get_last_node();
     t_list *get_last_node() const;
+    void insert_before(t_list *node, t_list *new_node);
 
     /* data */
 public:
@@ -48,7 +48,7 @@ public:
             ~iterator();
 
             int &operator*() const;
-            // int *operator->() const; // NOT IMPLEMENTED
+            int *operator->() const;
             iterator& operator++(); // preincrement (++a)
             iterator operator++(int); // postincrement (a++)
             iterator& operator--();
@@ -69,7 +69,7 @@ public:
             ~const_iterator();
 
             const int &operator*() const; // difference(2) with iterator
-            // int *operator->() const; // NOT IMPLEMENTED
+            const int *operator->() const;
             const_iterator& operator++();
             const_iterator operator++(int);
             const_iterator& operator--();
@@ -78,15 +78,14 @@ public:
             bool operator!=(const const_iterator &rhs) const;
     };
 
-    typedef std::reverse_iterator<iterator> reverse_iterator;    
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
+    // typedef std::reverse_iterator<iterator> reverse_iterator;    
+    // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
 
 
     // constructors & destructor
     explicit list ();
     explicit list (size_type n, const int val = int());
-    // template <class InputIterator>
-    // list (InputIterator first, InputIterator last);
+    list (const iterator &first, const iterator &last);
     list (const list& x);
     ~list();
     list& operator= (const list& x);
@@ -96,10 +95,10 @@ public:
     iterator end();
     const_iterator begin() const;
     const_iterator end() const;
-    reverse_iterator rbegin();
-    const_reverse_iterator rbegin() const;
-    reverse_iterator rend();
-    const_reverse_iterator rend() const;
+    // reverse_iterator rbegin();
+    // const_reverse_iterator rbegin() const;
+    // reverse_iterator rend();
+    // const_reverse_iterator rend() const;
 
     //capacity
     bool empty() const;
@@ -113,16 +112,19 @@ public:
 
     // modifiers
     void push_back(const int& val);
-    void pop_back(); // refaire em utilisant delete _node ?
+    void pop_back();
     void push_front (const value_type& val);
-    void pop_front(); // refaire em utilisant delete _node ? 
+    void pop_front();
     void clear();
     void swap (list& x);
     void resize (size_type n, value_type val = value_type());
 
     void assign (size_type n, const value_type& val);
-    // template <class InputIterator>
-    // void assign (InputIterator first, InputIterator last);
+    void assign (const iterator &first, const iterator &last);
+
+    iterator insert (iterator position, const value_type& val);
+    void insert (iterator position, size_type n, const value_type& val);
+    // void insert (iterator position, iterator first, iterator last);
 
 
     //operations
