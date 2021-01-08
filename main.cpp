@@ -134,50 +134,71 @@ int main()
     // lst12.displaylist();
 
     // sort
-    list lst13;
-    lst13.push_back(5);
-    lst13.push_back(8);
-    lst13.push_back(3);
-    lst13.push_back(1);
-    lst13.displaylist();
-    lst13.sort();
-    lst13.displaylist();
-    // std::cout << lst13.size() << std::endl;
+    // list lst13;
+    // lst13.push_back(5);
+    // lst13.push_back(8);
+    // lst13.push_back(3);
+    // lst13.push_back(1);
+    // lst13.displaylist();
+    // lst13.sort();
+    // lst13.displaylist();
+    // // std::cout << lst13.size() << std::endl;
 
-    // sort with binary compare
-    list lst14;
-    lst14.push_back(18);
-    lst14.push_back(48);
-    lst14.push_back(42);
-    lst14.push_back(1000);
-    lst14.push_back(188);
-    lst14.displaylist();
-    lst14.sort(compare_custom);
-    lst14.displaylist();
+    // // sort with binary compare
+    // list lst14;
+    // lst14.push_back(18);
+    // lst14.push_back(48);
+    // lst14.push_back(42);
+    // lst14.push_back(1000);
+    // lst14.push_back(188);
+    // lst14.displaylist();
+    // lst14.sort(compare_custom);
+    // lst14.displaylist();
 
-    // reverse
+    //reverse
     // list lst15;
     // lst15.push_back(4);
-    // lst15.push_back(22);
+    // // lst15.push_back(22);
+    // // lst15.push_back(23);
     // lst15.push_back(12);
     // lst15.reverse();
     // lst15.displaylist();
 
+    // // iterator
+    // list lst16;
+    // lst16.push_back(2);
+    // lst16.push_back(4);
+    // lst16.push_back(9);
+    // for (list::iterator it = lst16.begin(); it != lst16.end(); it++)
+    // {
+    //     std::cout << *it << std::endl;
+    // }
+
+    // const iterator
+    list lst17(4, 8);
+    const list lst18(lst17);
+    for (list::const_iterator it = lst18.begin(); it != lst18.end(); it++)
+    {
+        std::cout << *it << std::endl;
+    }
+
+
     // sort REAL
-    // std::list<int> lst;
-    // lst.push_back(5);
-    // lst.push_back(8);
-    // lst.push_back(3);
+//     std::list<int> lst;
+//     lst.push_back(5);
+//     lst.push_back(8);
+//     lst.push_back(3);
 
-    // std::list<int>::iterator it;
+//     std::list<int>::iterator it;
 
-    // it = lst.begin();
-    // std::cout << *it << std::endl;
+//     it = lst.begin();
+//     std::cout << *it << std::endl;
+//     // std::cout << it << std::endl;
     
-    // lst.sort();
+//     lst.sort();
     
-    // std::cout << *it << std::endl;
+//     std::cout << *it << std::endl;
     
-    // it = lst.begin();
-    // std::cout << *it << std::endl;
+//     it = lst.begin();
+//     std::cout << *it << std::endl;
 }

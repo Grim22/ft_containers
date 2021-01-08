@@ -29,7 +29,7 @@ void ft::list::delete_node(t_list *node)
 }
 
 // node a and b are contiguousm a is before b
-void ft::list::swap_nodes(t_list *a, t_list *b)
+void ft::list::swap_cont_nodes(t_list *a, t_list *b)
 {
     t_list *tmp;
 
@@ -57,26 +57,30 @@ void ft::list::swap_nodes(t_list *a, t_list *b)
 // version for two nodes that are not contiguous
 // void ft::list::swap_nodes(t_list *a, t_list *b)
 // {
-//     t_list *tmp_prev;
-//     t_list *tmp_next;
+//     t_list *old_a(a);
+//     t_list *old_b(b);
 
 //     // std::cout << "swap " << a->content << " " << b->content << std::endl << std::endl;
 //     if (a->prev)
 //         a->prev->next = b;
 //     else
-//         this->lst = b; // if a was the first element, we need to update this->lst 
-    
+//         this->lst = b;
+//     if (a ->next)
+//         a->next->prev = b; 
+
 //     if (b->next)
 //         b->next->prev = a;
+//     if (b->prev)
+//         b->prev->next = a;
+//     else
+//         this->lst = a;
     
-//     tmp_prev = a->prev;
-//     tmp_next = a->next;
 //     // std::cout << "tmp->prev " << tmp << std::endl;
-//     a->prev = b->prev;
-//     a->next = b->next;
+//     a->prev = old_b->prev;
+//     a->next = old_b->next;
     
-//     b->next = tmp_next;
-//     b->prev = tmp_prev;
+//     b->next = old_a->next;
+//     b->prev = old_a->prev;
 //     // std::cout << "tmp->prev " << tmp << std::endl;
 
 // }
@@ -100,6 +104,119 @@ t_list *ft::list::get_last_node() const
         tmp = tmp->next;
     return tmp;
 }
+
+// class iterator
+
+
+ft::list::iterator::iterator()
+{
+}
+ft::list::iterator::iterator(const iterator &copy): ptr(copy.ptr)
+{
+}
+ft::list::iterator::iterator(t_list *ptr): ptr(ptr)
+{
+}
+ft::list::iterator::~iterator()
+{
+}
+ft::list::iterator &ft::list::iterator::operator=(const iterator &rhs)
+{
+    this->ptr = rhs.ptr;
+    return *this;
+}
+int &ft::list::iterator::operator*() const
+{
+    return this->ptr->content;
+}
+ft::list::iterator& ft::list::iterator::operator++() // preincrement (++a)
+{
+    this->ptr = this->ptr->next;
+    return *this;
+}
+ft::list::iterator ft::list::iterator::operator++(int) // postincrement (a++)
+{
+    iterator tmp(*this);
+    this->ptr = this->ptr->next;
+    return tmp;
+}
+ft::list::iterator& ft::list::iterator::operator--()
+{
+    this->ptr = this->ptr->prev;
+    return *this;    
+}
+ft::list::iterator ft::list::iterator::operator--(int)
+{
+    iterator tmp(*this);
+    this->ptr = this->ptr->prev;
+    return tmp;
+}
+bool ft::list::iterator::operator==(const iterator &rhs) const
+{
+    return (this->ptr == rhs.ptr);
+}
+bool ft::list::iterator::operator!=(const iterator &rhs) const
+{
+    return (this->ptr != rhs.ptr);
+}
+
+
+// class const iterator
+
+ft::list::const_iterator::const_iterator()
+{
+}
+ft::list::const_iterator::const_iterator(const const_iterator &copy): ptr(copy.ptr)
+{
+}
+ft::list::const_iterator::const_iterator(t_list *ptr): ptr(ptr)
+{
+}
+ft::list::const_iterator::~const_iterator()
+{
+}
+ft::list::const_iterator &ft::list::const_iterator::operator=(const const_iterator &rhs)
+{
+    this->ptr = rhs.ptr;
+    return *this;
+}
+const int &ft::list::const_iterator::operator*() const
+{
+    return this->ptr->content;
+}
+ft::list::const_iterator& ft::list::const_iterator::operator++() // preincrement (++a)
+{
+    this->ptr = this->ptr->next;
+    return *this;
+}
+ft::list::const_iterator ft::list::const_iterator::operator++(int) // postincrement (a++)
+{
+    const_iterator tmp(*this);
+    this->ptr = this->ptr->next;
+    return tmp;
+}
+ft::list::const_iterator& ft::list::const_iterator::operator--()
+{
+    this->ptr = this->ptr->prev;
+    return *this;    
+}
+ft::list::const_iterator ft::list::const_iterator::operator--(int)
+{
+    const_iterator tmp(*this);
+    this->ptr = this->ptr->prev;
+    return tmp;
+}
+bool ft::list::const_iterator::operator==(const const_iterator &rhs) const
+{
+    return (this->ptr == rhs.ptr);
+}
+bool ft::list::const_iterator::operator!=(const const_iterator &rhs) const
+{
+    return (this->ptr != rhs.ptr);
+}
+
+
+
 
 // constructors & destructors
 
@@ -153,6 +270,27 @@ ft::list::~list()
     }
 }
 
+// iterator functions
+
+ft::list::iterator ft::list::begin()
+{
+    return iterator(this->lst);
+}
+
+ft::list::iterator ft::list::end()
+{
+    return iterator(NULL);
+}
+
+ft::list::const_iterator ft::list::begin() const
+{
+    return const_iterator(this->lst);
+}
+
+ft::list::const_iterator ft::list::end() const
+{
+    return const_iterator(NULL);
+}
 
 //capacity
 
@@ -353,7 +491,7 @@ void ft::list::sort()
         // std::cout << "1st elem " << this->lst->prev << std::endl;
         if (tmp->content > tmp->next->content)
         {
-            this->swap_nodes(tmp, tmp->next);
+            this->swap_cont_nodes(tmp, tmp->next);
             tmp = this->lst;
         }
         else
@@ -367,6 +505,7 @@ void ft::list::sort()
 //     t_list *last(this->get_last_node());
 //     for (size_type i = 0; i < this->num / 2; i++)
 //     {
+//         std::cout << "a" << std::endl;
 //         this->swap_nodes(first, last);
 //         first = first->next;
 //         last = last->prev;
