@@ -111,10 +111,10 @@ void ft::list::insert_before(t_list *node, t_list *new_node)
         node->prev->next = new_node;
     else
         this->lst = new_node;
-    node->prev = new_node;
-
-    new_node->next = node;
     new_node->prev = node->prev;
+    node->prev = new_node;
+    new_node->next = node;
+    this->num++;
 }
 
 t_list *ft::list::get_node(iterator position)
