@@ -40,7 +40,8 @@ public:
             iterator(const iterator &copy);
             iterator &operator=(const iterator &rhs);
             ~iterator();
-
+            
+            t_list *as_node();
             int &operator*() const;
             int *operator->() const;
             iterator& operator++(); // preincrement (++a)
@@ -61,7 +62,8 @@ public:
             const_iterator(const const_iterator &copy);
             const_iterator &operator=(const const_iterator &rhs);
             ~const_iterator();
-
+            
+            const t_list *as_node();
             const int &operator*() const; // difference(2) with iterator
             const int *operator->() const;
             const_iterator& operator++();
@@ -74,7 +76,7 @@ public:
 
     // typedef std::reverse_iterator<iterator> reverse_iterator;    
     // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
-    private:
+private:
 
     void delete_node(t_list *node);
     void swap_cont_nodes(t_list *a, t_list *b);
@@ -82,9 +84,9 @@ public:
     t_list *get_last_node();
     t_list *get_last_node() const;
     void insert_before(t_list *node, t_list *new_node);
-    t_list *get_node(iterator it);
+    // t_list *get_node(iterator it);
 
-    public:
+public:
     // constructors & destructor
     explicit list ();
     explicit list (size_type n, const int val = int());
@@ -128,8 +130,8 @@ public:
     iterator insert (iterator position, const value_type& val);
     void insert (iterator position, size_type n, const value_type& val);
     void insert (iterator position, iterator first, iterator last);
-    // iterator erase (iterator position);
-    // iterator erase (iterator first, iterator last);
+    iterator erase (iterator position);
+    iterator erase (iterator first, iterator last);
 
 
     //operations

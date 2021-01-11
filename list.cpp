@@ -117,17 +117,17 @@ void ft::list::insert_before(t_list *node, t_list *new_node)
     this->num++;
 }
 
-t_list *ft::list::get_node(iterator position)
-{
-    t_list *tmp(this->lst);
-    iterator it(this->begin());
-    while (it != position)
-    {
-        it++;
-        tmp = tmp->next;
-    }
-    return tmp;
-}
+// t_list *ft::list::get_node(ft::list::iterator position)
+// {
+//     t_list *tmp(this->lst);
+//     iterator it(this->begin());
+//     while (it != position)
+//     {
+//         it++;
+//         tmp = tmp->next;
+//     }
+//     return tmp;
+// }
 
 // class iterator
 
@@ -188,6 +188,10 @@ bool ft::list::iterator::operator!=(const iterator &rhs) const
     return (this->ptr != rhs.ptr);
 }
 
+t_list *ft::list::iterator::as_node()
+{
+    return this->ptr;
+}
 
 // class const iterator
 
@@ -247,7 +251,10 @@ bool ft::list::const_iterator::operator!=(const const_iterator &rhs) const
     return (this->ptr != rhs.ptr);
 }
 
-
+const t_list *ft::list::const_iterator::as_node()
+{
+    return this->ptr;
+}
 
 
 // constructors & destructors
@@ -525,7 +532,7 @@ ft::list::iterator ft::list::insert(iterator position, const value_type& val)
 {
     if (position == NULL) // protection
         return NULL;
-    this->insert_before(this->get_node(position), ft_lst_new(val));
+    this->insert_before(position.as_node(), ft_lst_new(val));
     return --position;
 }
 
@@ -534,16 +541,15 @@ void ft::list::insert(iterator position, size_type n, const value_type& val)
     if (position == NULL) // protection
         return ;
     for (size_type i = 0; i < n; ++i)
-        this->insert_before(this->get_node(position), ft_lst_new(val));
+        this->insert_before(position.as_node(), ft_lst_new(val));
 }
 
 void ft::list::insert(iterator position, iterator first, iterator last)
 {
     if (position == NULL) // protection
         return ;
-    t_list *node_position = this->get_node(position);
     for (iterator it = first; it != last ; ++it)
-        this->insert_before(node_position, ft_lst_new(*it));
+        this->insert_before(position.as_node(), ft_lst_new(*it));
 }
 
 // ft::list::iterator ft::list::erase (iterator position)

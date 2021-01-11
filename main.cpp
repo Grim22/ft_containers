@@ -1,6 +1,6 @@
 #include "list.hpp"
 #include <iostream>
-#include <list>
+// #include <list>
 #include <cmath> // fabs
 
 using namespace ft;
@@ -239,6 +239,7 @@ int main()
     lst25.push_back(0);
     lst25.insert(lst25.begin(), 3, 8);
     lst25.displaylist();
+    
     // does not work to insert at the end of the list, whereas it works with STL list
 
     // // insert multiple with iterator
@@ -247,7 +248,14 @@ int main()
     lst26.push_back(1);
     lst26.push_back(12);
     lst26.insert(++lst26.begin(), ++lst25.begin(), lst25.end());
-    lst26.displaylist();
+    lst26.displaylist_reverse();
+    std::cout << lst26.size() << std::endl;
+    // list::iterator it5 = lst26.begin();
+    // while (it5 != lst26.end())
+    // {
+    //     std::cout << *it5 << std::endl;
+    //     it5++;
+    // }
 
     // sort REAL
 //     std::list<int> lst;
