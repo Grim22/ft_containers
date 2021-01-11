@@ -85,7 +85,7 @@ public:
     // constructors & destructor
     explicit list ();
     explicit list (size_type n, const int val = int());
-    list (const iterator &first, const iterator &last);
+    list (iterator first, iterator last); // better not to call by reference, for cases lile list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
     list (const list& x);
     ~list();
     list& operator= (const list& x);
@@ -120,7 +120,7 @@ public:
     void resize (size_type n, value_type val = value_type());
 
     void assign (size_type n, const value_type& val);
-    void assign (const iterator &first, const iterator &last);
+    void assign (iterator first, iterator last);
 
     iterator insert (iterator position, const value_type& val);
     void insert (iterator position, size_type n, const value_type& val);

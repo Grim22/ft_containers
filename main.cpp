@@ -1,6 +1,6 @@
 #include "list.hpp"
 #include <iostream>
-#include <list>
+// #include <list>
 #include <cmath> // fabs
 
 using namespace ft;
@@ -193,21 +193,25 @@ int main()
     //     std::cout << *it << std::endl;
     // }
 
-    // // iterator constructor
-    // list lst20;
-    // lst20.push_back(12);
-    // lst20.push_back(14);
-    // lst20.push_back(134);
-    // lst20.push_back(1354);
-    // lst20.displaylist();
-    // ft::list::iterator it = lst20.begin();
-    // ft::list::iterator it2(it);
-    // it2++;
-    // list lst21(it, it2); // works fine
-    // lst21.displaylist();
+    // iterator constructor
+    list lst20;
+    lst20.push_back(12);
+    lst20.push_back(14);
+    lst20.push_back(134);
+    lst20.push_back(1354);
+    lst20.displaylist();
+    
+    // // iterator constructor: lst(it, it++) case
+    // // ft::list::iterator it2(it);
+    // // it2++;
+    // // list lst21(it, it2); // works fine
+    // // lst21.displaylist();
     // // ERROR CASES
+    // ft::list::iterator it = lst20.begin();
+    // ++it;
+    // // std::cout << "it: " << *it << std::endl;
     // list lst21b(it, ++it); // 1st arg is also incremented: both args are ++it
-    // list lst21b(it, it++); // 1st arg is incremented but second arg is not
+    // // list lst21b(it, it++); // 1st arg is incremented but second arg is not
     // lst21b.displaylist();
     
     // // iterator assign
@@ -221,23 +225,19 @@ int main()
     // lst23.push_back(122);
     // lst23.push_back(212);
     // lst23.push_back(12222);
-    // ft::list::iterator it = lst23.begin();
-    // it++;
-    // it = lst23.insert(it, 88);
+    // ft::list::iterator it3 = lst23.begin();
+    // it3++;
+    // ft::list::iterator it4 = lst23.insert(it3, 88);
     // lst23.displaylist();
-    // std::cout << *it << std::endl;
-    // it++;
-    // std::cout << *it++ << std::endl;
-    // // list lst24(it, ++it);
-    // // lst24.displaylist();
+    // std::cout << *it4 << std::endl;
 
-    // insert multiple
-    ft::list lst25;
-    lst25.push_back(3);
-    lst25.push_back(6);
-    lst25.push_back(0);
-    lst25.insert(lst25.begin(), 3, 8);
-    lst25.displaylist();
+    // // insert multiple
+    // ft::list lst25;
+    // lst25.push_back(3);
+    // lst25.push_back(6);
+    // lst25.push_back(0);
+    // lst25.insert(lst25.begin(), 3, 8);
+    // lst25.displaylist();
     // does not work to insert at the end of the list, whereas it works with STL list
 
 

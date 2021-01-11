@@ -263,11 +263,11 @@ ft::list::list(const list& x): num(0)
     }
 }
     
-ft::list::list(const iterator &first, const iterator &last): lst(NULL), num(0)
+ft::list::list(ft::list::iterator first, ft::list::iterator last): lst(NULL), num(0)
 {
     // std::cout << "first " << *first << std::endl;
     // std::cout << "last " << *last << std::endl;
-    for (iterator it = first; it != last; it++)
+    for (ft::list::iterator it = first; it != last; it++)
         this->push_back(*it);
 }
 
@@ -478,7 +478,7 @@ void ft::list::assign(size_type n, const value_type& val)
         this->push_back(val);
 }
 
-void ft::list::assign (const iterator &first, const iterator &last)
+void ft::list::assign (iterator first, iterator last)
 {
     // delete old list
     this->clear();
