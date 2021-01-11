@@ -535,19 +535,24 @@ void ft::list::insert(iterator position, size_type n, const value_type& val)
         it++;
         tmp = tmp->next;
     }
-    for (size_type i = 0; i < n; i++)
-    {
+    for (size_type i = 0; i < n; ++i)
         this->insert_before(tmp, ft_lst_new(val));
-        this->insert_before(tmp, ft_lst_new(val));
-    }
-    
-
 }
 
-// void ft::list::insert(iterator position, iterator first, iterator last)
-// {
-
-// }
+void ft::list::insert(iterator position, iterator first, iterator last)
+{
+    if (position == NULL) // protection
+        return ;
+    t_list *tmp(this->lst);
+    iterator it(this->begin());
+    while (it != position)
+    {
+        it++;
+        tmp = tmp->next;
+    }
+    for (it = first; it != last ; ++it)
+        this->insert_before(tmp, ft_lst_new(*it));
+}
 
 
 // operations

@@ -124,7 +124,7 @@ public:
 
     iterator insert (iterator position, const value_type& val);
     void insert (iterator position, size_type n, const value_type& val);
-    // void insert (iterator position, iterator first, iterator last);
+    void insert (iterator position, iterator first, iterator last);
 
 
     //operations

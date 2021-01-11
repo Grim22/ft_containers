@@ -1,6 +1,6 @@
 #include "list.hpp"
 #include <iostream>
-// #include <list>
+#include <list>
 #include <cmath> // fabs
 
 using namespace ft;
@@ -193,13 +193,13 @@ int main()
     //     std::cout << *it << std::endl;
     // }
 
-    // iterator constructor
-    list lst20;
-    lst20.push_back(12);
-    lst20.push_back(14);
-    lst20.push_back(134);
-    lst20.push_back(1354);
-    lst20.displaylist();
+    // // iterator constructor
+    // list lst20;
+    // lst20.push_back(12);
+    // lst20.push_back(14);
+    // lst20.push_back(134);
+    // lst20.push_back(1354);
+    // lst20.displaylist();
     
     // // iterator constructor: lst(it, it++) case
     // // ft::list::iterator it2(it);
@@ -231,15 +231,22 @@ int main()
     // lst23.displaylist();
     // std::cout << *it4 << std::endl;
 
-    // // insert multiple
+    // // // insert multiple
     // ft::list lst25;
     // lst25.push_back(3);
     // lst25.push_back(6);
     // lst25.push_back(0);
     // lst25.insert(lst25.begin(), 3, 8);
     // lst25.displaylist();
-    // does not work to insert at the end of the list, whereas it works with STL list
+    // // does not work to insert at the end of the list, whereas it works with STL list
 
+    // // insert multiple with iterator
+    // ft::list lst26;
+    // lst26.push_back(9);
+    // lst26.push_back(1);
+    // lst26.push_back(12);
+    // lst26.insert(++lst26.begin(), ++lst25.begin(), lst25.end());
+    // lst26.displaylist();
 
     // sort REAL
 //     std::list<int> lst;
@@ -274,12 +281,23 @@ int main()
     // }
     
     // insert REAL
-    // std::list<int> lst;
-    // lst.push_back(8);
-    // lst.insert(++lst.begin(), 3, 1);
+    std::list<int> lst;
+    lst.push_back(8);
+    lst.insert(++lst.begin(), 3, 1);
+    std::list<int>::iterator it = lst.begin();
     // for (std::list<int>::iterator it = lst.begin(); it != lst.end(); it++)
     // {
     //     std::cout << *it << std::endl;
     // }
+        std::cout << *it++ << std::endl;
+        std::cout << *it++ << std::endl;
+        std::cout << *it++ << std::endl;
+        std::cout << *it++ << std::endl;
+        std::cout << *it++ << std::endl;
+        std::cout << *it++ << std::endl;
+        std::cout << *it++ << std::endl;
+        std::cout << *it++ << std::endl;
+        std::cout << *it++ << std::endl;
+
 
 }
