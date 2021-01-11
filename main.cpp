@@ -219,34 +219,35 @@ int main()
     // lst22.assign(it, lst20.end());
     // lst22.displaylist();
 
-    // // insert
-    // ft::list lst23;
-    // lst23.push_back(12);
-    // lst23.push_back(122);
-    // lst23.push_back(212);
-    // lst23.push_back(12222);
-    // ft::list::iterator it3 = lst23.begin();
-    // it3++;
-    // ft::list::iterator it4 = lst23.insert(it3, 88);
-    // lst23.displaylist();
-    // std::cout << *it4 << std::endl;
+    // insert
+    ft::list lst23;
+    lst23.push_back(12);
+    lst23.push_back(122);
+    lst23.push_back(212);
+    lst23.push_back(12222);
+    ft::list::iterator it3 = lst23.begin();
+    it3++;
+    ft::list::iterator it4 = lst23.insert(it3, 88);
+    lst23.displaylist();
+    std::cout << *it4 << std::endl;
+    std::cout << "---" << std::endl;
 
-    // // // insert multiple
-    // ft::list lst25;
-    // lst25.push_back(3);
-    // lst25.push_back(6);
-    // lst25.push_back(0);
-    // lst25.insert(lst25.begin(), 3, 8);
-    // lst25.displaylist();
-    // // does not work to insert at the end of the list, whereas it works with STL list
+    // // insert multiple
+    ft::list lst25;
+    lst25.push_back(3);
+    lst25.push_back(6);
+    lst25.push_back(0);
+    lst25.insert(lst25.begin(), 3, 8);
+    lst25.displaylist();
+    // does not work to insert at the end of the list, whereas it works with STL list
 
     // // insert multiple with iterator
-    // ft::list lst26;
-    // lst26.push_back(9);
-    // lst26.push_back(1);
-    // lst26.push_back(12);
-    // lst26.insert(++lst26.begin(), ++lst25.begin(), lst25.end());
-    // lst26.displaylist();
+    ft::list lst26;
+    lst26.push_back(9);
+    lst26.push_back(1);
+    lst26.push_back(12);
+    lst26.insert(++lst26.begin(), ++lst25.begin(), lst25.end());
+    lst26.displaylist();
 
     // sort REAL
 //     std::list<int> lst;
@@ -280,24 +281,24 @@ int main()
     //     std::cout << *it << std::endl;
     // }
     
-    // insert REAL
-    std::list<int> lst;
-    lst.push_back(8);
-    lst.insert(++lst.begin(), 3, 1);
-    std::list<int>::iterator it = lst.begin();
-    // for (std::list<int>::iterator it = lst.begin(); it != lst.end(); it++)
-    // {
-    //     std::cout << *it << std::endl;
-    // }
-        std::cout << *it++ << std::endl;
-        std::cout << *it++ << std::endl;
-        std::cout << *it++ << std::endl;
-        std::cout << *it++ << std::endl;
-        std::cout << *it++ << std::endl;
-        std::cout << *it++ << std::endl;
-        std::cout << *it++ << std::endl;
-        std::cout << *it++ << std::endl;
-        std::cout << *it++ << std::endl;
+    // // insert REAL
+    // std::list<int> lst;
+    // lst.push_back(8);
+    // lst.insert(++lst.begin(), 3, 1);
+    // std::list<int>::iterator it = lst.begin();
+    // // for (std::list<int>::iterator it = lst.begin(); it != lst.end(); it++)
+    // // {
+    // //     std::cout << *it << std::endl;
+    // // }
+    //     std::cout << *it++ << std::endl;
+    //     std::cout << *it++ << std::endl;
+    //     std::cout << *it++ << std::endl;
+    //     std::cout << *it++ << std::endl;
+    //     std::cout << *it++ << std::endl;
+    //     std::cout << *it++ << std::endl;
+    //     std::cout << *it++ << std::endl;
+    //     std::cout << *it++ << std::endl;
+    //     std::cout << *it++ << std::endl;
 
 
 }

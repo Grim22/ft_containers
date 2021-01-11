@@ -26,12 +26,6 @@ class list
 private:
     t_list *lst;
     size_type num;
-    void delete_node(t_list *node);
-    void swap_cont_nodes(t_list *a, t_list *b);
-    // void swap_nodes(t_list *a, t_list *b);
-    t_list *get_last_node();
-    t_list *get_last_node() const;
-    void insert_before(t_list *node, t_list *new_node);
 
     /* data */
 public:
@@ -80,12 +74,21 @@ public:
 
     // typedef std::reverse_iterator<iterator> reverse_iterator;    
     // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
+    private:
 
+    void delete_node(t_list *node);
+    void swap_cont_nodes(t_list *a, t_list *b);
+    // void swap_nodes(t_list *a, t_list *b);
+    t_list *get_last_node();
+    t_list *get_last_node() const;
+    void insert_before(t_list *node, t_list *new_node);
+    t_list *get_node(iterator it);
 
+    public:
     // constructors & destructor
     explicit list ();
     explicit list (size_type n, const int val = int());
-    list (iterator first, iterator last); // better not to call by reference, for cases lile list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
+    list (iterator first, iterator last); // better not to call by reference, for cases like list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
     list (const list& x);
     ~list();
     list& operator= (const list& x);
@@ -125,6 +128,8 @@ public:
     iterator insert (iterator position, const value_type& val);
     void insert (iterator position, size_type n, const value_type& val);
     void insert (iterator position, iterator first, iterator last);
+    // iterator erase (iterator position);
+    // iterator erase (iterator first, iterator last);
 
 
     //operations

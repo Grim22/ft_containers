@@ -117,6 +117,18 @@ void ft::list::insert_before(t_list *node, t_list *new_node)
     new_node->prev = node->prev;
 }
 
+t_list *ft::list::get_node(iterator position)
+{
+    t_list *tmp(this->lst);
+    iterator it(this->begin());
+    while (it != position)
+    {
+        it++;
+        tmp = tmp->next;
+    }
+    return tmp;
+}
+
 // class iterator
 
 
@@ -513,46 +525,36 @@ ft::list::iterator ft::list::insert(iterator position, const value_type& val)
 {
     if (position == NULL) // protection
         return NULL;
-    t_list *tmp(this->lst);
-    iterator it(this->begin());
-    while (it != position)
-    {
-        it++;
-        tmp = tmp->next;
-    }
-    this->insert_before(tmp, ft_lst_new(val));
-    return --it;
+    this->insert_before(this->get_node(position), ft_lst_new(val));
+    return --position;
 }
 
 void ft::list::insert(iterator position, size_type n, const value_type& val)
 {
     if (position == NULL) // protection
         return ;
-    t_list *tmp(this->lst);
-    iterator it(this->begin());
-    while (it != position)
-    {
-        it++;
-        tmp = tmp->next;
-    }
     for (size_type i = 0; i < n; ++i)
-        this->insert_before(tmp, ft_lst_new(val));
+        this->insert_before(this->get_node(position), ft_lst_new(val));
 }
 
 void ft::list::insert(iterator position, iterator first, iterator last)
 {
     if (position == NULL) // protection
         return ;
-    t_list *tmp(this->lst);
-    iterator it(this->begin());
-    while (it != position)
-    {
-        it++;
-        tmp = tmp->next;
-    }
-    for (it = first; it != last ; ++it)
-        this->insert_before(tmp, ft_lst_new(*it));
+    t_list *node_position = this->get_node(position);
+    for (iterator it = first; it != last ; ++it)
+        this->insert_before(node_position, ft_lst_new(*it));
 }
+
+// ft::list::iterator ft::list::erase (iterator position)
+// {
+
+// }
+
+// ft::list::iterator ft::list::erase (iterator first, iterator last)
+// {
+
+// }
 
 
 // operations
