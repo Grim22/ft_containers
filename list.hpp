@@ -90,14 +90,14 @@ public:
     // constructors & destructor
     explicit list ();
     explicit list (size_type n, const int val = int());
-    list (iterator first, iterator last); // better not to call by reference, for cases like list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
+    list (ft::list::iterator first, ft::list::iterator last); // better not to call by reference, for cases like list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
     list (const list& x);
     ~list();
     list& operator= (const list& x);
 
     // iterator
-    iterator begin();
-    iterator end();
+    ft::list::iterator begin();
+    ft::list::iterator end();
     const_iterator begin() const;
     const_iterator end() const;
     // reverse_iterator rbegin();

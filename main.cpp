@@ -219,43 +219,66 @@ int main()
     // lst22.assign(it, lst20.end());
     // lst22.displaylist();
 
-    // insert
-    ft::list lst23;
-    lst23.push_back(12);
-    lst23.push_back(122);
-    lst23.push_back(212);
-    lst23.push_back(12222);
-    ft::list::iterator it3 = lst23.begin();
-    it3++;
-    ft::list::iterator it4 = lst23.insert(it3, 88);
-    lst23.displaylist();
-    std::cout << *it4 << std::endl;
-    std::cout << "---" << std::endl;
+    // // insert
+    // ft::list lst23;
+    // lst23.push_back(12);
+    // lst23.push_back(122);
+    // lst23.push_back(212);
+    // lst23.push_back(12222);
+    // ft::list::iterator it3 = lst23.begin();
+    // it3++;
+    // ft::list::iterator it4 = lst23.insert(it3, 88);
+    // lst23.displaylist();
+    // std::cout << *it4 << std::endl;
+    // std::cout << "---" << std::endl;
 
-    // // insert multiple
-    ft::list lst25;
-    lst25.push_back(3);
-    lst25.push_back(6);
-    lst25.push_back(0);
-    lst25.insert(lst25.begin(), 3, 8);
-    lst25.displaylist();
+    // // // insert multiple
+    // ft::list lst25;
+    // lst25.push_back(3);
+    // lst25.push_back(6);
+    // lst25.push_back(0);
+    // lst25.insert(lst25.begin(), 3, 8);
+    // lst25.displaylist();
     
-    // does not work to insert at the end of the list, whereas it works with STL list
+    // // does not work to insert at the end of the list, whereas it works with STL list
 
-    // // insert multiple with iterator
-    ft::list lst26;
-    lst26.push_back(9);
-    lst26.push_back(1);
-    lst26.push_back(12);
-    lst26.insert(++lst26.begin(), ++lst25.begin(), lst25.end());
-    lst26.displaylist_reverse();
-    std::cout << lst26.size() << std::endl;
+    // // // insert multiple with iterator
+    // ft::list lst26;
+    // lst26.push_back(9);
+    // lst26.push_back(1);
+    // lst26.push_back(12);
+    // lst26.insert(++lst26.begin(), ++lst25.begin(), lst25.end());
+    // lst26.displaylist_reverse();
+    // std::cout << lst26.size() << std::endl;
     // list::iterator it5 = lst26.begin();
     // while (it5 != lst26.end())
     // {
     //     std::cout << *it5 << std::endl;
     //     it5++;
     // }
+
+    // // erase
+    // ft::list lst27;
+    // lst27.push_back(4);
+    // lst27.push_back(42);
+    // lst27.push_back(422);
+    // lst27.push_back(8422);
+    // ft::list::iterator it6 = lst27.begin();
+    // it6++;
+    // it6 = lst27.erase(it6++);
+    // lst27.displaylist();
+    // std::cout << "element that followed: " <<  *it6 << std::endl;
+    // // lst27.erase(it6++);
+
+    // erase with iterator
+    ft::list lst28;
+    lst28.push_back(4);
+    lst28.push_back(49);
+    lst28.push_back(44);
+    lst28.push_back(45);
+    lst28.erase(lst28.begin(), ++lst28.begin());
+    lst28.displaylist();
+
 
     // sort REAL
 //     std::list<int> lst;

@@ -552,15 +552,24 @@ void ft::list::insert(iterator position, iterator first, iterator last)
         this->insert_before(position.as_node(), ft_lst_new(*it));
 }
 
-// ft::list::iterator ft::list::erase (iterator position)
-// {
+ft::list::iterator ft::list::erase (ft::list::iterator position)
+{
+    if (position == NULL)
+        return NULL;
+    ft::list::iterator next(position);
+    next++;
+    this->delete_node(position.as_node());
+    return next;
+}
 
-// }
-
-// ft::list::iterator ft::list::erase (iterator first, iterator last)
-// {
-
-// }
+ft::list::iterator ft::list::erase (iterator first, iterator last)
+{
+    while (first != last)
+    {
+        first = this->erase(first);
+    }
+    return last;
+}
 
 
 // operations
