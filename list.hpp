@@ -87,6 +87,7 @@ private:
     t_list *get_last_node();
     t_list *get_last_node() const;
     void insert_before(t_list *node, t_list *new_node);
+    void insert_end(t_list *new_node);
     // t_list *get_node(iterator it);
 
 public:
@@ -151,6 +152,9 @@ public:
     void splice (iterator position, list& x, iterator i);
     void splice (iterator position, list& x, iterator first, iterator last);
     // void reverse();
+    void merge (list& x);
+    // template <class Compare>
+    // void merge (list& x, Compare comp);
 
 
     // debug

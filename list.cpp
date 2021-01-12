@@ -133,6 +133,14 @@ void ft::list::insert_before(t_list *node, t_list *inserted_node)
     this->num++;
 }
 
+void ft::list::insert_end(t_list *new_last)
+{
+    t_list *old_last = this->get_last_node();
+    old_last->next = new_last;
+    new_last->prev = old_last;
+    this->num++;
+}
+
 // t_list *ft::list::get_node(ft::list::iterator position)
 // {
 //     t_list *tmp(this->lst);
@@ -714,6 +722,39 @@ void ft::list::splice (iterator position, list& x, iterator first, iterator last
 //         last = last->prev;
 //     }
 // }
+
+void ft::list::merge (list& x)
+{
+    iterator this_it = this->begin();
+    iterator x_it = x.begin();
+    iterator tmp(x_it);
+    while (x_it != x.end())
+    {
+        // std::cout << "x elem: " << *x_it;
+        tmp++;
+        while (this_it != this->end())
+        {
+            // std::cout << " this elem: " << *this_it << std::endl;
+            if (*x_it < *this_it)
+            {
+                this->splice(this_it, x, x_it);
+                break;
+            }
+            else
+                this_it++;
+        }
+        if (this_it == this->end()) // if we have to insert at the end (can't use splice in that case -> has to be done manually...)
+        {
+            x.unlink_node(x_it.as_node()); // unlink node that we are going to transfer
+            this->insert_end(x_it.as_node());
+
+
+        }
+        x_it = tmp;
+    }
+    
+}
+
 
 //debug
 
