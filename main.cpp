@@ -270,15 +270,46 @@ int main()
     // std::cout << "element that followed: " <<  *it6 << std::endl;
     // // lst27.erase(it6++);
 
-    // erase with iterator
-    ft::list lst28;
-    lst28.push_back(4);
-    lst28.push_back(49);
-    lst28.push_back(44);
-    lst28.push_back(45);
-    lst28.erase(lst28.begin(), ++lst28.begin());
-    lst28.displaylist();
+    // // erase with iterator
+    // ft::list lst28;
+    // lst28.push_back(4);
+    // lst28.push_back(49);
+    // lst28.push_back(44);
+    // lst28.push_back(45);
+    // lst28.erase(lst28.begin(), ++lst28.begin());
+    // lst28.displaylist();
 
+    // splice (whole list)
+    ft::list lst29;
+    lst29.push_back(4);
+    lst29.push_back(42);
+    lst29.push_back(44);
+    ft::list lst30;
+    lst30.push_back(8);
+    lst30.push_back(12);
+    lst29.splice(++lst29.begin(), lst30);
+    lst29.displaylist();
+    lst30.displaylist();
+    
+    // splice (one elem)
+    lst30.push_back(5);
+    lst30.push_back(512);
+    lst29.splice(lst29.begin(), lst30, lst30.begin());
+    lst29.displaylist();
+    lst30.displaylist();
+    // special case where the two lists are the same
+    lst29.splice(lst29.begin(), lst29, ++lst29.begin());
+    lst29.displaylist();
+
+    // splice (elems between two iterators)
+    ft::list lst31;
+    lst31.push_back(66);
+    lst31.push_back(166);
+    lst31.push_back(766);
+    lst31.push_back(3166);
+    lst29.splice(lst29.begin(), lst31, lst31.begin(), ++lst31.begin());
+    lst29.displaylist();
+    
 
     // sort REAL
 //     std::list<int> lst;

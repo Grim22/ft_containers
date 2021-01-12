@@ -11,6 +11,8 @@ typedef struct s_list
     int content; // stl containers internally store copies
     struct s_list *prev;
     struct s_list *next;
+
+    // void unlink();
 } t_list;
 
 
@@ -79,6 +81,7 @@ public:
 private:
 
     void delete_node(t_list *node);
+    void unlink_node(t_list *node);
     void swap_cont_nodes(t_list *a, t_list *b);
     // void swap_nodes(t_list *a, t_list *b);
     t_list *get_last_node();
@@ -144,7 +147,10 @@ public:
     void sort();
     template <class Compare>
     void sort (Compare comp);
-    void reverse();
+    void splice (iterator position, list& x);
+    void splice (iterator position, list& x, iterator i);
+    void splice (iterator position, list& x, iterator first, iterator last);
+    // void reverse();
 
 
     // debug

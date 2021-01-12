@@ -1,5 +1,15 @@
 #include "list.hpp"
 
+
+// void t_list::unlink()
+// {
+//     if (this->prev)
+//         this->prev->next = this->next;
+//     if (this->next)
+//         this->next->prev = this->prev;
+
+// }
+
 t_list *ft_lst_new(const int &val)
 {
     t_list *elem = new t_list;
@@ -9,7 +19,7 @@ t_list *ft_lst_new(const int &val)
     return elem;
 }
 
-void ft::list::delete_node(t_list *node)
+void ft::list::unlink_node(t_list *node)
 {
     if (node == NULL)
         return;
@@ -22,10 +32,14 @@ void ft::list::delete_node(t_list *node)
     if (node->next)
         node->next->prev = node->prev;
     
-    delete node;
-    if (this->num == 1) // if there will be no more element left on the list, set this->lst to NULL
-        this->lst = NULL;
     this->num--;
+}
+
+void ft::list::delete_node(t_list *node)
+{
+    this->unlink_node(node);
+    if (node == NULL)
+        delete node;
 }
 
 // node a and b are contiguousm a is before b
@@ -105,15 +119,17 @@ t_list *ft::list::get_last_node() const
     return tmp;
 }
 
-void ft::list::insert_before(t_list *node, t_list *new_node)
+void ft::list::insert_before(t_list *node, t_list *inserted_node)
 {
+    // update node before and node in list where inserted
+    // set next and prev of new_node
     if (node->prev)
-        node->prev->next = new_node;
+        node->prev->next = inserted_node;
     else
-        this->lst = new_node;
-    new_node->prev = node->prev;
-    node->prev = new_node;
-    new_node->next = node;
+        this->lst = inserted_node;
+    inserted_node->prev = node->prev;
+    node->prev = inserted_node;
+    inserted_node->next = node;
     this->num++;
 }
 
@@ -617,6 +633,73 @@ void ft::list::sort()
         else
             tmp = tmp->next;
     }
+}
+
+
+void ft::list::splice (iterator position, list& x)
+{
+    if (position == NULL) // protection
+        return ;
+    iterator it = x.begin();
+    iterator tmp(it);
+    while (it != x.end())
+    {
+        // std::cout << *it << std::endl;
+        // std::cout << "---" << std::endl;
+        // x.displaylist();
+        // this->displaylist();
+        tmp++;
+        x.unlink_node(it.as_node());
+        this->insert_before(position.as_node(), it.as_node());
+        it = tmp;
+    }
+}
+
+void ft::list::splice (iterator position, list& x, iterator i)
+{
+    if (position == NULL)
+        return;
+    
+    // x may be *this if position points to an element not actually being spliced (i != position)
+    // if position == i++ (position == j): no splice to be done
+    iterator j = i;
+    j++;
+    if (position == i || position == j)
+        return ;
+
+    x.unlink_node(i.as_node());
+    this->insert_before(position.as_node(), i.as_node());
+}
+
+void ft::list::splice (iterator position, list& x, iterator first, iterator last)
+{
+    if (position == NULL) // protection
+        return ;
+
+    // undefined if position in [first, last]
+    iterator j = first;
+    while (j != last)
+    {
+        if (position == j)
+            return ;
+        j++;
+    }
+
+
+    iterator it = first;
+    iterator tmp(it);
+    while (it != last)
+    {
+        // std::cout << *it << std::endl;
+        // std::cout << "---" << std::endl;
+        // x.displaylist();
+        // this->displaylist();
+        tmp++;
+        x.unlink_node(it.as_node());
+        this->insert_before(position.as_node(), it.as_node());
+        it = tmp;
+    }
+
 }
 
 // void ft::list::reverse()
