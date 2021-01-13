@@ -199,7 +199,7 @@ void ft::list::sort (Compare comp)
     t_list *tmp(this->lst);
     while (tmp->next)
     {
-        if (!comp(tmp->content, tmp->next->content))
+        if (comp(tmp->next->content, tmp->content)) // swap if tmp->next->content "<" tmp->content (Comp returns true if first_arg < second_arg)
         {
             this->swap_cont_nodes(tmp, tmp->next);
             tmp = this->lst;

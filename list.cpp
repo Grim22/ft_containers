@@ -38,7 +38,7 @@ void ft::list::unlink_node(t_list *node)
 void ft::list::delete_node(t_list *node)
 {
     this->unlink_node(node);
-    if (node == NULL)
+    if (node != NULL)
         delete node;
 }
 
@@ -66,38 +66,6 @@ void ft::list::swap_cont_nodes(t_list *a, t_list *b)
     // std::cout << "tmp->prev " << tmp << std::endl;
 
 }
-
-// NOT WORKING: swap for reverse
-// version for two nodes that are not contiguous
-// void ft::list::swap_nodes(t_list *a, t_list *b)
-// {
-//     t_list *old_a(a);
-//     t_list *old_b(b);
-
-//     // std::cout << "swap " << a->content << " " << b->content << std::endl << std::endl;
-//     if (a->prev)
-//         a->prev->next = b;
-//     else
-//         this->lst = b;
-//     if (a ->next)
-//         a->next->prev = b; 
-
-//     if (b->next)
-//         b->next->prev = a;
-//     if (b->prev)
-//         b->prev->next = a;
-//     else
-//         this->lst = a;
-    
-//     // std::cout << "tmp->prev " << tmp << std::endl;
-//     a->prev = old_b->prev;
-//     a->next = old_b->next;
-    
-//     b->next = old_a->next;
-//     b->prev = old_a->prev;
-//     // std::cout << "tmp->prev " << tmp << std::endl;
-
-// }
 
 t_list *ft::list::get_last_node()
 {

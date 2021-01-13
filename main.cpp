@@ -1,6 +1,6 @@
 #include "list.hpp"
 #include <iostream>
-#include <list>
+// #include <list>
 #include <cmath> // fabs
 
 using namespace ft;
@@ -42,15 +42,14 @@ int main()
     // lst.push_back(19);
     // lst.push_back(49);
     // lst.displaylist_reverse();
-
     // list lst2(5, 7);
     // std::cout << lst2.size() << std::endl;
-
     // list lst3(lst2);
     // std::cout << lst3.size() << std::endl;
     // lst3 = lst;
     // std::cout << lst3.size() << std::endl;
 
+    // // pop_back, pop front, assign
     // list lst4(4, 8);
     // lst4.push_front(5);
     // std::cout << "back:" << lst4.back() << std::endl;
@@ -61,7 +60,6 @@ int main()
     // lst4.pop_back();
     // lst4.pop_back();
     // lst4.displaylist();
-
     // list lst5;
     // lst5.push_front(22);
     // lst5.push_back(50);
@@ -70,16 +68,17 @@ int main()
     // lst5.displaylist();
     // lst5.assign(4, 9);
     // lst5.displaylist();
-
     // lst5 = lst4;
     // lst5.displaylist();
 
+    // // swap
     // list lst6(4, 8);
     // list lst7(3, 7);
     // lst6.swap(lst7);
     // lst6.displaylist();
     // lst7.displaylist();
 
+    // // resize
     // list lst8;
     // lst8.push_front(2);
     // lst8.push_front(22);
@@ -90,16 +89,16 @@ int main()
     // lst8.resize(1);
     // lst8.displaylist();
 
-    // remove
+    // // remove
     // list lst9(4, 2);
     // lst9.push_back(3);
     // lst9.push_front(4);
     // lst9.remove(4);
     // lst9.remove(2);
-    // lst9.remove(3);
+    // // lst9.remove(3);
     // lst9.displaylist();
 
-    // remove if
+    // // remove if
     // list lst10;
     // lst10.push_back(3);
     // lst10.push_back(5);
@@ -107,10 +106,10 @@ int main()
     // lst10.push_back(60);
     // lst10.push_back(61);
     // lst10.remove_if(single_digit);
-    // lst10.remove_if(is_odd());
+    // // lst10.remove_if(is_odd());
     // lst10.displaylist();
 
-    // unique
+    // // unique
     // list lst11;
     // lst11.push_back(5);
     // lst11.push_back(4);
@@ -136,7 +135,7 @@ int main()
     // lst12.unique(same_parity);
     // lst12.displaylist();
 
-    // sort
+    // // sort
     // list lst13;
     // lst13.push_back(5);
     // lst13.push_back(8);
@@ -145,29 +144,29 @@ int main()
     // lst13.displaylist();
     // lst13.sort();
     // lst13.displaylist();
-    // // std::cout << lst13.size() << std::endl;
+    // std::cout << lst13.size() << std::endl;
 
     // // sort with binary compare
-    // list lst14;
-    // lst14.push_back(18);
-    // lst14.push_back(48);
-    // lst14.push_back(42);
-    // lst14.push_back(1000);
-    // lst14.push_back(188);
-    // lst14.displaylist();
-    // lst14.sort(compare_custom);
-    // lst14.displaylist();
+    list lst14;
+    lst14.push_back(18);
+    lst14.push_back(48);
+    lst14.push_back(42);
+    lst14.push_back(1000);
+    lst14.push_back(188);
+    lst14.displaylist();
+    lst14.sort(compare_custom);
+    lst14.displaylist();
 
-    //reverse
-    list lst15;
-    lst15.push_back(4);
-    lst15.push_back(22);
-    lst15.push_back(23);
-    lst15.push_back(12);
-    lst15.reverse();
-    lst15.displaylist();
+    // //reverse
+    // list lst15;
+    // lst15.push_back(4);
+    // lst15.push_back(22);
+    // lst15.push_back(23);
+    // lst15.push_back(12);
+    // lst15.reverse();
+    // lst15.displaylist();
 
-    // iterator
+    // // iterator
     // list lst16;
     // lst16.push_back(2);
     // lst16.push_back(4);
@@ -202,22 +201,15 @@ int main()
     // lst20.push_back(14);
     // lst20.push_back(134);
     // lst20.push_back(1354);
-    // lst20.displaylist();
-    
-    // // iterator constructor: lst(it, it++) case
-    // // ft::list::iterator it2(it);
-    // // it2++;
-    // // list lst21(it, it2); // works fine
-    // // lst21.displaylist();
-    // // ERROR CASES
+    // list lst21a(lst20.begin(), lst20.end());
+    // lst21a.displaylist();
     // ft::list::iterator it = lst20.begin();
     // ++it;
-    // // std::cout << "it: " << *it << std::endl;
     // list lst21b(it, ++it); // 1st arg is also incremented: both args are ++it
-    // // list lst21b(it, it++); // 1st arg is incremented but second arg is not
+    // // // list lst21b(it, it++); // 1st arg is incremented but second arg is not
     // lst21b.displaylist();
     
-    // // iterator assign
+    // // // iterator assign
     // list lst22(2, 4);
     // lst22.assign(it, lst20.end());
     // lst22.displaylist();
@@ -243,22 +235,14 @@ int main()
     // lst25.insert(lst25.begin(), 3, 8);
     // lst25.displaylist();
     
-    // // does not work to insert at the end of the list, whereas it works with STL list
 
-    // // // insert multiple with iterator
+    // // // // insert multiple with iterator
     // ft::list lst26;
     // lst26.push_back(9);
     // lst26.push_back(1);
     // lst26.push_back(12);
     // lst26.insert(++lst26.begin(), ++lst25.begin(), lst25.end());
-    // lst26.displaylist_reverse();
-    // std::cout << lst26.size() << std::endl;
-    // list::iterator it5 = lst26.begin();
-    // while (it5 != lst26.end())
-    // {
-    //     std::cout << *it5 << std::endl;
-    //     it5++;
-    // }
+    // lst26.displaylist();
 
     // // erase
     // ft::list lst27;
@@ -271,7 +255,8 @@ int main()
     // it6 = lst27.erase(it6++);
     // lst27.displaylist();
     // std::cout << "element that followed: " <<  *it6 << std::endl;
-    // // lst27.erase(it6++);
+    // lst27.erase(it6++);
+    // lst27.displaylist();
 
     // // erase with iterator
     // ft::list lst28;
@@ -294,7 +279,7 @@ int main()
     // lst29.displaylist();
     // lst30.displaylist();
     
-    // // splice (one elem)
+    // // // splice (one elem)
     // lst30.push_back(5);
     // lst30.push_back(512);
     // lst29.splice(lst29.begin(), lst30, lst30.begin());
@@ -304,7 +289,7 @@ int main()
     // lst29.splice(lst29.begin(), lst29, ++lst29.begin());
     // lst29.displaylist();
 
-    // // splice (elems between two iterators)
+    // // // splice (elems between two iterators)
     // ft::list lst31;
     // lst31.push_back(66);
     // lst31.push_back(166);
@@ -313,7 +298,7 @@ int main()
     // lst29.splice(lst29.begin(), lst31, lst31.begin(), ++lst31.begin());
     // lst29.displaylist();
 
-    // // merge
+    // // // merge
     // ft::list lst32;
     // lst32.push_back(2);
     // lst32.push_back(4);
@@ -328,7 +313,7 @@ int main()
     // lst32.displaylist();
     // lst33.displaylist();
 
-    // // merge with comp
+    // // // merge with comp
     // ft::list lst34;
     // lst34.push_back(3);
     // lst34.push_back(27);
