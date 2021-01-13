@@ -2,7 +2,7 @@
 #define LIST_HPP
 
 #include <iostream>
-#include <iterator>
+// #include <iterator>
 
 // list of int (1st param of template = int, and second param is set to default)
 
@@ -82,19 +82,17 @@ private:
 
     void delete_node(t_list *node);
     void unlink_node(t_list *node);
-    void swap_cont_nodes(t_list *a, t_list *b);
-    // void swap_nodes(t_list *a, t_list *b);
+    // void swap_cont_nodes(t_list *a, t_list *b);
     t_list *get_last_node();
     t_list *get_last_node() const;
     void insert_before(t_list *node, t_list *new_node);
     void insert_end(t_list *new_node);
-    // t_list *get_node(iterator it);
 
 public:
     // constructors & destructor
     explicit list ();
     explicit list (size_type n, const int val = int());
-    list (ft::list::iterator first, ft::list::iterator last); // better not to call by reference, for cases like list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
+    list (iterator first, iterator last); // better not to call by reference, for cases like list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
     list (const list& x);
     ~list();
     list& operator= (const list& x);
@@ -208,6 +206,7 @@ void ft::list::sort (Compare comp)
             tmp = tmp->next;
     }
 }
+
 template <class Compare>
 void ft::list::merge (list& x, Compare comp)
 {
@@ -238,23 +237,5 @@ void ft::list::merge (list& x, Compare comp)
     }
 }
 
-// template <class InputIterator>
-// ft::list::list (InputIterator first, InputIterator last): num(0)
-// {
-//     for (InputIterator tmp = first; tmp != last; tmp++)
-//         this->push_back(*tmp);
-    
-// }
-
-// template <class InputIterator>
-// void ft::list::assign (InputIterator first, InputIterator last)
-// {
-//     this->clear_list();
-//     for (InputIterator tmp = first; tmp != last; tmp++)
-//     {
-//         this->push_back(*tmp);
-//     }
-
-// }
 
 #endif

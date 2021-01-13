@@ -136,26 +136,27 @@ int main()
     // lst12.displaylist();
 
     // // sort
-    // list lst13;
-    // lst13.push_back(5);
-    // lst13.push_back(8);
-    // lst13.push_back(3);
-    // lst13.push_back(1);
-    // lst13.displaylist();
-    // lst13.sort();
-    // lst13.displaylist();
-    // std::cout << lst13.size() << std::endl;
+    list lst13;
+    lst13.push_back(5);
+    lst13.push_back(8);
+    lst13.push_back(3);
+    lst13.push_back(8);
+    lst13.push_back(1);
+    lst13.displaylist();
+    lst13.sort();
+    lst13.displaylist();
+    std::cout << lst13.size() << std::endl;
 
     // // sort with binary compare
-    list lst14;
-    lst14.push_back(18);
-    lst14.push_back(48);
-    lst14.push_back(42);
-    lst14.push_back(1000);
-    lst14.push_back(188);
-    lst14.displaylist();
-    lst14.sort(compare_custom);
-    lst14.displaylist();
+    // list lst14;
+    // lst14.push_back(18);
+    // lst14.push_back(48);
+    // lst14.push_back(42);
+    // lst14.push_back(1000);
+    // lst14.push_back(188);
+    // lst14.displaylist();
+    // lst14.sort(compare_custom);
+    // lst14.displaylist();
 
     // //reverse
     // list lst15;

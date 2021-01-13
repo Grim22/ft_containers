@@ -1,15 +1,6 @@
 #include "list.hpp"
 
 
-// void t_list::unlink()
-// {
-//     if (this->prev)
-//         this->prev->next = this->next;
-//     if (this->next)
-//         this->next->prev = this->prev;
-
-// }
-
 t_list *ft_lst_new(const int &val)
 {
     t_list *elem = new t_list;
@@ -43,29 +34,29 @@ void ft::list::delete_node(t_list *node)
 }
 
 // node a and b are contiguousm a is before b
-void ft::list::swap_cont_nodes(t_list *a, t_list *b)
-{
-    t_list *tmp;
+// void ft::list::swap_cont_nodes(t_list *a, t_list *b)
+// {
+//     t_list *tmp;
 
-    // std::cout << "swap " << a->content << " " << b->content << std::endl << std::endl;
-    if (a->prev)
-        a->prev->next = b;
-    else
-        this->lst = b; // if a was the first element, we need to update this->lst 
+//     // std::cout << "swap " << a->content << " " << b->content << std::endl << std::endl;
+//     if (a->prev)
+//         a->prev->next = b;
+//     else
+//         this->lst = b; // if a was the first element, we need to update this->lst 
     
-    if (b->next)
-        b->next->prev = a;
+//     if (b->next)
+//         b->next->prev = a;
     
-    tmp = a->prev;
-    // std::cout << "tmp->prev " << tmp << std::endl;
-    a->prev = b;
-    a->next = b->next;
+//     tmp = a->prev;
+//     // std::cout << "tmp->prev " << tmp << std::endl;
+//     a->prev = b;
+//     a->next = b->next;
     
-    b->next = a;
-    b->prev = tmp;
-    // std::cout << "tmp->prev " << tmp << std::endl;
+//     b->next = a;
+//     b->prev = tmp;
+//     // std::cout << "tmp->prev " << tmp << std::endl;
 
-}
+// }
 
 t_list *ft::list::get_last_node()
 {
@@ -117,17 +108,6 @@ void ft::list::insert_end(t_list *new_last)
     this->num++;
 }
 
-// t_list *ft::list::get_node(ft::list::iterator position)
-// {
-//     t_list *tmp(this->lst);
-//     iterator it(this->begin());
-//     while (it != position)
-//     {
-//         it++;
-//         tmp = tmp->next;
-//     }
-//     return tmp;
-// }
 
 // class iterator
 
@@ -284,8 +264,6 @@ ft::list::list(const list& x): num(0)
     
 ft::list::list(ft::list::iterator first, ft::list::iterator last): lst(NULL), num(0)
 {
-    // std::cout << "first " << *first << std::endl;
-    // std::cout << "last " << *last << std::endl;
     for (ft::list::iterator it = first; it != last; it++)
         this->push_back(*it);
 }
@@ -421,22 +399,6 @@ void ft::list::push_back(const int &val)
 
 void ft::list::pop_back()
 {
-    // t_list *tmp(this->lst);
-    // t_list *old(NULL);
-    // while (tmp->next)
-    // {
-    //     old = tmp;
-    //     tmp = tmp->next;
-    // }
-    // delete tmp;
-    // if (old)
-    //     old->next = NULL;
-    // this->num--;
-    // if (this->num == 0)
-    //     this->lst = NULL;
-    // t_list *tmp(this->lst);
-    // while (tmp->next)
-    //     tmp = tmp->next;
     this->delete_node(this->get_last_node());
 }
 
@@ -457,18 +419,6 @@ void ft::list::push_front (const value_type& val)
 
 void ft::list::pop_front()
 {
-    // if (this->num == 1)
-    // {
-    //     this->num--;
-    //     delete this->lst;
-    //     this->lst = NULL;
-    //     return ;
-    // }
-    // t_list *tmp(this->lst->next);
-    // delete this->lst;
-    // this->lst = tmp;
-    // this->lst->prev = NULL;
-    // this->num--;
     this->delete_node(this->lst);
 }
 
@@ -607,17 +557,37 @@ void ft::list::sort()
     t_list *tmp(this->lst);
     while (tmp->next)
     {
-        // this->displaylist();
-        // std::cout << "1st elem " << this->lst->prev << std::endl;
         if (tmp->content > tmp->next->content)
         {
-            this->swap_cont_nodes(tmp, tmp->next);
+            // this->swap_cont_nodes(tmp, tmp->next);
+            this->splice(iterator(tmp), *this, iterator(tmp->next));
             tmp = this->lst;
         }
         else
             tmp = tmp->next;
     }
 }
+
+// sort in iterator fashion
+// void ft::list::sort()
+// {
+//     iterator it = this->begin();
+//     iterator it_next = ++this->begin();
+//     while (it_next != this->end())
+//     {
+//         if (*it > *it_next)
+//         {
+//             this->splice(it, *this, it_next);
+//             it = this->begin();
+//             it_next = ++this->begin();
+//         }
+//         else
+//         {
+//             it++;
+//             it_next++;
+//         }
+//     }
+// }
 
 
 void ft::list::splice (iterator position, list& x)
@@ -668,7 +638,6 @@ void ft::list::splice (iterator position, list& x, iterator first, iterator last
             return ;
         j++;
     }
-
 
     iterator it = first;
     iterator tmp(it);
