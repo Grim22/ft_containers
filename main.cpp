@@ -1,6 +1,6 @@
 #include "list.hpp"
 #include <iostream>
-// #include <list>
+#include <list>
 #include <cmath> // fabs
 
 using namespace ft;
@@ -29,7 +29,10 @@ bool same_parity (int first, int second)
 // a binary comp function
 bool compare_custom(int first, int second)
 {
-    return (first % 10 > second % 10);
+    if (first % 10 < second % 10)
+        return true;
+    return false;
+    // return (first % 10 < second % 10);
 }
 
 int main()
@@ -310,39 +313,54 @@ int main()
     // lst29.splice(lst29.begin(), lst31, lst31.begin(), ++lst31.begin());
     // lst29.displaylist();
 
-    // merge
-    ft::list lst32;
-    lst32.push_back(2);
-    lst32.push_back(4);
-    lst32.push_back(9);
-    ft::list lst33;
-    lst33.push_back(2);
-    lst33.push_back(5);
-    lst33.push_back(7);
-    lst33.push_back(19);
-    lst32.merge(lst33);
-    lst32.displaylist();
-    lst33.displaylist();
+    // // merge
+    // ft::list lst32;
+    // lst32.push_back(2);
+    // lst32.push_back(4);
+    // lst32.push_back(9);
+    // ft::list lst33;
+    // lst33.push_back(2);
+    // lst33.push_back(5);
+    // lst33.push_back(7);
+    // lst33.push_back(19);
+    // lst33.push_back(29);
+    // lst32.merge(lst33);
+    // lst32.displaylist();
+    // lst33.displaylist();
+
+    // merge with comp
+    ft::list lst34;
+    lst34.push_back(3);
+    lst34.push_back(27);
+    lst34.push_back(2);
+    lst34.sort(compare_custom);
+    lst34.displaylist();
+    ft::list lst35;
+    lst35.push_back(4);
+    lst35.push_back(110);
+    lst35.push_back(11);
+    lst35.push_back(222);
+    lst35.sort(compare_custom);
+    lst35.displaylist();
+    lst34.merge(lst35, compare_custom);
+    lst34.displaylist();
+    lst35.displaylist();
+
     
 
-    // sort REAL
-//     std::list<int> lst;
-//     lst.push_back(5);
-//     lst.push_back(8);
-//     lst.push_back(3);
+    // // sort REAL
+    // std::list<int> lst;
+    // lst.push_back(5);
+    // lst.push_back(8);
+    // lst.push_back(13);
 
-//     std::list<int>::iterator it;
-
-//     it = lst.begin();
-//     std::cout << *it << std::endl;
-//     // std::cout << it << std::endl;
+    // // lst.sort(compare_custom);
+    // lst.sort();
+    // for (std::list<int>::iterator it = lst.begin(); it != lst.end(); it++)
+    // {
+    //     std::cout << *it << std::endl;
+    // }
     
-//     lst.sort();
-    
-//     std::cout << *it << std::endl;
-    
-//     it = lst.begin();
-//     std::cout << *it << std::endl;
 
     // iterator constructor REAL
     // std::list<int> lst;

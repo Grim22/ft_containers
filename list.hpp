@@ -153,8 +153,8 @@ public:
     void splice (iterator position, list& x, iterator first, iterator last);
     // void reverse();
     void merge (list& x);
-    // template <class Compare>
-    // void merge (list& x, Compare comp);
+    template <class Compare>
+    void merge (list& x, Compare comp);
 
 
     // debug
@@ -199,13 +199,42 @@ void ft::list::sort (Compare comp)
     t_list *tmp(this->lst);
     while (tmp->next)
     {
-        if (comp(tmp->content, tmp->next->content))
+        if (!comp(tmp->content, tmp->next->content))
         {
             this->swap_cont_nodes(tmp, tmp->next);
             tmp = this->lst;
         }
         else
             tmp = tmp->next;
+    }
+}
+template <class Compare>
+void ft::list::merge (list& x, Compare comp)
+{
+    if (this == &x)
+        return ;
+    iterator this_it = this->begin();
+    iterator x_it = x.begin();
+    iterator tmp(x_it);
+    while (x_it != x.end())
+    {
+        tmp++;
+        while (this_it != this->end())
+        {
+            if (comp(*x_it, *this_it)) // true if x_it "<" this_it
+            {
+                this->splice(this_it, x, x_it);
+                break;
+            }
+            else
+                this_it++;
+        }
+        if (this_it == this->end()) // if we have to insert at the end (can't use splice in that case -> has to be done manually...)
+        {
+            x.unlink_node(x_it.as_node()); // unlink node that we are going to transfer
+            this->insert_end(x_it.as_node());
+        }
+        x_it = tmp;
     }
 }
 
