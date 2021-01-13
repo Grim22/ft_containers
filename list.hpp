@@ -151,7 +151,7 @@ public:
     void splice (iterator position, list& x);
     void splice (iterator position, list& x, iterator i);
     void splice (iterator position, list& x, iterator first, iterator last);
-    // void reverse();
+    void reverse();
     void merge (list& x);
     template <class Compare>
     void merge (list& x, Compare comp);

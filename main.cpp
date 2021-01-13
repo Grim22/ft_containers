@@ -159,13 +159,13 @@ int main()
     // lst14.displaylist();
 
     //reverse
-    // list lst15;
-    // lst15.push_back(4);
-    // // lst15.push_back(22);
-    // // lst15.push_back(23);
-    // lst15.push_back(12);
-    // lst15.reverse();
-    // lst15.displaylist();
+    list lst15;
+    lst15.push_back(4);
+    lst15.push_back(22);
+    lst15.push_back(23);
+    lst15.push_back(12);
+    lst15.reverse();
+    lst15.displaylist();
 
     // iterator
     // list lst16;
@@ -328,23 +328,23 @@ int main()
     // lst32.displaylist();
     // lst33.displaylist();
 
-    // merge with comp
-    ft::list lst34;
-    lst34.push_back(3);
-    lst34.push_back(27);
-    lst34.push_back(2);
-    lst34.sort(compare_custom);
-    lst34.displaylist();
-    ft::list lst35;
-    lst35.push_back(4);
-    lst35.push_back(110);
-    lst35.push_back(11);
-    lst35.push_back(222);
-    lst35.sort(compare_custom);
-    lst35.displaylist();
-    lst34.merge(lst35, compare_custom);
-    lst34.displaylist();
-    lst35.displaylist();
+    // // merge with comp
+    // ft::list lst34;
+    // lst34.push_back(3);
+    // lst34.push_back(27);
+    // lst34.push_back(2);
+    // lst34.sort(compare_custom);
+    // lst34.displaylist();
+    // ft::list lst35;
+    // lst35.push_back(4);
+    // lst35.push_back(110);
+    // lst35.push_back(11);
+    // lst35.push_back(222);
+    // lst35.sort(compare_custom);
+    // lst35.displaylist();
+    // lst34.merge(lst35, compare_custom);
+    // lst34.displaylist();
+    // lst35.displaylist();
 
     
 

@@ -718,18 +718,21 @@ void ft::list::splice (iterator position, list& x, iterator first, iterator last
 
 }
 
-// void ft::list::reverse()
-// {
-//     t_list *first(this->lst);
-//     t_list *last(this->get_last_node());
-//     for (size_type i = 0; i < this->num / 2; i++)
-//     {
-//         std::cout << "a" << std::endl;
-//         this->swap_nodes(first, last);
-//         first = first->next;
-//         last = last->prev;
-//     }
-// }
+void ft::list::reverse()
+{
+    if (this->lst == NULL)
+        return ;
+    t_list *tmp(this->get_last_node());
+    this->lst = tmp;
+    while (tmp)
+    {
+        // std::cout << tmp->content << std::endl;
+        t_list *swap(tmp->next);
+        tmp->next = tmp->prev;
+        tmp->prev = swap;
+        tmp = tmp->next;
+    }
+}
 
 void ft::list::merge (list& x)
 {
