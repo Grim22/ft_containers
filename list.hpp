@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <iterator>
+#include <memory>
 
 // list of int (1st param of template = int, and second param is set to default)
 
@@ -110,6 +111,7 @@ public:
     //capacity
     bool empty() const;
     size_type size() const;
+    size_type max_size() const;
 
     // element access
     int &front();

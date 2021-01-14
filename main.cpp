@@ -1,6 +1,6 @@
 #include "list.hpp"
 #include <iostream>
-// #include <list>
+#include <list>
 #include <cmath> // fabs
 
 using namespace ft;
@@ -338,48 +338,53 @@ int main()
 
     // relationnal operators
 
-    ft::list lst36;
-    lst36.push_back(3);
-    lst36.push_back(5);
-    lst36.push_back(7);
-    ft::list lst37;
-    lst37.push_back(3);
-    lst37.push_back(5);
-    lst37.push_back(7);
-    ft::list lst38;
-    lst38.push_back(3);
-    lst38.push_back(5);
-    lst38.push_back(7);
-    lst38.push_back(17);
-    ft::list lst39;
-    lst39.push_back(2);
-    lst39.push_back(4);
-    lst39.push_back(6);
+    // ft::list lst36;
+    // lst36.push_back(3);
+    // lst36.push_back(5);
+    // lst36.push_back(7);
+    // ft::list lst37;
+    // lst37.push_back(3);
+    // lst37.push_back(5);
+    // lst37.push_back(7);
+    // ft::list lst38;
+    // lst38.push_back(3);
+    // lst38.push_back(5);
+    // lst38.push_back(7);
+    // lst38.push_back(17);
+    // ft::list lst39;
+    // lst39.push_back(2);
+    // lst39.push_back(4);
+    // lst39.push_back(6);
 
-    std::cout << (lst36 == lst37) << std::endl;
-    std::cout << (lst36 == lst38) << std::endl;
-    std::cout << (lst36 == lst39) << std::endl;
-    std::cout << "---" << std::endl;
-    std::cout << (lst36 != lst37) << std::endl;
-    std::cout << (lst36 != lst38) << std::endl;
-    std::cout << (lst36 != lst39) << std::endl;
-    std::cout << "---" << std::endl;
-    std::cout << (lst36 < lst37) << std::endl;
-    std::cout << (lst36 < lst38) << std::endl;
-    std::cout << (lst36 < lst39) << std::endl;
-    std::cout << "---" << std::endl;
-    std::cout << (lst36 <= lst37) << std::endl;
-    std::cout << (lst36 <= lst38) << std::endl;
-    std::cout << (lst36 <= lst39) << std::endl;
-    std::cout << "---" << std::endl;
-    std::cout << (lst36 > lst37) << std::endl;
-    std::cout << (lst36 > lst38) << std::endl;
-    std::cout << (lst36 > lst39) << std::endl;
-    std::cout << "---" << std::endl;
-    std::cout << (lst36 >= lst37) << std::endl;
-    std::cout << (lst36 >= lst38) << std::endl;
-    std::cout << (lst36 >= lst39) << std::endl;
+    // std::cout << (lst36 == lst37) << std::endl;
+    // std::cout << (lst36 == lst38) << std::endl;
+    // std::cout << (lst36 == lst39) << std::endl;
+    // std::cout << "---" << std::endl;
+    // std::cout << (lst36 != lst37) << std::endl;
+    // std::cout << (lst36 != lst38) << std::endl;
+    // std::cout << (lst36 != lst39) << std::endl;
+    // std::cout << "---" << std::endl;
+    // std::cout << (lst36 < lst37) << std::endl;
+    // std::cout << (lst36 < lst38) << std::endl;
+    // std::cout << (lst36 < lst39) << std::endl;
+    // std::cout << "---" << std::endl;
+    // std::cout << (lst36 <= lst37) << std::endl;
+    // std::cout << (lst36 <= lst38) << std::endl;
+    // std::cout << (lst36 <= lst39) << std::endl;
+    // std::cout << "---" << std::endl;
+    // std::cout << (lst36 > lst37) << std::endl;
+    // std::cout << (lst36 > lst38) << std::endl;
+    // std::cout << (lst36 > lst39) << std::endl;
+    // std::cout << "---" << std::endl;
+    // std::cout << (lst36 >= lst37) << std::endl;
+    // std::cout << (lst36 >= lst38) << std::endl;
+    // std::cout << (lst36 >= lst39) << std::endl;
 
+    ft::list lst40;
+    std::cout << lst40.max_size() << std::endl;
+    
+    std::list<int> listoun;
+    std::cout << listoun.max_size() << std::endl;
 
     // // sort REAL
     // std::list<int> lst;

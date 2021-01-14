@@ -345,6 +345,13 @@ ft::list::size_type ft::list::size() const
     return this->num;
 }
 
+
+ft::list::size_type ft::list::max_size() const
+{
+    std::allocator<int> al;
+    return al.max_size();
+}
+
 bool ft::list::empty() const
 {
     if (this->num == 0)
@@ -744,9 +751,7 @@ bool ft::operator<=(const list& lhs, const list& rhs)
 }
 bool ft::operator!=(const list& lhs, const list& rhs)
 {
-    if (lhs == rhs)
-        return false;
-    return true;
+    return (!(lhs == rhs));
 }
 bool ft::operator>=(const list& lhs, const list& rhs)
 {
