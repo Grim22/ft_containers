@@ -700,6 +700,66 @@ void ft::list::merge (list& x)
     }
 }
 
+// non members
+
+bool ft::operator==(const list& lhs, const list& rhs)
+{
+    if (lhs.size() != rhs.size())
+        return false;
+    ft::list::const_iterator it_l = lhs.begin();
+    ft::list::const_iterator it_r = rhs.begin();
+    while (it_l != lhs.end())
+    {
+        if (*it_l++ != *it_r++)
+            return false;
+    }
+    return true;
+}
+bool ft::operator<(const list& lhs, const list& rhs)
+{
+    ft::list::const_iterator it_l = lhs.begin();
+    ft::list::const_iterator it_r = rhs.begin();
+    while (it_l != lhs.end() && it_r != rhs.end())
+    {
+        if (*it_l == *it_r)
+        {
+            it_l++;
+            it_r++;
+        }
+        else
+            return (*it_l < *it_r);
+    }
+    // so far all elements compare equal
+    // 3 cases:
+    // 1. it_l == end && it_r == end -> equal ==> return FALSE
+    // 2. it_l == end only ==> l is shorther ==> return TRUE
+    // 3. it_r == end only ==> r is shorter ==> return FALSE
+    if (it_r != rhs.end())
+        return true;
+    return false;
+}
+bool ft::operator<=(const list& lhs, const list& rhs)
+{
+    return (lhs == rhs || lhs < rhs );
+}
+bool ft::operator!=(const list& lhs, const list& rhs)
+{
+    if (lhs == rhs)
+        return false;
+    return true;
+}
+bool ft::operator>=(const list& lhs, const list& rhs)
+{
+    if ( lhs < rhs)
+        return false;
+    return true;
+}
+bool ft::operator>(const list& lhs, const list& rhs)
+{
+    if ( lhs <= rhs)
+        return false;
+    return true;
+}
 
 //debug
 

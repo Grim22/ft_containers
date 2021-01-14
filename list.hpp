@@ -2,7 +2,7 @@
 #define LIST_HPP
 
 #include <iostream>
-// #include <iterator>
+#include <iterator>
 
 // list of int (1st param of template = int, and second param is set to default)
 
@@ -67,7 +67,7 @@ public:
             
             const t_list *as_node();
             const int &operator*() const; // difference(2) with iterator
-            const int *operator->() const;
+            const int *operator->() const; // difference(3) with iterator
             const_iterator& operator++();
             const_iterator operator++(int);
             const_iterator& operator--();
@@ -160,6 +160,18 @@ public:
     void displaylist_reverse();
 
 };
+
+    // non member functions (relationnal operators)
+    // -> if they need to call private members of ft::list, we add them as friend of the ft::list class
+
+    bool operator== (const list& lhs, const list& rhs);
+    bool operator!= (const list& lhs, const list& rhs);
+    bool operator<= (const list& lhs, const list& rhs);
+    bool operator< (const list& lhs, const list& rhs);
+    bool operator>= (const list& lhs, const list& rhs);
+    bool operator> (const list& lhs, const list& rhs);
+
+
 }
 template <class Predicate>
 void ft::list::remove_if (Predicate pred)

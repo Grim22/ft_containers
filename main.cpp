@@ -136,16 +136,16 @@ int main()
     // lst12.displaylist();
 
     // // sort
-    list lst13;
-    lst13.push_back(5);
-    lst13.push_back(8);
-    lst13.push_back(3);
-    lst13.push_back(8);
-    lst13.push_back(1);
-    lst13.displaylist();
-    lst13.sort();
-    lst13.displaylist();
-    std::cout << lst13.size() << std::endl;
+    // list lst13;
+    // lst13.push_back(5);
+    // lst13.push_back(8);
+    // lst13.push_back(3);
+    // lst13.push_back(8);
+    // lst13.push_back(1);
+    // lst13.displaylist();
+    // lst13.sort();
+    // lst13.displaylist();
+    // std::cout << lst13.size() << std::endl;
 
     // // sort with binary compare
     // list lst14;
@@ -179,7 +179,11 @@ int main()
 
     // // const iterator
     // list lst17(4, 8);
+    // list::iterator it_i = lst17.begin();
+    // *it_i = 13;
     // const list lst18(lst17);
+    // list::const_iterator it = lst18.begin();
+    // std::cout << *it << std::endl;
     // for (list::const_iterator it = lst18.begin(); it != lst18.end(); it++)
     // {
     //     std::cout << *it << std::endl;
@@ -332,7 +336,50 @@ int main()
     // lst34.displaylist();
     // lst35.displaylist();
 
-    
+    // relationnal operators
+
+    ft::list lst36;
+    lst36.push_back(3);
+    lst36.push_back(5);
+    lst36.push_back(7);
+    ft::list lst37;
+    lst37.push_back(3);
+    lst37.push_back(5);
+    lst37.push_back(7);
+    ft::list lst38;
+    lst38.push_back(3);
+    lst38.push_back(5);
+    lst38.push_back(7);
+    lst38.push_back(17);
+    ft::list lst39;
+    lst39.push_back(2);
+    lst39.push_back(4);
+    lst39.push_back(6);
+
+    std::cout << (lst36 == lst37) << std::endl;
+    std::cout << (lst36 == lst38) << std::endl;
+    std::cout << (lst36 == lst39) << std::endl;
+    std::cout << "---" << std::endl;
+    std::cout << (lst36 != lst37) << std::endl;
+    std::cout << (lst36 != lst38) << std::endl;
+    std::cout << (lst36 != lst39) << std::endl;
+    std::cout << "---" << std::endl;
+    std::cout << (lst36 < lst37) << std::endl;
+    std::cout << (lst36 < lst38) << std::endl;
+    std::cout << (lst36 < lst39) << std::endl;
+    std::cout << "---" << std::endl;
+    std::cout << (lst36 <= lst37) << std::endl;
+    std::cout << (lst36 <= lst38) << std::endl;
+    std::cout << (lst36 <= lst39) << std::endl;
+    std::cout << "---" << std::endl;
+    std::cout << (lst36 > lst37) << std::endl;
+    std::cout << (lst36 > lst38) << std::endl;
+    std::cout << (lst36 > lst39) << std::endl;
+    std::cout << "---" << std::endl;
+    std::cout << (lst36 >= lst37) << std::endl;
+    std::cout << (lst36 >= lst38) << std::endl;
+    std::cout << (lst36 >= lst39) << std::endl;
+
 
     // // sort REAL
     // std::list<int> lst;
