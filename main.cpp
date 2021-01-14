@@ -380,11 +380,20 @@ int main()
     // std::cout << (lst36 >= lst38) << std::endl;
     // std::cout << (lst36 >= lst39) << std::endl;
 
-    ft::list lst40;
-    std::cout << lst40.max_size() << std::endl;
+    // ft::list lst40;
+    // std::cout << lst40.max_size() << std::endl;
     
-    std::list<int> listoun;
-    std::cout << listoun.max_size() << std::endl;
+    // std::list<int> listoun;
+    // std::cout << listoun.max_size() << std::endl;
+
+    ft::list lst38;
+    lst38.push_front(333);
+    // lst38.push_back(3);
+    // lst38.push_front(33);
+    // lst38.push_back(4);
+    lst38.displaylist();
+    lst38.displaylist_reverse();
+
 
     // // sort REAL
     // std::list<int> lst;

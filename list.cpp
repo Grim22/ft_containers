@@ -82,10 +82,7 @@ void ft::list::insert_before(t_list *node, t_list *inserted_node)
 {
     // update node before and node in list where inserted
     // set next and prev of new_node
-    if (node->prev)
-        node->prev->next = inserted_node;
-    else
-        this->lst = inserted_node;
+    node->prev->next = inserted_node;
     inserted_node->prev = node->prev;
     node->prev = inserted_node;
     inserted_node->next = node;
@@ -239,8 +236,10 @@ const t_list *ft::list::const_iterator::as_node()
 
 // constructors & destructors
 
-ft::list::list(): lst(NULL), num(0)
+ft::list::list(): lst(ft_lst_new(int())), num(0)
 {
+    this->lst->next = this->lst;
+    this->lst->prev = this->lst;
 }
 
 ft::list::list(size_type n, const int val): num(0)
@@ -299,42 +298,42 @@ ft::list::~list()
 
 ft::list::iterator ft::list::begin()
 {
-    return iterator(this->lst);
+    return iterator(this->lst->next);
 }
 
 ft::list::iterator ft::list::end()
 {
-    return iterator(NULL);
+    return iterator(this->lst);
 }
 
 ft::list::const_iterator ft::list::begin() const
 {
-    return const_iterator(this->lst);
+    return const_iterator(this->lst->next);
 }
 
 ft::list::const_iterator ft::list::end() const
 {
-    return const_iterator(NULL);
+    return const_iterator(this->lst);
 }
 
 // ft::list::reverse_iterator ft::list::rbegin()
 // {
-//     return reverse_iterator(this->get_last_node());
+//     return reverse_iterator(this->lst->prev());
 // }
 
 // ft::list::reverse_iterator ft::list::rend()
 // {
-//     return reverse_iterator(NULL);
+//     return reverse_iterator(this->lst);
 // }
 
 // ft::list::const_reverse_iterator ft::list::rbegin() const
 // {
-//     return const_reverse_iterator(this->get_last_node());
+//     return const_reverse_iterator(this->lst->prev());
 // }
 
 // ft::list::const_reverse_iterator ft::list::rend() const
 // {
-//     return const_reverse_iterator(NULL);
+//     return const_reverse_iterator(this->lst);
 // }
 
 
@@ -389,19 +388,7 @@ const int &ft::list::back() const
 
 void ft::list::push_back(const int &val)
 {
-    if (this->empty())
-    {
-        this->lst = ft_lst_new(val);
-        this->num = 1;
-        return ;
-    }
-    // add elem at the end
-    t_list *last(this->get_last_node());
-    t_list *new_elem(ft_lst_new(val));
-    last->next = new_elem;
-    // set last elem->prev
-    new_elem->prev = last;
-    this->num++;
+    this->insert(this->end(), val);
 }
 
 void ft::list::pop_back()
@@ -411,17 +398,7 @@ void ft::list::pop_back()
 
 void ft::list::push_front (const value_type& val)
 {
-    if (this->empty())
-    {
-        this->lst = ft_lst_new(val);
-        this->num = 1;
-        return ;
-    }
-    t_list *tmp(this->lst);
-    this->lst = ft_lst_new(val);
-    this->lst->next = tmp;
-    tmp->prev = this->lst;
-    this->num++;
+    this->insert(this->begin(), val);
 }
 
 void ft::list::pop_front()
@@ -489,6 +466,7 @@ ft::list::iterator ft::list::insert(iterator position, const value_type& val)
 {
     if (position == NULL) // protection
         return NULL;
+    // std::cout << *position << std::endl;
     this->insert_before(position.as_node(), ft_lst_new(val));
     return --position;
 }
@@ -770,12 +748,11 @@ bool ft::operator>(const list& lhs, const list& rhs)
 
 void ft::list::displaylist()
 {
-    t_list *tmp;
-    tmp = this->lst;
-    while (tmp)
+    iterator it = this->begin();
+    while (it != this->end())
     {
-        std::cout << tmp->content << std::endl;
-        tmp = tmp->next;
+        std::cout << *it << std::endl;
+        it++;
     }
     std::cout << "---" << std::endl;
 }
@@ -783,12 +760,8 @@ void ft::list::displaylist()
 void ft::list::displaylist_reverse()
 {
     t_list *tmp;
-    tmp = this->lst;
-    while (tmp->next)
-    {
-        tmp = tmp->next;
-    }
-    while (tmp)
+    tmp = this->lst->prev;
+    while (tmp != this->lst)
     {
         std::cout << tmp->content << std::endl;
         tmp = tmp->prev;
