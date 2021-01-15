@@ -150,11 +150,6 @@ public:
     template <class Compare>
     void merge (list& x, Compare comp);
 
-
-    // debug
-    void displaylist();
-    void displaylist_reverse();
-
 };
 
     // non member functions (relationnal operators)

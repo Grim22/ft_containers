@@ -631,25 +631,3 @@ bool ft::operator>(const list& lhs, const list& rhs)
 
 //debug
 
-void ft::list::displaylist()
-{
-    iterator it = this->begin();
-    while (it != this->end())
-    {
-        std::cout << *it << std::endl;
-        it++;
-    }
-    std::cout << "---" << std::endl;
-}
-
-void ft::list::displaylist_reverse()
-{
-    t_list *tmp;
-    tmp = this->lst->prev;
-    while (tmp != this->lst)
-    {
-        std::cout << tmp->content << std::endl;
-        tmp = tmp->prev;
-    }
-    std::cout << "---" << std::endl;
-}
