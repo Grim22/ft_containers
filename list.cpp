@@ -1,5 +1,12 @@
 #include "list.hpp"
 
+void t_list::reverse()
+{
+    t_list *tmp;
+    tmp = this->next;
+    this->next = this->prev;
+    this->prev = tmp;
+}
 
 t_list *ft_lst_new(const int &val) // by default, points on itself
 {
@@ -12,9 +19,6 @@ t_list *ft_lst_new(const int &val) // by default, points on itself
 
 void ft::list::unlink_node(t_list *node)
 {
-    if (node == NULL)
-        return;
-
     if (node->prev)
         node->prev->next = node->next;
     else // if we are deleting the first element of the list, we need to update this->lst
@@ -28,37 +32,11 @@ void ft::list::unlink_node(t_list *node)
 
 void ft::list::delete_node(t_list *node)
 {
-    if (node->next == node && node->prev == node)
+    if (node == this->lst)
         return;
     this->unlink_node(node);
-    if (node != NULL)
-        delete node;
+    delete node;
 }
-
-// node a and b are contiguousm a is before b
-// void ft::list::swap_cont_nodes(t_list *a, t_list *b)
-// {
-//     t_list *tmp;
-
-//     // std::cout << "swap " << a->content << " " << b->content << std::endl << std::endl;
-//     if (a->prev)
-//         a->prev->next = b;
-//     else
-//         this->lst = b; // if a was the first element, we need to update this->lst 
-    
-//     if (b->next)
-//         b->next->prev = a;
-    
-//     tmp = a->prev;
-//     // std::cout << "tmp->prev " << tmp << std::endl;
-//     a->prev = b;
-//     a->next = b->next;
-    
-//     b->next = a;
-//     b->prev = tmp;
-//     // std::cout << "tmp->prev " << tmp << std::endl;
-
-// }
 
 t_list *ft::list::get_last_node()
 {
@@ -306,25 +284,25 @@ ft::list::const_iterator ft::list::end() const
     return const_iterator(this->lst);
 }
 
-// ft::list::reverse_iterator ft::list::rbegin()
-// {
-//     return reverse_iterator(this->lst->prev());
-// }
+ft::list::reverse_iterator ft::list::rbegin()
+{
+    return reverse_iterator(this->end());
+}
 
-// ft::list::reverse_iterator ft::list::rend()
-// {
-//     return reverse_iterator(this->lst);
-// }
+ft::list::reverse_iterator ft::list::rend()
+{
+    return reverse_iterator(this->begin());
+}
 
-// ft::list::const_reverse_iterator ft::list::rbegin() const
-// {
-//     return const_reverse_iterator(this->lst->prev());
-// }
+ft::list::const_reverse_iterator ft::list::rbegin() const
+{
+    return const_reverse_iterator(this->end());
+}
 
-// ft::list::const_reverse_iterator ft::list::rend() const
-// {
-//     return const_reverse_iterator(this->lst);
-// }
+ft::list::const_reverse_iterator ft::list::rend() const
+{
+    return const_reverse_iterator(this->begin());
+}
 
 
 //capacity
@@ -345,7 +323,7 @@ ft::list::size_type ft::list::size() const
 
 ft::list::size_type ft::list::max_size() const
 {
-    std::allocator<int> al;
+    std::allocator<t_list> al;
     return al.max_size();
 }
 
@@ -516,69 +494,47 @@ void ft::list::remove(const value_type& val)
 
 void ft::list::unique()
 {
-    t_list *tmp(this->lst->next);
-    while (tmp->next != this->end().as_node())
+    // smart implementation from stl source
+    iterator it = this->begin();
+    iterator it_next = it;
+    iterator ite = this->end();
+    while (++it_next != ite)
     {
-        if (tmp->content == tmp->next->content)
-        {
-            this->delete_node(tmp->next);
-            tmp = this->lst;
-        }
+        if (*it == *it_next)
+            this->erase(it_next);
         else
-            tmp = tmp->next;
+            it = it_next;
+        it_next = it; // if it_next erased, it_next and it are back to it
+        // else it_next and it move on
     }
+    
 }
 
 void ft::list::sort()
 {
-    t_list *tmp(this->lst);
-    while (tmp->next)
+    iterator it = this->begin();
+    iterator it_next = it;
+    iterator ite = this->end();
+    while (++it_next != this->end())
     {
-        if (tmp->content > tmp->next->content)
+        if (*it > *it_next)
         {
-            // this->swap_cont_nodes(tmp, tmp->next);
-            this->splice(iterator(tmp), *this, iterator(tmp->next));
-            tmp = this->lst;
+            this->splice(it, *this, it_next);
+            it = this->begin();
+            it_next = it;
         }
         else
-            tmp = tmp->next;
+            it = it_next;
     }
 }
-
-// sort in iterator fashion
-// void ft::list::sort()
-// {
-//     iterator it = this->begin();
-//     iterator it_next = ++this->begin();
-//     while (it_next != this->end())
-//     {
-//         if (*it > *it_next)
-//         {
-//             this->splice(it, *this, it_next);
-//             it = this->begin();
-//             it_next = ++this->begin();
-//         }
-//         else
-//         {
-//             it++;
-//             it_next++;
-//         }
-//     }
-// }
 
 
 void ft::list::splice (iterator position, list& x)
 {
-    if (position == NULL) // protection
-        return ;
     iterator it = x.begin();
     iterator tmp(it);
     while (it != x.end())
     {
-        // std::cout << *it << std::endl;
-        // std::cout << "---" << std::endl;
-        // x.displaylist();
-        // this->displaylist();
         tmp++;
         x.unlink_node(it.as_node());
         this->insert_before(position.as_node(), it.as_node());
@@ -588,9 +544,6 @@ void ft::list::splice (iterator position, list& x)
 
 void ft::list::splice (iterator position, list& x, iterator i)
 {
-    if (position == NULL)
-        return;
-    
     // x may be *this if position points to an element not actually being spliced (i != position)
     // if position == i++ (position == j): no splice to be done
     iterator j = i;
@@ -604,9 +557,6 @@ void ft::list::splice (iterator position, list& x, iterator i)
 
 void ft::list::splice (iterator position, list& x, iterator first, iterator last)
 {
-    if (position == NULL) // protection
-        return ;
-
     // undefined if position in [first, last]
     iterator j = first;
     while (j != last)
@@ -620,10 +570,6 @@ void ft::list::splice (iterator position, list& x, iterator first, iterator last
     iterator tmp(it);
     while (it != last)
     {
-        // std::cout << *it << std::endl;
-        // std::cout << "---" << std::endl;
-        // x.displaylist();
-        // this->displaylist();
         tmp++;
         x.unlink_node(it.as_node());
         this->insert_before(position.as_node(), it.as_node());
@@ -634,18 +580,15 @@ void ft::list::splice (iterator position, list& x, iterator first, iterator last
 
 void ft::list::reverse()
 {
-    if (this->lst == NULL)
-        return ;
-    t_list *tmp(this->get_last_node());
-    this->lst = tmp;
-    while (tmp)
+    // start from end of the list, and "reverse" every node
+    // then reverse past_the_end node
+    t_list *tmp(this->lst->prev);
+    while (tmp != this->lst)
     {
-        // std::cout << tmp->content << std::endl;
-        t_list *swap(tmp->next);
-        tmp->next = tmp->prev;
-        tmp->prev = swap;
+        tmp->reverse();
         tmp = tmp->next;
     }
+    tmp->reverse();
 }
 
 void ft::list::merge (list& x)
@@ -655,6 +598,7 @@ void ft::list::merge (list& x)
     iterator this_it = this->begin();
     iterator x_it = x.begin();
     iterator tmp(x_it);
+    // for each element in x, go through this to find where to insert it
     while (x_it != x.end())
     {
         tmp++;
@@ -668,11 +612,8 @@ void ft::list::merge (list& x)
             else
                 this_it++;
         }
-        if (this_it == this->end()) // if we have to insert at the end (can't use splice in that case -> has to be done manually...)
-        {
-            x.unlink_node(x_it.as_node()); // unlink node that we are going to transfer
-            this->insert_end(x_it.as_node());
-        }
+        if (this_it == this->end()) // if couldnt insert it before, insert it at the end
+            this->splice(this_it, x, x_it);
         x_it = tmp;
     }
 }

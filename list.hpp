@@ -2,7 +2,7 @@
 #define LIST_HPP
 
 #include <iostream>
-// #include <iterator>
+#include <iterator>
 #include <memory>
 
 // list of int (1st param of template = int, and second param is set to default)
@@ -13,6 +13,7 @@ typedef struct s_list
     struct s_list *prev;
     struct s_list *next;
 
+    void reverse();
     // void unlink();
 } t_list;
 
@@ -77,8 +78,8 @@ public:
             bool operator!=(const const_iterator &rhs) const;
     };
 
-    // typedef std::reverse_iterator<iterator> reverse_iterator;    
-    // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
+    typedef std::reverse_iterator<iterator> reverse_iterator;    
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
 private:
 
     void delete_node(t_list *node);
@@ -103,10 +104,10 @@ public:
     ft::list::iterator end();
     const_iterator begin() const;
     const_iterator end() const;
-    // reverse_iterator rbegin();
-    // const_reverse_iterator rbegin() const;
-    // reverse_iterator rend();
-    // const_reverse_iterator rend() const;
+    reverse_iterator rbegin();
+    const_reverse_iterator rbegin() const;
+    reverse_iterator rend();
+    const_reverse_iterator rend() const;
 
     //capacity
     bool empty() const;
@@ -193,33 +194,35 @@ void ft::list::remove_if (Predicate pred)
 template <class BinaryPredicate>
 void ft::list::unique (BinaryPredicate binary_pred)
 {
-    t_list *tmp(this->lst->next);
-    while (tmp->next != this->end().as_node())
+    iterator it = this->begin();
+    iterator it_next = it;
+    iterator ite = this->end();
+    while (++it_next != ite)
     {
-        if (binary_pred(tmp->content, tmp->next->content))
-        {
-            this->delete_node(tmp->next);
-            tmp = this->lst;
-        }
+        if (binary_pred(*it, *it_next))
+            this->erase(it_next);
         else
-            tmp = tmp->next;
+            it = it_next;
+        it_next = it;
     }
 }
     
 template <class Compare>
 void ft::list::sort (Compare comp)
 {
-    t_list *tmp(this->lst);
-    while (tmp->next)
+    iterator it = this->begin();
+    iterator it_next = it;
+    iterator ite = this->end();
+    while (++it_next != this->end())
     {
-        if (comp(tmp->next->content, tmp->content)) // swap if tmp->next->content "<" tmp->content (Comp returns true if first_arg < second_arg)
+        if (comp(*it_next, *it))
         {
-            // this->swap_cont_nodes(tmp, tmp->next);
-            this->splice(iterator(tmp), *this, iterator(tmp->next));
-            tmp = this->lst;
+            this->splice(it, *this, it_next);
+            it = this->begin();
+            it_next = it;
         }
         else
-            tmp = tmp->next;
+            it = it_next;
     }
 }
 
@@ -231,12 +234,13 @@ void ft::list::merge (list& x, Compare comp)
     iterator this_it = this->begin();
     iterator x_it = x.begin();
     iterator tmp(x_it);
+    // for each element in x, go through this to find where to insert it
     while (x_it != x.end())
     {
         tmp++;
         while (this_it != this->end())
         {
-            if (comp(*x_it, *this_it)) // true if x_it "<" this_it
+            if (comp(*x_it, *this_it)) // if x_it "<" this_it
             {
                 this->splice(this_it, x, x_it);
                 break;
@@ -244,14 +248,10 @@ void ft::list::merge (list& x, Compare comp)
             else
                 this_it++;
         }
-        if (this_it == this->end()) // if we have to insert at the end (can't use splice in that case -> has to be done manually...)
-        {
-            x.unlink_node(x_it.as_node()); // unlink node that we are going to transfer
-            this->insert_end(x_it.as_node());
-        }
+        if (this_it == this->end()) // if couldnt insert it before, insert it at the end
+            this->splice(this_it, x, x_it);
         x_it = tmp;
     }
 }
-
 
 #endif
