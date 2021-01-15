@@ -58,11 +58,13 @@ int main()
     // lst4.pop_back();
     // lst4.pop_back();
     // lst4.pop_back();
-    // lst4.pop_back();
+    // // lst4.pop_back();
+    // // lst4.pop_back();
     // lst4.displaylist();
     // list lst5;
     // lst5.push_front(22);
     // lst5.push_back(50);
+    // lst5.pop_front();
     // lst5.pop_front();
     // lst5.pop_front();
     // lst5.displaylist();
@@ -78,7 +80,7 @@ int main()
     // lst6.displaylist();
     // lst7.displaylist();
 
-    // // resize
+    // resize
     // list lst8;
     // lst8.push_front(2);
     // lst8.push_front(22);
@@ -106,7 +108,7 @@ int main()
     // lst10.push_back(60);
     // lst10.push_back(61);
     // lst10.remove_if(single_digit);
-    // // lst10.remove_if(is_odd());
+    // lst10.remove_if(is_odd());
     // lst10.displaylist();
 
     // // unique
@@ -122,18 +124,18 @@ int main()
     // lst11.displaylist();
 
     // // unique with binarypred
-    // list lst12;
-    // lst12.push_back(5);
-    // lst12.push_back(8);
-    // lst12.push_back(10);
-    // lst12.push_back(12);
-    // lst12.push_back(5);
-    // lst12.push_back(5);
-    // lst12.push_back(50);
-    // lst12.push_back(7);
-    // lst12.push_back(9);
-    // lst12.unique(same_parity);
-    // lst12.displaylist();
+    list lst12;
+    lst12.push_back(5);
+    lst12.push_back(8);
+    lst12.push_back(10);
+    lst12.push_back(12);
+    lst12.push_back(5);
+    lst12.push_back(5);
+    lst12.push_back(50);
+    lst12.push_back(7);
+    lst12.push_back(9);
+    lst12.unique(same_parity);
+    lst12.displaylist();
 
     // // sort
     // list lst13;
@@ -386,13 +388,13 @@ int main()
     // std::list<int> listoun;
     // std::cout << listoun.max_size() << std::endl;
 
-    ft::list lst38;
-    lst38.push_front(333);
+    // ft::list lst38;
     // lst38.push_back(3);
-    // lst38.push_front(33);
     // lst38.push_back(4);
-    lst38.displaylist();
-    lst38.displaylist_reverse();
+    // lst38.push_back(7);
+    // lst38.displaylist();
+    // lst38.clear();
+    // lst38.displaylist_reverse();
 
 
     // // sort REAL

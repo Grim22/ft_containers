@@ -2,7 +2,7 @@
 #define LIST_HPP
 
 #include <iostream>
-#include <iterator>
+// #include <iterator>
 #include <memory>
 
 // list of int (1st param of template = int, and second param is set to default)
@@ -178,22 +178,23 @@ public:
 template <class Predicate>
 void ft::list::remove_if (Predicate pred)
 {
-    t_list *tmp(this->lst);
-    t_list *old(NULL);
-    while (tmp)
+    iterator it = this->begin();
+    iterator ite = this->end();
+
+    while (it != this->end())
     {
-        old = tmp;
-        tmp = tmp->next;
-        if (pred(old->content))
-            this->delete_node(old);
+        if (pred(*it))
+            it = this->erase(it);
+        else
+            it++;
     }
 }
 
 template <class BinaryPredicate>
 void ft::list::unique (BinaryPredicate binary_pred)
 {
-    t_list *tmp(this->lst);
-    while (tmp->next)
+    t_list *tmp(this->lst->next);
+    while (tmp->next != this->end().as_node())
     {
         if (binary_pred(tmp->content, tmp->next->content))
         {

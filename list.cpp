@@ -1,12 +1,12 @@
 #include "list.hpp"
 
 
-t_list *ft_lst_new(const int &val)
+t_list *ft_lst_new(const int &val) // by default, points on itself
 {
     t_list *elem = new t_list;
     elem->content = val;
-    elem->next = NULL;
-    elem->prev = NULL;
+    elem->next = elem;
+    elem->prev = elem;
     return elem;
 }
 
@@ -28,6 +28,8 @@ void ft::list::unlink_node(t_list *node)
 
 void ft::list::delete_node(t_list *node)
 {
+    if (node->next == node && node->prev == node)
+        return;
     this->unlink_node(node);
     if (node != NULL)
         delete node;
@@ -238,11 +240,9 @@ const t_list *ft::list::const_iterator::as_node()
 
 ft::list::list(): lst(ft_lst_new(int())), num(0)
 {
-    this->lst->next = this->lst;
-    this->lst->prev = this->lst;
 }
 
-ft::list::list(size_type n, const int val): num(0)
+ft::list::list(size_type n, const int val): lst(ft_lst_new(int())), num(0)
 {
     for (size_type i = 0; i < n; i++)
     {
@@ -250,18 +250,15 @@ ft::list::list(size_type n, const int val): num(0)
     }
 }
 
-ft::list::list(const list& x): num(0)
+ft::list::list(const list& x): lst(ft_lst_new(int())) ,num(0)
 {
-    t_list *tmp;
-    tmp = x.lst;
-    for (size_type i = 0; i < x.num; i++)
-    {
-        this->push_back(tmp->content); // num is incremented at each call
-        tmp = tmp->next;
-    }
+    const_iterator it = x.begin();
+    const_iterator ite = x.end();
+    while (it != ite)
+        this->push_back(*it++);
 }
     
-ft::list::list(ft::list::iterator first, ft::list::iterator last): lst(NULL), num(0)
+ft::list::list(ft::list::iterator first, ft::list::iterator last): lst(ft_lst_new(int())), num(0)
 {
     for (ft::list::iterator it = first; it != last; it++)
         this->push_back(*it);
@@ -271,27 +268,20 @@ ft::list& ft::list::operator=(const list& x)
 {
     this->clear();
     
-    t_list *tmp;
-    tmp = x.lst;
-    for (size_type i = 0; i < x.num; i++)
+    const_iterator it = x.begin();
+    const_iterator ite = x.end();
+    while (it != ite)
     {
-        this->push_back(tmp->content); // num is incremented at each call
-        tmp = tmp->next;
+        this->push_back(*it);
+        it++;
     }
     return *this;
 }
 
 ft::list::~list()
 {
-    t_list *tmp;
-    t_list *del;
-    tmp = this->lst;
-    for (size_type i = 0; i < this->num; i++)
-    {
-        del = tmp;
-        tmp = del->next;
-        delete del;
-    }
+    this->clear();
+    delete this->lst;
 }
 
 // iterator functions
@@ -341,7 +331,15 @@ ft::list::const_iterator ft::list::end() const
 
 ft::list::size_type ft::list::size() const
 {
-    return this->num;
+    size_type ret(0);
+    const_iterator it = this->begin();
+    const_iterator ite = this->end();
+    while (it != ite)
+    {
+        ret++;
+        it++;
+    }
+    return ret;
 }
 
 
@@ -353,7 +351,7 @@ ft::list::size_type ft::list::max_size() const
 
 bool ft::list::empty() const
 {
-    if (this->num == 0)
+    if (this->size() == 0)
         return true;
     else
         return false;
@@ -365,22 +363,22 @@ bool ft::list::empty() const
 
 int &ft::list::front()
 {
-    return this->lst->content;
+    return this->lst->next->content;
 }
 
 const int &ft::list::front() const
 {
-    return this->lst->content;
+    return this->lst->next->content;
 }
 
 int &ft::list::back()
 {
-    return this->get_last_node()->content;
+    return this->lst->prev->content;
 }
 
 const int &ft::list::back() const
 {
-    return this->get_last_node()->content;
+    return this->lst->prev->content;
 }
 
 
@@ -393,7 +391,7 @@ void ft::list::push_back(const int &val)
 
 void ft::list::pop_back()
 {
-    this->delete_node(this->get_last_node());
+    this->delete_node(this->lst->prev);
 }
 
 void ft::list::push_front (const value_type& val)
@@ -403,22 +401,24 @@ void ft::list::push_front (const value_type& val)
 
 void ft::list::pop_front()
 {
-    this->delete_node(this->lst);
+    this->delete_node(this->lst->next);
 }
 
 void ft::list::clear()
 {
-    t_list *tmp;
-    t_list *del;
-    tmp = this->lst;
-    for (size_type i = 0; i < this->num; i++)
+    iterator it = this->begin();
+    iterator ite = this->end();
+    iterator tmp;
+    while (it != ite)
     {
-        del = tmp;
-        tmp = del->next;
-        delete del;
+        tmp = it;
+        tmp++;
+        delete it.as_node(); // we dont need to use delete_node, as we are deleting the whole list (no need to use unlink)
+        it = tmp;
     }
-    this->num = 0;
-    this->lst = NULL;
+    // reset past-the-end node
+    this->lst->next = this->lst;
+    this->lst->prev = this->lst;
 }
 
 
@@ -450,47 +450,38 @@ void ft::list::swap (list& x)
     
 void ft::list::resize (size_type n, value_type val)
 {
-    if (n > this->num)
+    if (n > this->size())
     {
-        while (this->num != n)
+        while (this->size() != n)
             this->push_back(val);
     }
     else
     {
-        while (this->num != n)
+        while (this->size() != n)
             this->pop_back();
     }
 }
 
 ft::list::iterator ft::list::insert(iterator position, const value_type& val)
 {
-    if (position == NULL) // protection
-        return NULL;
-    // std::cout << *position << std::endl;
     this->insert_before(position.as_node(), ft_lst_new(val));
     return --position;
 }
 
 void ft::list::insert(iterator position, size_type n, const value_type& val)
 {
-    if (position == NULL) // protection
-        return ;
     for (size_type i = 0; i < n; ++i)
         this->insert_before(position.as_node(), ft_lst_new(val));
 }
 
 void ft::list::insert(iterator position, iterator first, iterator last)
 {
-    if (position == NULL) // protection
-        return ;
     for (iterator it = first; it != last ; ++it)
         this->insert_before(position.as_node(), ft_lst_new(*it));
 }
 
 ft::list::iterator ft::list::erase (ft::list::iterator position)
 {
-    if (position == NULL)
-        return NULL;
     ft::list::iterator next(position);
     next++;
     this->delete_node(position.as_node());
@@ -511,21 +502,22 @@ ft::list::iterator ft::list::erase (iterator first, iterator last)
 
 void ft::list::remove(const value_type& val)
 {
-    t_list *tmp(this->lst);
-    t_list *old(NULL);
-    while (tmp)
+    iterator it = this->begin();
+    iterator ite = this->end();
+
+    while (it != this->end())
     {
-        old = tmp;
-        tmp = tmp->next;
-        if (old->content == val)
-            this->delete_node(old);
+        if (*it == val)
+            it = this->erase(it);
+        else
+            it++;
     }
 }
 
 void ft::list::unique()
 {
-    t_list *tmp(this->lst);
-    while (tmp->next)
+    t_list *tmp(this->lst->next);
+    while (tmp->next != this->end().as_node())
     {
         if (tmp->content == tmp->next->content)
         {
