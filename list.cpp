@@ -374,10 +374,9 @@ void ft::list::assign (iterator first, iterator last)
 
 void ft::list::swap (list& x)
 {
-    list tmp;
-    tmp = *this;
-    *this = x;
-    x = tmp;
+    t_list *tmp(this->lst);
+    this->lst = x.lst;
+    x.lst = tmp;
 }
     
 void ft::list::resize (size_type n, value_type val)
@@ -629,5 +628,9 @@ bool ft::operator>(const list& lhs, const list& rhs)
     return true;
 }
 
-//debug
+void ft::swap (list& x, list& y)
+{
+    x.swap(y);
+}
+
 

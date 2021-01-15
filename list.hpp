@@ -161,6 +161,7 @@ public:
     bool operator< (const list& lhs, const list& rhs);
     bool operator>= (const list& lhs, const list& rhs);
     bool operator> (const list& lhs, const list& rhs);
+    void swap (list& x, list& y);
 
 
 }
