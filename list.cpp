@@ -19,43 +19,16 @@ t_list *ft_lst_new(const int &val) // by default, points on itself
 
 void ft::list::unlink_node(t_list *node)
 {
-    if (node->prev)
-        node->prev->next = node->next;
-    else // if we are deleting the first element of the list, we need to update this->lst
-        this->lst = node->next;
-
-    if (node->next)
-        node->next->prev = node->prev;
-    
-    this->num--;
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
 }
 
 void ft::list::delete_node(t_list *node)
 {
-    if (node == this->lst)
+    if (node == this->lst) // we dont want to delete the past the end node
         return;
     this->unlink_node(node);
     delete node;
-}
-
-t_list *ft::list::get_last_node()
-{
-    t_list *tmp(this->lst);
-    if (tmp == NULL)
-        return NULL;
-    while (tmp->next)
-        tmp = tmp->next;
-    return tmp;
-}
-
-t_list *ft::list::get_last_node() const
-{
-    t_list *tmp(this->lst);
-    if (tmp == NULL)
-        return NULL;
-    while (tmp->next)
-        tmp = tmp->next;
-    return tmp;
 }
 
 void ft::list::insert_before(t_list *node, t_list *inserted_node)
@@ -66,24 +39,8 @@ void ft::list::insert_before(t_list *node, t_list *inserted_node)
     inserted_node->prev = node->prev;
     node->prev = inserted_node;
     inserted_node->next = node;
-    this->num++;
 }
 
-void ft::list::insert_end(t_list *new_last)
-{
-    t_list *old_last = this->get_last_node();
-    if (old_last == NULL) // empty list
-    {
-        new_last->next = NULL;
-        this->lst = new_last;
-        this->num++;
-        return ;
-    }
-    old_last->next = new_last;
-    new_last->prev = old_last;
-    new_last->next = NULL;
-    this->num++;
-}
 
 
 // class iterator
@@ -216,19 +173,17 @@ const t_list *ft::list::const_iterator::as_node()
 
 // constructors & destructors
 
-ft::list::list(): lst(ft_lst_new(int())), num(0)
+ft::list::list(): lst(ft_lst_new(int()))
 {
 }
 
-ft::list::list(size_type n, const int val): lst(ft_lst_new(int())), num(0)
+ft::list::list(size_type n, const int val): lst(ft_lst_new(int()))
 {
     for (size_type i = 0; i < n; i++)
-    {
         this->push_back(val);
-    }
 }
 
-ft::list::list(const list& x): lst(ft_lst_new(int())) ,num(0)
+ft::list::list(const list& x): lst(ft_lst_new(int()))
 {
     const_iterator it = x.begin();
     const_iterator ite = x.end();
@@ -236,7 +191,7 @@ ft::list::list(const list& x): lst(ft_lst_new(int())) ,num(0)
         this->push_back(*it++);
 }
     
-ft::list::list(ft::list::iterator first, ft::list::iterator last): lst(ft_lst_new(int())), num(0)
+ft::list::list(ft::list::iterator first, ft::list::iterator last): lst(ft_lst_new(int()))
 {
     for (ft::list::iterator it = first; it != last; it++)
         this->push_back(*it);
@@ -319,7 +274,6 @@ ft::list::size_type ft::list::size() const
     }
     return ret;
 }
-
 
 ft::list::size_type ft::list::max_size() const
 {
@@ -528,7 +482,6 @@ void ft::list::sort()
     }
 }
 
-
 void ft::list::splice (iterator position, list& x)
 {
     iterator it = x.begin();
@@ -575,7 +528,6 @@ void ft::list::splice (iterator position, list& x, iterator first, iterator last
         this->insert_before(position.as_node(), it.as_node());
         it = tmp;
     }
-
 }
 
 void ft::list::reverse()

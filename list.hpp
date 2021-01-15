@@ -12,9 +12,7 @@ typedef struct s_list
     int content; // stl containers internally store copies
     struct s_list *prev;
     struct s_list *next;
-
     void reverse();
-    // void unlink();
 } t_list;
 
 
@@ -29,7 +27,6 @@ class list
     typedef unsigned long size_type;
 private:
     t_list *lst;
-    size_type num;
 
     /* data */
 public:
@@ -84,11 +81,7 @@ private:
 
     void delete_node(t_list *node);
     void unlink_node(t_list *node);
-    // void swap_cont_nodes(t_list *a, t_list *b);
-    t_list *get_last_node();
-    t_list *get_last_node() const;
     void insert_before(t_list *node, t_list *new_node);
-    void insert_end(t_list *new_node);
 
 public:
     // constructors & destructor
