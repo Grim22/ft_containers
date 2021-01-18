@@ -18,6 +18,7 @@ struct node
     node();
     node(const T &val);
     void reverse();
+    void unlink();
 };
 
 template<class T>
@@ -92,7 +93,6 @@ public:
 private:
 
     void delete_node(node_type *node);
-    void unlink_node(node_type *node);
     void insert_before(node_type *node, node_type *new_node);
 
 public:
@@ -210,6 +210,13 @@ ft::node<T>::node(const T &val)
     this->content = val;
     this->next = this;
     this->prev = this;
+}
+
+template<class T>
+void ft::node<T>::unlink()
+{
+    this->prev->next = this->next;
+    this->next->prev = this->prev;
 }
 
 
@@ -375,18 +382,11 @@ const typename ft::const_iterator<T>::node_type *ft::const_iterator<T>::as_node(
 // private functions
 
 template<class T>
-void ft::list<T>::unlink_node(node_type *node)
-{
-    node->prev->next = node->next;
-    node->next->prev = node->prev;
-}
-
-template<class T>
 void ft::list<T>::delete_node(node_type *node)
 {
     if (node == this->lst) // we dont want to delete the past the end node
         return;
-    this->unlink_node(node);
+    node->unlink();
     delete node;
 }
 
@@ -813,7 +813,7 @@ void ft::list<T>::splice (iterator position, list& x)
     while (it != x.end())
     {
         tmp++;
-        x.unlink_node(it.as_node());
+        it.as_node()->unlink();
         this->insert_before(position.as_node(), it.as_node());
         it = tmp;
     }
@@ -829,7 +829,8 @@ void ft::list<T>::splice (iterator position, list& x, iterator i)
     if (position == i || position == j)
         return ;
 
-    x.unlink_node(i.as_node());
+    (void)x;
+    i.as_node()->unlink();
     this->insert_before(position.as_node(), i.as_node());
 }
 
@@ -845,12 +846,13 @@ void ft::list<T>::splice (iterator position, list& x, iterator first, iterator l
         j++;
     }
 
+    (void)x;
     iterator it = first;
     iterator tmp(it);
     while (it != last)
     {
         tmp++;
-        x.unlink_node(it.as_node());
+        it.as_node()->unlink();
         this->insert_before(position.as_node(), it.as_node());
         it = tmp;
     }
