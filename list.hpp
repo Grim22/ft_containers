@@ -6,6 +6,8 @@
 #include <memory>
 
 
+namespace ft
+{
 template<class T>
 struct node
 {
@@ -43,8 +45,31 @@ class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has 
         bool operator!=(const iterator &rhs) const;
 };
 
-namespace ft
+template<class T>
+class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
 {
+    typedef node<T> node_type;
+    
+    private:
+        const node_type *ptr; // difference(1) with iterator
+    public:
+        const_iterator();
+        const_iterator(node_type *ptr);
+        const_iterator(const const_iterator &copy);
+        const_iterator &operator=(const const_iterator &rhs);
+        ~const_iterator();
+        
+        const node_type *as_node();
+        const T &operator*() const; // difference(2) with iterator
+        const T *operator->() const; // difference(3) with iterator
+        const_iterator& operator++();
+        const_iterator operator++(int);
+        const_iterator& operator--();
+        const_iterator operator--(int);
+        bool operator==(const const_iterator &rhs) const;
+        bool operator!=(const const_iterator &rhs) const;
+};
+
 template<class T>
 class list
 {
@@ -58,31 +83,9 @@ private:
     node_type *lst;
 
 public:
-
     
     typedef iterator<T> iterator;
-    class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
-    {
-        private:
-            const node_type *ptr; // difference(1) with iterator
-        public:
-            const_iterator();
-            const_iterator(node_type *ptr);
-            const_iterator(const const_iterator &copy);
-            const_iterator &operator=(const const_iterator &rhs);
-            ~const_iterator();
-            
-            const node_type *as_node();
-            const T &operator*() const; // difference(2) with iterator
-            const T *operator->() const; // difference(3) with iterator
-            const_iterator& operator++();
-            const_iterator operator++(int);
-            const_iterator& operator--();
-            const_iterator operator--(int);
-            bool operator==(const const_iterator &rhs) const;
-            bool operator!=(const const_iterator &rhs) const;
-    };
-
+    typedef const_iterator<T> const_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;    
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
 
