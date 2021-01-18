@@ -18,33 +18,35 @@ struct t_list
 template<class T>
 t_list<T> *ft_lst_new(const T &val);
 
+
 namespace ft
 {
 template<class T>
 class list
 {
+private:
     // member types
     typedef t_list<T> node_type;
     typedef T value_type; // 1st param of template
     typedef unsigned long size_type;
-private:
-    t_list<T> *lst;
 
-    /* data */
+private:
+    node_type *lst;
+
 public:
 
     class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
         private:
-            t_list<T> *ptr;
+            node_type *ptr;
         public:
             iterator();
-            iterator(t_list<T> *ptr);
+            iterator(node_type *ptr);
             iterator(const iterator &copy);
             iterator &operator=(const iterator &rhs);
             ~iterator();
             
-            t_list<T> *as_node();
+            node_type *as_node();
             T &operator*() const;
             T *operator->() const;
             iterator& operator++(); // preincrement (++a)
@@ -58,15 +60,15 @@ public:
     class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
         private:
-            const t_list<T> *ptr; // difference(1) with iterator
+            const node_type *ptr; // difference(1) with iterator
         public:
             const_iterator();
-            const_iterator(t_list<T> *ptr);
+            const_iterator(node_type *ptr);
             const_iterator(const const_iterator &copy);
             const_iterator &operator=(const const_iterator &rhs);
             ~const_iterator();
             
-            const t_list<T> *as_node();
+            const node_type *as_node();
             const T &operator*() const; // difference(2) with iterator
             const T *operator->() const; // difference(3) with iterator
             const_iterator& operator++();
@@ -79,11 +81,12 @@ public:
 
     typedef std::reverse_iterator<iterator> reverse_iterator;    
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
+
 private:
 
-    void delete_node(t_list<T> *node);
-    void unlink_node(t_list<T> *node);
-    void insert_before(t_list<T> *node, t_list<T> *new_node);
+    void delete_node(node_type *node);
+    void unlink_node(node_type *node);
+    void insert_before(node_type *node, node_type *new_node);
 
 public:
     // constructors & destructor

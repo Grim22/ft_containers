@@ -23,14 +23,14 @@ t_list<T> *ft_lst_new(const T &val) // by default, points on itself
 // private functions
 
 template<class T>
-void ft::list<T>::unlink_node(t_list<T> *node)
+void ft::list<T>::unlink_node(node_type *node)
 {
     node->prev->next = node->next;
     node->next->prev = node->prev;
 }
 
 template<class T>
-void ft::list<T>::delete_node(t_list<T> *node)
+void ft::list<T>::delete_node(node_type *node)
 {
     if (node == this->lst) // we dont want to delete the past the end node
         return;
@@ -39,7 +39,7 @@ void ft::list<T>::delete_node(t_list<T> *node)
 }
 
 template<class T>
-void ft::list<T>::insert_before(t_list<T> *node, t_list<T> *inserted_node)
+void ft::list<T>::insert_before(node_type *node, node_type *inserted_node)
 {
     // update node before and node in list where inserted
     // set next and prev of new_node
@@ -63,7 +63,7 @@ ft::list<T>::iterator::iterator(const iterator &copy): ptr(copy.ptr)
 {
 }
 template<class T>
-ft::list<T>::iterator::iterator(t_list<T> *ptr): ptr(ptr)
+ft::list<T>::iterator::iterator(node_type *ptr): ptr(ptr)
 {
 }
 template<class T>
@@ -124,7 +124,7 @@ bool ft::list<T>::iterator::operator!=(const iterator &rhs) const
 }
 
 template<class T>
-t_list<T> *ft::list<T>::iterator::as_node()
+typename ft::list<T>::node_type *ft::list<T>::iterator::as_node()
 {
     return this->ptr;
 }
@@ -140,7 +140,7 @@ ft::list<T>::const_iterator::const_iterator(const const_iterator &copy): ptr(cop
 {
 }
 template<class T>
-ft::list<T>::const_iterator::const_iterator(t_list<T> *ptr): ptr(ptr)
+ft::list<T>::const_iterator::const_iterator(node_type *ptr): ptr(ptr)
 {
 }
 template<class T>
@@ -201,7 +201,7 @@ bool ft::list<T>::const_iterator::operator!=(const const_iterator &rhs) const
 }
 
 template<class T>
-const t_list<T> *ft::list<T>::const_iterator::as_node()
+const typename ft::list<T>::node_type *ft::list<T>::const_iterator::as_node()
 {
     return this->ptr;
 }
@@ -329,7 +329,7 @@ typename ft::list<T>::size_type ft::list<T>::size() const
 template<class T>
 typename ft::list<T>::size_type ft::list<T>::max_size() const
 {
-    std::allocator< t_list<T> > al;
+    std::allocator< node_type > al;
     return al.max_size();
 }
 
@@ -439,7 +439,7 @@ void ft::list<T>::assign (iterator first, iterator last)
 template<class T>
 void ft::list<T>::swap (list& x)
 {
-    t_list<T> *tmp(this->lst);
+    node_type *tmp(this->lst);
     this->lst = x.lst;
     x.lst = tmp;
 }
@@ -611,7 +611,7 @@ void ft::list<T>::reverse()
 {
     // start from end of the list, and "reverse" every node
     // then reverse past_the_end node
-    t_list<T> *tmp(this->lst->prev);
+    node_type *tmp(this->lst->prev);
     while (tmp != this->lst)
     {
         tmp->reverse();

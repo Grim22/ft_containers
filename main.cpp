@@ -3,8 +3,8 @@
 #include <list>
 #include <cmath> // fabs
 
+using namespace std;
 // using namespace ft;
-using namespace ft;
 
 void displaylst(list<int> lst)
 {
