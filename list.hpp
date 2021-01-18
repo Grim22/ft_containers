@@ -7,16 +7,19 @@
 
 
 template<class T>
-struct t_list
+struct node
 {
     T content; // stl containers internally store copies
-    struct t_list *prev;
-    struct t_list *next;
+    node *prev;
+    node *next;
+
+    node();
+    node(const T &val);
     void reverse();
 };
 
-template<class T>
-t_list<T> *ft_lst_new(const T &val);
+// template<class T>
+// node<T> *ft_lst_new(const T &val);
 
 
 namespace ft
@@ -26,7 +29,7 @@ class list
 {
 private:
     // member types
-    typedef t_list<T> node_type;
+    typedef node<T> node_type;
     typedef T value_type; // 1st param of template
     typedef unsigned long size_type;
 

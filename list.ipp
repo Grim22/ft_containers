@@ -1,22 +1,28 @@
 #include "list.hpp"
 
 template<class T>
-void t_list<T>::reverse()
+void node<T>::reverse()
 {
-    t_list *tmp;
+    node *tmp;
     tmp = this->next;
     this->next = this->prev;
     this->prev = tmp;
 }
 
 template<class T>
-t_list<T> *ft_lst_new(const T &val) // by default, points on itself
+node<T>::node()
 {
-    t_list<T> *elem = new t_list<T>;
-    elem->content = val;
-    elem->next = elem;
-    elem->prev = elem;
-    return elem;
+    this->content = T();
+    this->next = this;
+    this->prev = this;
+}
+
+template<class T>
+node<T>::node(const T &val)
+{
+    this->content = val;
+    this->next = this;
+    this->prev = this;
 }
 
 
@@ -210,19 +216,19 @@ const typename ft::list<T>::node_type *ft::list<T>::const_iterator::as_node()
 // constructors & destructors
 
 template<class T>
-ft::list<T>::list(): lst(ft_lst_new(T()))
+ft::list<T>::list(): lst(new node_type)
 {
 }
 
 template<class T>
-ft::list<T>::list(size_type n, const T val): lst(ft_lst_new(T()))
+ft::list<T>::list(size_type n, const T val): lst(new node_type)
 {
     for (size_type i = 0; i < n; i++)
         this->push_back(val);
 }
 
 template<class T>
-ft::list<T>::list(const list<T>& x): lst(ft_lst_new(T()))
+ft::list<T>::list(const list<T>& x): lst(new node_type)
 {
     const_iterator it = x.begin();
     const_iterator ite = x.end();
@@ -231,7 +237,7 @@ ft::list<T>::list(const list<T>& x): lst(ft_lst_new(T()))
 }
     
 template<class T>
-ft::list<T>::list(ft::list<T>::iterator first, ft::list<T>::iterator last): lst(ft_lst_new(T()))
+ft::list<T>::list(ft::list<T>::iterator first, ft::list<T>::iterator last): lst(new node_type)
 {
     for (ft::list<T>::iterator it = first; it != last; it++)
         this->push_back(*it);
@@ -462,7 +468,7 @@ void ft::list<T>::resize (size_type n, value_type val)
 template<class T>
 typename ft::list<T>::iterator ft::list<T>::insert(iterator position, const value_type& val)
 {
-    this->insert_before(position.as_node(), ft_lst_new(val));
+    this->insert_before(position.as_node(), new node_type(val));
     return --position;
 }
 
@@ -470,14 +476,14 @@ template<class T>
 void ft::list<T>::insert(iterator position, size_type n, const value_type& val)
 {
     for (size_type i = 0; i < n; ++i)
-        this->insert_before(position.as_node(), ft_lst_new(val));
+        this->insert_before(position.as_node(), new node_type(val));
 }
 
 template<class T>
 void ft::list<T>::insert(iterator position, iterator first, iterator last)
 {
     for (iterator it = first; it != last ; ++it)
-        this->insert_before(position.as_node(), ft_lst_new(*it));
+        this->insert_before(position.as_node(), new node_type(*it));
 }
 
 template<class T>
