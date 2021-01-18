@@ -1,6 +1,7 @@
 #include "list.hpp"
 
-void t_list::reverse()
+template<class T>
+void t_list<T>::reverse()
 {
     t_list *tmp;
     tmp = this->next;
@@ -8,22 +9,28 @@ void t_list::reverse()
     this->prev = tmp;
 }
 
-t_list *ft_lst_new(const int &val) // by default, points on itself
+template<class T>
+t_list<T> *ft_lst_new(const T &val) // by default, points on itself
 {
-    t_list *elem = new t_list;
+    t_list<T> *elem = new t_list<T>;
     elem->content = val;
     elem->next = elem;
     elem->prev = elem;
     return elem;
 }
 
-void ft::list::unlink_node(t_list *node)
+
+// private functions
+
+template<class T>
+void ft::list<T>::unlink_node(t_list<T> *node)
 {
     node->prev->next = node->next;
     node->next->prev = node->prev;
 }
 
-void ft::list::delete_node(t_list *node)
+template<class T>
+void ft::list<T>::delete_node(t_list<T> *node)
 {
     if (node == this->lst) // we dont want to delete the past the end node
         return;
@@ -31,7 +38,8 @@ void ft::list::delete_node(t_list *node)
     delete node;
 }
 
-void ft::list::insert_before(t_list *node, t_list *inserted_node)
+template<class T>
+void ft::list<T>::insert_before(t_list<T> *node, t_list<T> *inserted_node)
 {
     // update node before and node in list where inserted
     // set next and prev of new_node
@@ -46,126 +54,154 @@ void ft::list::insert_before(t_list *node, t_list *inserted_node)
 // class iterator
 
 
-ft::list::iterator::iterator()
+template<class T>
+ft::list<T>::iterator::iterator()
 {
 }
-ft::list::iterator::iterator(const iterator &copy): ptr(copy.ptr)
+template<class T>
+ft::list<T>::iterator::iterator(const iterator &copy): ptr(copy.ptr)
 {
 }
-ft::list::iterator::iterator(t_list *ptr): ptr(ptr)
+template<class T>
+ft::list<T>::iterator::iterator(t_list<T> *ptr): ptr(ptr)
 {
 }
-ft::list::iterator::~iterator()
+template<class T>
+ft::list<T>::iterator::~iterator()
 {
 }
-ft::list::iterator &ft::list::iterator::operator=(const iterator &rhs)
+template<class T>
+typename ft::list<T>::iterator &ft::list<T>::iterator::operator=(const iterator &rhs)
 {
     this->ptr = rhs.ptr;
     return *this;
 }
-int &ft::list::iterator::operator*() const
+template<class T>
+T &ft::list<T>::iterator::operator*() const
 {
     return this->ptr->content;
 }
-int *ft::list::iterator::operator->() const
+template<class T>
+T *ft::list<T>::iterator::operator->() const
 {
     return &this->ptr->content;
 }
-ft::list::iterator& ft::list::iterator::operator++() // preincrement (++a)
+template<class T>
+typename ft::list<T>::iterator& ft::list<T>::iterator::operator++() // preincrement (++a)
 {
     this->ptr = this->ptr->next;
     return *this;
 }
-ft::list::iterator ft::list::iterator::operator++(int) // postincrement (a++)
+template<class T>
+typename ft::list<T>::iterator ft::list<T>::iterator::operator++(int) // postincrement (a++)
 {
     iterator tmp(*this);
     this->ptr = this->ptr->next;
     return tmp;
 }
-ft::list::iterator& ft::list::iterator::operator--()
+template<class T>
+typename ft::list<T>::iterator& ft::list<T>::iterator::operator--()
 {
     this->ptr = this->ptr->prev;
     return *this;    
 }
-ft::list::iterator ft::list::iterator::operator--(int)
+template<class T>
+typename ft::list<T>::iterator ft::list<T>::iterator::operator--(int)
 {
     iterator tmp(*this);
     this->ptr = this->ptr->prev;
     return tmp;
 }
-bool ft::list::iterator::operator==(const iterator &rhs) const
+template<class T>
+bool ft::list<T>::iterator::operator==(const iterator &rhs) const
 {
     return (this->ptr == rhs.ptr);
 }
-bool ft::list::iterator::operator!=(const iterator &rhs) const
+template<class T>
+bool ft::list<T>::iterator::operator!=(const iterator &rhs) const
 {
     return (this->ptr != rhs.ptr);
 }
 
-t_list *ft::list::iterator::as_node()
+template<class T>
+t_list<T> *ft::list<T>::iterator::as_node()
 {
     return this->ptr;
 }
 
 // class const iterator
 
-ft::list::const_iterator::const_iterator()
+template<class T>
+ft::list<T>::const_iterator::const_iterator()
 {
 }
-ft::list::const_iterator::const_iterator(const const_iterator &copy): ptr(copy.ptr)
+template<class T>
+ft::list<T>::const_iterator::const_iterator(const const_iterator &copy): ptr(copy.ptr)
 {
 }
-ft::list::const_iterator::const_iterator(t_list *ptr): ptr(ptr)
+template<class T>
+ft::list<T>::const_iterator::const_iterator(t_list<T> *ptr): ptr(ptr)
 {
 }
-ft::list::const_iterator::~const_iterator()
+template<class T>
+ft::list<T>::const_iterator::~const_iterator()
 {
 }
-ft::list::const_iterator &ft::list::const_iterator::operator=(const const_iterator &rhs)
+template<class T>
+typename ft::list<T>::const_iterator &ft::list<T>::const_iterator::operator=(const const_iterator &rhs)
 {
     this->ptr = rhs.ptr;
     return *this;
 }
-const int &ft::list::const_iterator::operator*() const
+template<class T>
+const T &ft::list<T>::const_iterator::operator*() const
 {
     return this->ptr->content;
 }
-const int *ft::list::const_iterator::operator->() const
+template<class T>
+const T *ft::list<T>::const_iterator::operator->() const
 {
     return &this->ptr->content;
 }
-ft::list::const_iterator& ft::list::const_iterator::operator++() // preincrement (++a)
+template<class T>
+typename ft::list<T>::const_iterator& ft::list<T>::const_iterator::operator++() // preincrement (++a)
 {
     this->ptr = this->ptr->next;
     return *this;
 }
-ft::list::const_iterator ft::list::const_iterator::operator++(int) // postincrement (a++)
+template<class T>
+typename ft::list<T>::const_iterator ft::list<T>::const_iterator::operator++(int) // postincrement (a++)
 {
     const_iterator tmp(*this);
     this->ptr = this->ptr->next;
     return tmp;
 }
-ft::list::const_iterator& ft::list::const_iterator::operator--()
+template<class T>
+typename ft::list<T>::const_iterator& ft::list<T>::const_iterator::operator--()
 {
     this->ptr = this->ptr->prev;
     return *this;    
 }
-ft::list::const_iterator ft::list::const_iterator::operator--(int)
+template<class T>
+typename ft::list<T>::const_iterator ft::list<T>::const_iterator::operator--(int)
 {
     const_iterator tmp(*this);
     this->ptr = this->ptr->prev;
     return tmp;
 }
-bool ft::list::const_iterator::operator==(const const_iterator &rhs) const
+template<class T>
+bool ft::list<T>::const_iterator::operator==(const const_iterator &rhs) const
 {
     return (this->ptr == rhs.ptr);
 }
-bool ft::list::const_iterator::operator!=(const const_iterator &rhs) const
+template<class T>
+bool ft::list<T>::const_iterator::operator!=(const const_iterator &rhs) const
 {
     return (this->ptr != rhs.ptr);
 }
 
-const t_list *ft::list::const_iterator::as_node()
+template<class T>
+const t_list<T> *ft::list<T>::const_iterator::as_node()
 {
     return this->ptr;
 }
@@ -173,17 +209,20 @@ const t_list *ft::list::const_iterator::as_node()
 
 // constructors & destructors
 
-ft::list::list(): lst(ft_lst_new(int()))
+template<class T>
+ft::list<T>::list(): lst(ft_lst_new(T()))
 {
 }
 
-ft::list::list(size_type n, const int val): lst(ft_lst_new(int()))
+template<class T>
+ft::list<T>::list(size_type n, const T val): lst(ft_lst_new(T()))
 {
     for (size_type i = 0; i < n; i++)
         this->push_back(val);
 }
 
-ft::list::list(const list& x): lst(ft_lst_new(int()))
+template<class T>
+ft::list<T>::list(const list<T>& x): lst(ft_lst_new(T()))
 {
     const_iterator it = x.begin();
     const_iterator ite = x.end();
@@ -191,13 +230,15 @@ ft::list::list(const list& x): lst(ft_lst_new(int()))
         this->push_back(*it++);
 }
     
-ft::list::list(ft::list::iterator first, ft::list::iterator last): lst(ft_lst_new(int()))
+template<class T>
+ft::list<T>::list(ft::list<T>::iterator first, ft::list<T>::iterator last): lst(ft_lst_new(T()))
 {
-    for (ft::list::iterator it = first; it != last; it++)
+    for (ft::list<T>::iterator it = first; it != last; it++)
         this->push_back(*it);
 }
 
-ft::list& ft::list::operator=(const list& x)
+template<class T>
+ft::list<T>& ft::list<T>::operator=(const list<T>& x)
 {
     this->clear();
     
@@ -211,7 +252,8 @@ ft::list& ft::list::operator=(const list& x)
     return *this;
 }
 
-ft::list::~list()
+template<class T>
+ft::list<T>::~list()
 {
     this->clear();
     delete this->lst;
@@ -219,42 +261,50 @@ ft::list::~list()
 
 // iterator functions
 
-ft::list::iterator ft::list::begin()
+template<class T>
+typename ft::list<T>::iterator ft::list<T>::begin()
 {
     return iterator(this->lst->next);
 }
 
-ft::list::iterator ft::list::end()
+template<class T>
+typename ft::list<T>::iterator ft::list<T>::end()
 {
     return iterator(this->lst);
 }
 
-ft::list::const_iterator ft::list::begin() const
+template<class T>
+typename ft::list<T>::const_iterator ft::list<T>::begin() const
 {
     return const_iterator(this->lst->next);
 }
 
-ft::list::const_iterator ft::list::end() const
+template<class T>
+typename ft::list<T>::const_iterator ft::list<T>::end() const
 {
     return const_iterator(this->lst);
 }
 
-ft::list::reverse_iterator ft::list::rbegin()
+template<class T>
+typename ft::list<T>::reverse_iterator ft::list<T>::rbegin()
 {
     return reverse_iterator(this->end());
 }
 
-ft::list::reverse_iterator ft::list::rend()
+template<class T>
+typename ft::list<T>::reverse_iterator ft::list<T>::rend()
 {
     return reverse_iterator(this->begin());
 }
 
-ft::list::const_reverse_iterator ft::list::rbegin() const
+template<class T>
+typename ft::list<T>::const_reverse_iterator ft::list<T>::rbegin() const
 {
     return const_reverse_iterator(this->end());
 }
 
-ft::list::const_reverse_iterator ft::list::rend() const
+template<class T>
+typename ft::list<T>::const_reverse_iterator ft::list<T>::rend() const
 {
     return const_reverse_iterator(this->begin());
 }
@@ -262,7 +312,8 @@ ft::list::const_reverse_iterator ft::list::rend() const
 
 //capacity
 
-ft::list::size_type ft::list::size() const
+template<class T>
+typename ft::list<T>::size_type ft::list<T>::size() const
 {
     size_type ret(0);
     const_iterator it = this->begin();
@@ -275,13 +326,15 @@ ft::list::size_type ft::list::size() const
     return ret;
 }
 
-ft::list::size_type ft::list::max_size() const
+template<class T>
+typename ft::list<T>::size_type ft::list<T>::max_size() const
 {
-    std::allocator<t_list> al;
+    std::allocator< t_list<T> > al;
     return al.max_size();
 }
 
-bool ft::list::empty() const
+template<class T>
+bool ft::list<T>::empty() const
 {
     if (this->size() == 0)
         return true;
@@ -293,22 +346,26 @@ bool ft::list::empty() const
 // element access
 // Calling these functions (front & back) on an empty container causes undefined behavior (cplusplus.com)
 
-int &ft::list::front()
+template<class T>
+T &ft::list<T>::front()
 {
     return this->lst->next->content;
 }
 
-const int &ft::list::front() const
+template<class T>
+const T &ft::list<T>::front() const
 {
     return this->lst->next->content;
 }
 
-int &ft::list::back()
+template<class T>
+T &ft::list<T>::back()
 {
     return this->lst->prev->content;
 }
 
-const int &ft::list::back() const
+template<class T>
+const T &ft::list<T>::back() const
 {
     return this->lst->prev->content;
 }
@@ -316,27 +373,32 @@ const int &ft::list::back() const
 
 // modifiers
 
-void ft::list::push_back(const int &val)
+template<class T>
+void ft::list<T>::push_back(const T &val)
 {
     this->insert(this->end(), val);
 }
 
-void ft::list::pop_back()
+template<class T>
+void ft::list<T>::pop_back()
 {
     this->delete_node(this->lst->prev);
 }
 
-void ft::list::push_front (const value_type& val)
+template<class T>
+void ft::list<T>::push_front (const value_type& val)
 {
     this->insert(this->begin(), val);
 }
 
-void ft::list::pop_front()
+template<class T>
+void ft::list<T>::pop_front()
 {
     this->delete_node(this->lst->next);
 }
 
-void ft::list::clear()
+template<class T>
+void ft::list<T>::clear()
 {
     iterator it = this->begin();
     iterator ite = this->end();
@@ -354,7 +416,8 @@ void ft::list::clear()
 }
 
 
-void ft::list::assign(size_type n, const value_type& val)
+template<class T>
+void ft::list<T>::assign(size_type n, const value_type& val)
 {
     // delete old list
     this->clear();
@@ -363,7 +426,8 @@ void ft::list::assign(size_type n, const value_type& val)
         this->push_back(val);
 }
 
-void ft::list::assign (iterator first, iterator last)
+template<class T>
+void ft::list<T>::assign (iterator first, iterator last)
 {
     // delete old list
     this->clear();
@@ -372,14 +436,16 @@ void ft::list::assign (iterator first, iterator last)
         this->push_back(*it);
 }
 
-void ft::list::swap (list& x)
+template<class T>
+void ft::list<T>::swap (list& x)
 {
-    t_list *tmp(this->lst);
+    t_list<T> *tmp(this->lst);
     this->lst = x.lst;
     x.lst = tmp;
 }
     
-void ft::list::resize (size_type n, value_type val)
+template<class T>
+void ft::list<T>::resize (size_type n, value_type val)
 {
     if (n > this->size())
     {
@@ -393,33 +459,38 @@ void ft::list::resize (size_type n, value_type val)
     }
 }
 
-ft::list::iterator ft::list::insert(iterator position, const value_type& val)
+template<class T>
+typename ft::list<T>::iterator ft::list<T>::insert(iterator position, const value_type& val)
 {
     this->insert_before(position.as_node(), ft_lst_new(val));
     return --position;
 }
 
-void ft::list::insert(iterator position, size_type n, const value_type& val)
+template<class T>
+void ft::list<T>::insert(iterator position, size_type n, const value_type& val)
 {
     for (size_type i = 0; i < n; ++i)
         this->insert_before(position.as_node(), ft_lst_new(val));
 }
 
-void ft::list::insert(iterator position, iterator first, iterator last)
+template<class T>
+void ft::list<T>::insert(iterator position, iterator first, iterator last)
 {
     for (iterator it = first; it != last ; ++it)
         this->insert_before(position.as_node(), ft_lst_new(*it));
 }
 
-ft::list::iterator ft::list::erase (ft::list::iterator position)
+template<class T>
+typename ft::list<T>::iterator ft::list<T>::erase (ft::list<T>::iterator position)
 {
-    ft::list::iterator next(position);
+    ft::list<T>::iterator next(position);
     next++;
     this->delete_node(position.as_node());
     return next;
 }
 
-ft::list::iterator ft::list::erase (iterator first, iterator last)
+template<class T>
+typename ft::list<T>::iterator ft::list<T>::erase (iterator first, iterator last)
 {
     while (first != last)
     {
@@ -431,7 +502,8 @@ ft::list::iterator ft::list::erase (iterator first, iterator last)
 
 // operations
 
-void ft::list::remove(const value_type& val)
+template<class T>
+void ft::list<T>::remove(const value_type& val)
 {
     iterator it = this->begin();
     iterator ite = this->end();
@@ -445,7 +517,8 @@ void ft::list::remove(const value_type& val)
     }
 }
 
-void ft::list::unique()
+template<class T>
+void ft::list<T>::unique()
 {
     // smart implementation from stl source
     iterator it = this->begin();
@@ -463,7 +536,8 @@ void ft::list::unique()
     
 }
 
-void ft::list::sort()
+template<class T>
+void ft::list<T>::sort()
 {
     iterator it = this->begin();
     iterator it_next = it;
@@ -481,7 +555,8 @@ void ft::list::sort()
     }
 }
 
-void ft::list::splice (iterator position, list& x)
+template<class T>
+void ft::list<T>::splice (iterator position, list& x)
 {
     iterator it = x.begin();
     iterator tmp(it);
@@ -494,7 +569,8 @@ void ft::list::splice (iterator position, list& x)
     }
 }
 
-void ft::list::splice (iterator position, list& x, iterator i)
+template<class T>
+void ft::list<T>::splice (iterator position, list& x, iterator i)
 {
     // x may be *this if position points to an element not actually being spliced (i != position)
     // if position == i++ (position == j): no splice to be done
@@ -507,7 +583,8 @@ void ft::list::splice (iterator position, list& x, iterator i)
     this->insert_before(position.as_node(), i.as_node());
 }
 
-void ft::list::splice (iterator position, list& x, iterator first, iterator last)
+template<class T>
+void ft::list<T>::splice (iterator position, list& x, iterator first, iterator last)
 {
     // undefined if position in [first, last]
     iterator j = first;
@@ -529,11 +606,12 @@ void ft::list::splice (iterator position, list& x, iterator first, iterator last
     }
 }
 
-void ft::list::reverse()
+template<class T>
+void ft::list<T>::reverse()
 {
     // start from end of the list, and "reverse" every node
     // then reverse past_the_end node
-    t_list *tmp(this->lst->prev);
+    t_list<T> *tmp(this->lst->prev);
     while (tmp != this->lst)
     {
         tmp->reverse();
@@ -542,7 +620,8 @@ void ft::list::reverse()
     tmp->reverse();
 }
 
-void ft::list::merge (list& x)
+template<class T>
+void ft::list<T>::merge (list& x)
 {
     if (this == &x)
         return ;
@@ -571,12 +650,13 @@ void ft::list::merge (list& x)
 
 // non members
 
-bool ft::operator==(const list& lhs, const list& rhs)
+template<class T>
+bool ft::operator==(const list<T>& lhs, const list<T>& rhs)
 {
     if (lhs.size() != rhs.size())
         return false;
-    ft::list::const_iterator it_l = lhs.begin();
-    ft::list::const_iterator it_r = rhs.begin();
+    typename ft::list<T>::const_iterator it_l = lhs.begin();
+    typename ft::list<T>::const_iterator it_r = rhs.begin();
     while (it_l != lhs.end())
     {
         if (*it_l++ != *it_r++)
@@ -584,10 +664,11 @@ bool ft::operator==(const list& lhs, const list& rhs)
     }
     return true;
 }
-bool ft::operator<(const list& lhs, const list& rhs)
+template<class T>
+bool ft::operator<(const list<T>& lhs, const list<T>& rhs)
 {
-    ft::list::const_iterator it_l = lhs.begin();
-    ft::list::const_iterator it_r = rhs.begin();
+    typename ft::list<T>::const_iterator it_l = lhs.begin();
+    typename ft::list<T>::const_iterator it_r = rhs.begin();
     while (it_l != lhs.end() && it_r != rhs.end())
     {
         if (*it_l == *it_r)
@@ -607,28 +688,33 @@ bool ft::operator<(const list& lhs, const list& rhs)
         return true;
     return false;
 }
-bool ft::operator<=(const list& lhs, const list& rhs)
+template<class T>
+bool ft::operator<=(const list<T>& lhs, const list<T>& rhs)
 {
     return (lhs == rhs || lhs < rhs );
 }
-bool ft::operator!=(const list& lhs, const list& rhs)
+template<class T>
+bool ft::operator!=(const list<T>& lhs, const list<T>& rhs)
 {
     return (!(lhs == rhs));
 }
-bool ft::operator>=(const list& lhs, const list& rhs)
+template<class T>
+bool ft::operator>=(const list<T>& lhs, const list<T>& rhs)
 {
     if ( lhs < rhs)
         return false;
     return true;
 }
-bool ft::operator>(const list& lhs, const list& rhs)
+template<class T>
+bool ft::operator>(const list<T>& lhs, const list<T>& rhs)
 {
     if ( lhs <= rhs)
         return false;
     return true;
 }
 
-void ft::swap (list& x, list& y)
+template<class T>
+void ft::swap (list<T>& x, list<T>& y)
 {
     x.swap(y);
 }

@@ -5,46 +5,48 @@
 #include <iterator>
 #include <memory>
 
-// list of int (1st param of template = int, and second param is set to default)
 
-typedef struct s_list
+template<class T>
+struct t_list
 {
-    int content; // stl containers internally store copies
-    struct s_list *prev;
-    struct s_list *next;
+    T content; // stl containers internally store copies
+    struct t_list *prev;
+    struct t_list *next;
     void reverse();
-} t_list;
+};
 
-
-t_list *ft_lst_new(const int &val);
+template<class T>
+t_list<T> *ft_lst_new(const T &val);
 
 namespace ft
 {
+template<class T>
 class list
 {
     // member types
-    typedef int value_type; // 1st param of template
+    typedef t_list<T> node_type;
+    typedef T value_type; // 1st param of template
     typedef unsigned long size_type;
 private:
-    t_list *lst;
+    t_list<T> *lst;
 
     /* data */
 public:
 
-    class iterator: public std::iterator<std::bidirectional_iterator_tag, int> // has typedefs (cf iterator_traits cplusplus)
+    class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
         private:
-            t_list *ptr;
+            t_list<T> *ptr;
         public:
             iterator();
-            iterator(t_list *ptr);
+            iterator(t_list<T> *ptr);
             iterator(const iterator &copy);
             iterator &operator=(const iterator &rhs);
             ~iterator();
             
-            t_list *as_node();
-            int &operator*() const;
-            int *operator->() const;
+            t_list<T> *as_node();
+            T &operator*() const;
+            T *operator->() const;
             iterator& operator++(); // preincrement (++a)
             iterator operator++(int); // postincrement (a++)
             iterator& operator--();
@@ -53,20 +55,20 @@ public:
             bool operator!=(const iterator &rhs) const;
     };
     
-    class const_iterator: public std::iterator<std::bidirectional_iterator_tag, int> // has typedefs (cf iterator_traits cplusplus)
+    class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
         private:
-            const t_list *ptr; // difference(1) with iterator
+            const t_list<T> *ptr; // difference(1) with iterator
         public:
             const_iterator();
-            const_iterator(t_list *ptr);
+            const_iterator(t_list<T> *ptr);
             const_iterator(const const_iterator &copy);
             const_iterator &operator=(const const_iterator &rhs);
             ~const_iterator();
             
-            const t_list *as_node();
-            const int &operator*() const; // difference(2) with iterator
-            const int *operator->() const; // difference(3) with iterator
+            const t_list<T> *as_node();
+            const T &operator*() const; // difference(2) with iterator
+            const T *operator->() const; // difference(3) with iterator
             const_iterator& operator++();
             const_iterator operator++(int);
             const_iterator& operator--();
@@ -79,22 +81,22 @@ public:
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
 private:
 
-    void delete_node(t_list *node);
-    void unlink_node(t_list *node);
-    void insert_before(t_list *node, t_list *new_node);
+    void delete_node(t_list<T> *node);
+    void unlink_node(t_list<T> *node);
+    void insert_before(t_list<T> *node, t_list<T> *new_node);
 
 public:
     // constructors & destructor
     explicit list ();
-    explicit list (size_type n, const int val = int());
+    explicit list (size_type n, const T val = T());
     list (iterator first, iterator last); // better not to call by reference, for cases like list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
     list (const list& x);
     ~list();
     list& operator= (const list& x);
 
     // iterator
-    ft::list::iterator begin();
-    ft::list::iterator end();
+    ft::list<T>::iterator begin();
+    ft::list<T>::iterator end();
     const_iterator begin() const;
     const_iterator end() const;
     reverse_iterator rbegin();
@@ -108,13 +110,13 @@ public:
     size_type max_size() const;
 
     // element access
-    int &front();
-    const int &front() const;
-    int &back();
-    const int &back() const;
+    T &front();
+    const T &front() const;
+    T &back();
+    const T &back() const;
 
     // modifiers
-    void push_back(const int& val);
+    void push_back(const T& val);
     void pop_back();
     void push_front (const value_type& val);
     void pop_front();
@@ -154,19 +156,26 @@ public:
 
     // non member functions (relationnal operators)
     // -> if they need to call private members of ft::list, we add them as friend of the ft::list class
-
-    bool operator== (const list& lhs, const list& rhs);
-    bool operator!= (const list& lhs, const list& rhs);
-    bool operator<= (const list& lhs, const list& rhs);
-    bool operator< (const list& lhs, const list& rhs);
-    bool operator>= (const list& lhs, const list& rhs);
-    bool operator> (const list& lhs, const list& rhs);
-    void swap (list& x, list& y);
+    template <class T>
+    bool operator== (const list<T>& lhs, const list<T>& rhs);
+    template <class T>
+    bool operator!= (const list<T>& lhs, const list<T>& rhs);
+    template <class T>
+    bool operator<= (const list<T>& lhs, const list<T>& rhs);
+    template <class T>
+    bool operator< (const list<T>& lhs, const list<T>& rhs);
+    template <class T>
+    bool operator>= (const list<T>& lhs, const list<T>& rhs);
+    template <class T>
+    bool operator> (const list<T>& lhs, const list<T>& rhs);
+    template <class T>
+    void swap (list<T>& x, list<T>& y);
 
 
 }
+template <class T>
 template <class Predicate>
-void ft::list::remove_if (Predicate pred)
+void ft::list<T>::remove_if (Predicate pred)
 {
     iterator it = this->begin();
     iterator ite = this->end();
@@ -180,8 +189,9 @@ void ft::list::remove_if (Predicate pred)
     }
 }
 
+template <class T>
 template <class BinaryPredicate>
-void ft::list::unique (BinaryPredicate binary_pred)
+void ft::list<T>::unique (BinaryPredicate binary_pred)
 {
     iterator it = this->begin();
     iterator it_next = it;
@@ -196,8 +206,9 @@ void ft::list::unique (BinaryPredicate binary_pred)
     }
 }
     
+template <class T>
 template <class Compare>
-void ft::list::sort (Compare comp)
+void ft::list<T>::sort (Compare comp)
 {
     iterator it = this->begin();
     iterator it_next = it;
@@ -215,8 +226,9 @@ void ft::list::sort (Compare comp)
     }
 }
 
+template <class T>
 template <class Compare>
-void ft::list::merge (list& x, Compare comp)
+void ft::list<T>::merge (list& x, Compare comp)
 {
     if (this == &x)
         return ;
@@ -242,5 +254,7 @@ void ft::list::merge (list& x, Compare comp)
         x_it = tmp;
     }
 }
+
+#include "list.ipp"
 
 #endif
