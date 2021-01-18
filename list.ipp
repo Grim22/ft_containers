@@ -61,76 +61,76 @@ void ft::list<T>::insert_before(node_type *node, node_type *inserted_node)
 
 
 template<class T>
-ft::list<T>::iterator::iterator()
+iterator<T>::iterator()
 {
 }
 template<class T>
-ft::list<T>::iterator::iterator(const iterator &copy): ptr(copy.ptr)
+iterator<T>::iterator(const iterator &copy): ptr(copy.ptr)
 {
 }
 template<class T>
-ft::list<T>::iterator::iterator(node_type *ptr): ptr(ptr)
+iterator<T>::iterator(node_type *ptr): ptr(ptr)
 {
 }
 template<class T>
-ft::list<T>::iterator::~iterator()
+iterator<T>::~iterator()
 {
 }
 template<class T>
-typename ft::list<T>::iterator &ft::list<T>::iterator::operator=(const iterator &rhs)
+iterator<T> &iterator<T>::operator=(const iterator &rhs)
 {
     this->ptr = rhs.ptr;
     return *this;
 }
 template<class T>
-T &ft::list<T>::iterator::operator*() const
+T &iterator<T>::operator*() const
 {
     return this->ptr->content;
 }
 template<class T>
-T *ft::list<T>::iterator::operator->() const
+T *iterator<T>::operator->() const
 {
     return &this->ptr->content;
 }
 template<class T>
-typename ft::list<T>::iterator& ft::list<T>::iterator::operator++() // preincrement (++a)
+iterator<T>& iterator<T>::operator++() // preincrement (++a)
 {
     this->ptr = this->ptr->next;
     return *this;
 }
 template<class T>
-typename ft::list<T>::iterator ft::list<T>::iterator::operator++(int) // postincrement (a++)
+iterator<T> iterator<T>::operator++(int) // postincrement (a++)
 {
     iterator tmp(*this);
     this->ptr = this->ptr->next;
     return tmp;
 }
 template<class T>
-typename ft::list<T>::iterator& ft::list<T>::iterator::operator--()
+iterator<T>& iterator<T>::operator--()
 {
     this->ptr = this->ptr->prev;
     return *this;    
 }
 template<class T>
-typename ft::list<T>::iterator ft::list<T>::iterator::operator--(int)
+iterator<T> iterator<T>::operator--(int)
 {
     iterator tmp(*this);
     this->ptr = this->ptr->prev;
     return tmp;
 }
 template<class T>
-bool ft::list<T>::iterator::operator==(const iterator &rhs) const
+bool iterator<T>::operator==(const iterator &rhs) const
 {
     return (this->ptr == rhs.ptr);
 }
 template<class T>
-bool ft::list<T>::iterator::operator!=(const iterator &rhs) const
+bool iterator<T>::operator!=(const iterator &rhs) const
 {
     return (this->ptr != rhs.ptr);
 }
 
 template<class T>
-typename ft::list<T>::node_type *ft::list<T>::iterator::as_node()
+typename iterator<T>::node_type *iterator<T>::as_node()
 {
     return this->ptr;
 }

@@ -18,9 +18,30 @@ struct node
     void reverse();
 };
 
-// template<class T>
-// node<T> *ft_lst_new(const T &val);
+template<class T>
+class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
+{
+    typedef node<T> node_type;
 
+    private:
+        node_type *ptr;
+    public:
+        iterator();
+        iterator(node_type *ptr);
+        iterator(const iterator &copy);
+        iterator &operator=(const iterator &rhs);
+        ~iterator();
+        
+        node_type *as_node();
+        T &operator*() const;
+        T *operator->() const;
+        iterator& operator++(); // preincrement (++a)
+        iterator operator++(int); // postincrement (a++)
+        iterator& operator--();
+        iterator operator--(int);
+        bool operator==(const iterator &rhs) const;
+        bool operator!=(const iterator &rhs) const;
+};
 
 namespace ft
 {
@@ -38,28 +59,8 @@ private:
 
 public:
 
-    class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
-    {
-        private:
-            node_type *ptr;
-        public:
-            iterator();
-            iterator(node_type *ptr);
-            iterator(const iterator &copy);
-            iterator &operator=(const iterator &rhs);
-            ~iterator();
-            
-            node_type *as_node();
-            T &operator*() const;
-            T *operator->() const;
-            iterator& operator++(); // preincrement (++a)
-            iterator operator++(int); // postincrement (a++)
-            iterator& operator--();
-            iterator operator--(int);
-            bool operator==(const iterator &rhs) const;
-            bool operator!=(const iterator &rhs) const;
-    };
     
+    typedef iterator<T> iterator;
     class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
         private:
