@@ -35,7 +35,7 @@ class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has 
         iterator &operator=(const iterator &rhs);
         ~iterator();
         
-        node_type *as_node();
+        node_type *as_node(); // needed to access node from outisde the class (from list for example): it would be better to declare list as a friend class (thats the way it is done in the STL) but we're not allowed to
         T &operator*() const;
         T *operator->() const;
         iterator& operator++(); // preincrement (++a)
@@ -57,10 +57,11 @@ class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> /
         const_iterator();
         const_iterator(node_type *ptr);
         const_iterator(const const_iterator &copy);
+        const_iterator(ft::iterator<T> copy); // difference(4)
         const_iterator &operator=(const const_iterator &rhs);
         ~const_iterator();
         
-        const node_type *as_node();
+        const node_type *as_node(); // needed to access node from outisde the class (from list for example): it would be better to declare list as a friend class (thats the way it is done in the STL) but we're not allowed to
         const T &operator*() const; // difference(2) with iterator
         const T *operator->() const; // difference(3) with iterator
         const_iterator& operator++();
@@ -100,6 +101,8 @@ public:
     explicit list ();
     explicit list (size_type n, const T val = T());
     list (iterator first, iterator last); // better not to call by reference, for cases like list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
+    // template <class InputIterator> // not ready yet, needs some kind of enable_if to check the nature of the template argument. For now we will use the version below
+    // list(InputIterator first, InputIterator last);
     list (const list& x);
     ~list();
     list& operator= (const list& x);
@@ -136,6 +139,8 @@ public:
 
     void assign (size_type n, const value_type& val);
     void assign (iterator first, iterator last);
+    // template<class inputiterator> // not ready either
+    // void assign (inputiterator first, inputiterator last)
 
     iterator insert (iterator position, const value_type& val);
     void insert (iterator position, size_type n, const value_type& val);
@@ -307,6 +312,10 @@ ft::const_iterator<T>::const_iterator()
 }
 template<class T>
 ft::const_iterator<T>::const_iterator(const const_iterator &copy): ptr(copy.ptr)
+{
+}
+template<class T>
+ft::const_iterator<T>::const_iterator(ft::iterator<T> copy): ptr(copy.as_node())
 {
 }
 template<class T>

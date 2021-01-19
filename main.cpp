@@ -3,8 +3,8 @@
 #include <list>
 #include <cmath> // fabs
 
-// using namespace std;
-using namespace ft;
+using namespace std;
+// using namespace ft;
 
 void displaylst(list<int> lst)
 {
@@ -401,6 +401,12 @@ int main()
 
     list<int> lst40;
     std::cout << lst40.max_size() << std::endl;
+
+    // const_iterator built from iterator
+    list<int> lst41(4, 8);
+    list<int>::iterator it7(lst41.begin());
+    std::cout << *it7 << std::endl;
+
     
 
 }
