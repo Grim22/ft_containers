@@ -103,6 +103,7 @@ public:
     list (iterator first, iterator last); // better not to call by reference, for cases like list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
     // template <class InputIterator> // not ready yet, needs some kind of enable_if to check the nature of the template argument. For now we will use the version below
     // list(InputIterator first, InputIterator last);
+    list (T *first, T *last); // additional constructor, useful as inputiterator constructor is not functionnal
     list (const list& x);
     ~list();
     list& operator= (const list& x);
@@ -443,6 +444,13 @@ ft::list<T>::list(ft::list<T>::iterator first, ft::list<T>::iterator last): lst(
 }
 
 template<class T>
+ft::list<T>::list(T* first, T* last): lst(new node_type)
+{
+    for (T* it = first; it != last; it++)
+        this->push_back(*it);
+}
+
+template<class T>
 ft::list<T>& ft::list<T>::operator=(const list<T>& x)
 {
     this->clear();
@@ -681,6 +689,11 @@ void ft::list<T>::insert(iterator position, size_type n, const value_type& val)
 template<class T>
 void ft::list<T>::insert(iterator position, iterator first, iterator last)
 {
+    // prevent infinite loop (this is a case of "undefined behaviour")
+    iterator it(first);
+    if (position == ++it)
+        return ;
+
     for (iterator it = first; it != last ; ++it)
         this->insert_before(position.as_node(), new node_type(*it));
 }
