@@ -817,6 +817,8 @@ void ft::list<T>::sort (Compare comp)
 template<class T>
 void ft::list<T>::splice (iterator position, list& x)
 {
+    if (*this == x) // behaviour is "undefined" in that case
+        return ;
     iterator it = x.begin();
     iterator tmp(it);
     while (it != x.end())
@@ -838,7 +840,7 @@ void ft::list<T>::splice (iterator position, list& x, iterator i)
     if (position == i || position == j)
         return ;
 
-    (void)x;
+    (void)x; // x is not needed... needed in the source for a "check_equal_allocator" function, whose behaviour I dont know... maybe ras as it concerns allocators ?
     i.as_node()->unlink();
     this->insert_before(position.as_node(), i.as_node());
 }
@@ -846,7 +848,7 @@ void ft::list<T>::splice (iterator position, list& x, iterator i)
 template<class T>
 void ft::list<T>::splice (iterator position, list& x, iterator first, iterator last)
 {
-    // undefined if position in [first, last]
+    // "undefined: if position in [first, last]
     iterator j = first;
     while (j != last)
     {
