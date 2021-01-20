@@ -407,6 +407,15 @@ int main()
     list<int>::iterator it7(lst41.begin());
     std::cout << *it7 << std::endl;
 
+    // compare const_iterator and iterator
+    list<int>::iterator it8 = lst41.begin();
+    list<int>::const_iterator it9 = lst41.begin();
+    std::cout << (it8 == it9) << std::endl;
+    std::cout << (it9 == it8) << std::endl;
+    std::cout << (it8 != it9) << std::endl;
+    std::cout << (it9 != it8) << std::endl;
+
+
     
 
 }

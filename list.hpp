@@ -36,6 +36,7 @@ class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has 
         ~iterator();
         
         node_type *as_node(); // needed to access node from outisde the class (from list for example): it would be better to declare list as a friend class (thats the way it is done in the STL) but we're not allowed to
+        const node_type *as_node() const;
         T &operator*() const;
         T *operator->() const;
         iterator& operator++(); // preincrement (++a)
@@ -61,7 +62,7 @@ class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> /
         const_iterator &operator=(const const_iterator &rhs);
         ~const_iterator();
         
-        const node_type *as_node(); // needed to access node from outisde the class (from list for example): it would be better to declare list as a friend class (thats the way it is done in the STL) but we're not allowed to
+        const node_type *as_node() const; // needed to access node from outisde the class (from list for example): it would be better to declare list as a friend class (thats the way it is done in the STL) but we're not allowed to
         const T &operator*() const; // difference(2) with iterator
         const T *operator->() const; // difference(3) with iterator
         const_iterator& operator++();
@@ -71,6 +72,33 @@ class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> /
         bool operator==(const const_iterator &rhs) const;
         bool operator!=(const const_iterator &rhs) const;
 };
+
+// additionnal comparison operators, to allow comparison between const_iterator and iterator
+
+template<class T>
+bool operator==(const iterator<T> &lhs, const const_iterator<T> &rhs)
+{
+    return (lhs.as_node() == rhs.as_node());
+};
+
+template<class T>
+bool operator==(const const_iterator<T> &lhs, const iterator<T> &rhs)
+{
+    return (lhs.as_node() == rhs.as_node());
+};
+template<class T>
+bool operator!=(const iterator<T> &lhs, const const_iterator<T> &rhs)
+{
+    return (lhs.as_node() != rhs.as_node());
+};
+template<class T>
+bool operator!=(const const_iterator<T> &lhs, const iterator<T> &rhs)
+{
+    return (lhs.as_node() != rhs.as_node());
+};
+
+
+
 
 template<class T>
 class list
@@ -305,6 +333,12 @@ typename ft::iterator<T>::node_type *ft::iterator<T>::as_node()
     return this->ptr;
 }
 
+template<class T>
+const typename ft::iterator<T>::node_type *ft::iterator<T>::as_node() const
+{
+    return this->ptr;
+}
+
 // class const iterator
 
 template<class T>
@@ -381,7 +415,7 @@ bool ft::const_iterator<T>::operator!=(const const_iterator &rhs) const
 }
 
 template<class T>
-const typename ft::const_iterator<T>::node_type *ft::const_iterator<T>::as_node()
+const typename ft::const_iterator<T>::node_type *ft::const_iterator<T>::as_node() const
 {
     return this->ptr;
 }
