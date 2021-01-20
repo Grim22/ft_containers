@@ -13,9 +13,8 @@ namespace ft
 template<class T>
 class iterator: public std::iterator<std::random_access_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
 {
-    // typedef node<T> node_type;
-
     private:
+        typedef typename std::iterator<std::random_access_iterator_tag, T>::difference_type difference_type;
         T* ptr;
     public:
         iterator(): ptr(NULL) {};
@@ -30,12 +29,39 @@ class iterator: public std::iterator<std::random_access_iterator_tag, T> // has 
         
         T &operator*() const
         {
-            return *ptr;
+            return *this->ptr;
         };
-        // T *operator->() const;
-        // {
-        //     return ptr;
-        // }
+        T &operator[](difference_type n) const
+        {
+            return this->ptr[n];
+        };
+        T *operator->() const
+        {
+            return this->ptr;
+        };
+        T *get_ptr() const
+        {
+            return this->ptr;
+        }
+        // substracting two pointers returns a difference_type
+        difference_type operator-(const iterator &rhs)
+        {
+            return (this->ptr - rhs.ptr);
+        }
+
+        // unlike ++ += -- -=, these operators do not modify this: they return a new iterator
+        iterator operator-(difference_type n)
+        {
+            return iterator(this->ptr - n);
+        }
+        iterator operator+(difference_type n)
+        {
+            return iterator(this->ptr + n);
+        }
+        // non member overload made friend in order to access ptr
+        template <class X>
+        friend ft::iterator<X> operator+(typename ft::iterator<X>::difference_type n, const ft::iterator<X> &it);
+        
         iterator& operator++()// preincrement (++a)
         {
             this->ptr++;
@@ -68,6 +94,7 @@ class iterator: public std::iterator<std::random_access_iterator_tag, T> // has 
             this->ptr--;
             return tmp;
         };
+
         bool operator==(const iterator &rhs) const
         {
             return (this->ptr == rhs.ptr);
@@ -94,6 +121,15 @@ class iterator: public std::iterator<std::random_access_iterator_tag, T> // has 
         }
 };
 
+// we need non member to perform symetrical operations:
+// 3 + it (and not only it + 3)
+template<class T>
+iterator<T> operator+(typename ft::iterator<T>::difference_type n, const ft::iterator<T> &it)
+{
+    return ft::iterator<T>(it.ptr + n);
+}
+
+
 template<class T>
 class const_iterator: public std::iterator<std::random_access_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
 {
@@ -119,6 +155,8 @@ class const_iterator: public std::iterator<std::random_access_iterator_tag, T> /
         bool operator==(const const_iterator &rhs) const;
         bool operator!=(const const_iterator &rhs) const;
 };
+
+
 
 template<class T>
 class vector
@@ -161,7 +199,15 @@ public:
             it++;
         }
     };
-    vector (const vector& x);
+    // vector (const vector& x): base(new T[x.capacity_]), size_(x.size_), capacity_(x.size_)
+    // {
+    //     const_iterator it = x.begin();
+    //     for (size_type i = 0; i < this->size_; i++)
+    //     {
+    //         this->base[i] = *it;
+    //         it++;
+    //     }
+    // }
     ~vector()
     {
         delete [] this->base;
@@ -223,8 +269,8 @@ public:
         T *new_base = new T[this->capacity_]; 
         for (size_type i = 0; i < this->size_; i++)
             new_base[i] = this->base[i];
-        this->size_++;
         new_base[this->size_] = val;
+        this->size_++;
         delete [] this->base;
         this->base = new_base;
 
