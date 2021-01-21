@@ -58,7 +58,7 @@ class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> /
         const_iterator();
         const_iterator(node_type *ptr);
         const_iterator(const const_iterator &copy);
-        const_iterator(ft::iterator<T> copy); // difference(4)
+        const_iterator(const ft::iterator<T> &copy); // difference(4)
         const_iterator &operator=(const const_iterator &rhs);
         ~const_iterator();
         
@@ -350,7 +350,7 @@ ft::const_iterator<T>::const_iterator(const const_iterator &copy): ptr(copy.ptr)
 {
 }
 template<class T>
-ft::const_iterator<T>::const_iterator(ft::iterator<T> copy): ptr(copy.as_node())
+ft::const_iterator<T>::const_iterator(const ft::iterator<T> &copy): ptr(copy.as_node())
 {
 }
 template<class T>

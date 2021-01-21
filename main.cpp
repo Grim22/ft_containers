@@ -3,8 +3,8 @@
 #include <vector>
 #include "vector.hpp"
 
-using namespace std;
-// using namespace ft;
+// using namespace std;
+using namespace ft;
 
 
 
@@ -73,6 +73,7 @@ int main()
     vec4.push_back(6);
     vec4.push_back(8);
 
+    // -- & ++
     vector<int>::iterator it = vec4.begin();
     std::cout << *++it << std::endl;
     std::cout << *++it << std::endl;
@@ -80,6 +81,7 @@ int main()
     std::cout << *it-- << std::endl;
     std::cout << "---" << std::endl;
 
+    // += & -=
     it = vec4.begin();
     std::cout << *it << std::endl;
     it += 3;
@@ -88,14 +90,18 @@ int main()
     std::cout << *it << std::endl;
     std::cout << "---" << std::endl;
     
+    // access
     it = vec4.begin();
     std::cout << it[0] << std::endl;
     std::cout << it[1] << std::endl;
     std::cout << it[2] << std::endl;
+    it[3] = 55;
     std::cout << it[3] << std::endl;
+    *it = 12;
     std::cout << *it << std::endl;
     std::cout << "---" << std::endl;
 
+    // + & -
     it = vec4.begin();
     std::cout << *(it + 2) << std::endl;
     std::cout << *(2 + it) << std::endl;
@@ -103,6 +109,7 @@ int main()
     std::cout << *it << std::endl;
     std::cout << "---" << std::endl;
 
+    // comparison
     vector<int>::iterator it2 = vec4.begin();
     it2++;
     std::cout << *it2 << std::endl;
@@ -113,19 +120,73 @@ int main()
     std::cout << (it == vec4.begin()) << std::endl;
     std::cout << "---" << std::endl;
 
+    // const_iterator
+    vector<int> vec5;
+    vec5.push_back(2);
+    vec5.push_back(4);
+    vec5.push_back(6);
+    vec5.push_back(8);
 
+    // -- & ++
+    vector<int>::const_iterator it3 = vec5.begin();
+    std::cout << *++it3 << std::endl;
+    std::cout << *++it3 << std::endl;
+    std::cout << *--it3 << std::endl;
+    std::cout << *it3-- << std::endl;
+    std::cout << "---" << std::endl;
+
+    // += & -=
+    it3 = vec5.begin();
+    std::cout << *it3 << std::endl;
+    it3 += 3;
+    std::cout << *it3 << std::endl;
+    it3 -= 2;
+    std::cout << *it3 << std::endl;
+    std::cout << "---" << std::endl;
+    
+    // access
+    it3 = vec5.begin();
+    std::cout << it3[0] << std::endl;
+    std::cout << it3[1] << std::endl;
+    std::cout << it3[2] << std::endl;
+    // it3[3] = 55;
+    std::cout << it3[3] << std::endl;
+    // *it3 = 12;
+    std::cout << *it3 << std::endl;
+    std::cout << "---" << std::endl;
+
+    // + & -
+    it3 = vec5.begin();
+    std::cout << *(it3 + 2) << std::endl;
+    std::cout << *(2 + it3) << std::endl;
+    std::cout << *(it3 + 3 - 1) << std::endl;
+    std::cout << *it3 << std::endl;
+    std::cout << "---" << std::endl;
+
+    // comparison
+    vector<int>::const_iterator it4 = vec5.begin();
+    it4++;
+    std::cout << *it4 << std::endl;
+    std::cout << (it3 < it4) << std::endl;
+    std::cout << (it3 <= it4) << std::endl;
+    std::cout << (it3 > it4) << std::endl;
+    std::cout << (it3 >= it4) << std::endl;
+    std::cout << (it3 == vec5.begin()) << std::endl;
+    std::cout << "---" << std::endl;
+    
+    
+    
     it = vec4.begin();
     while (it != vec4.end())
     {
         std::cout << *it++ << std::endl;
     }
 
-
-    // displayvec(vec2);
-
-    vector<int>::const_iterator it3 = vec4.begin();
-    vector<int>::iterator it4 = vec4.begin();
-    std::cout << (it3 == it4) << std::endl;
+    
+    // // comp btw iterator and const it
+    // vector<int>::const_iterator it3 = vec4.begin();
+    // vector<int>::iterator it4 = vec4.begin();
+    // std::cout << (it3 == it4) << std::endl;
 
     
 }
