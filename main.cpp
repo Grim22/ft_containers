@@ -120,12 +120,10 @@ int main()
     std::cout << (it == vec4.begin()) << std::endl;
     std::cout << "---" << std::endl;
 
+
+
     // const_iterator
-    vector<int> vec5;
-    vec5.push_back(2);
-    vec5.push_back(4);
-    vec5.push_back(6);
-    vec5.push_back(8);
+    const vector<int> vec5(vec4.begin(), vec4.end());
 
     // -- & ++
     vector<int>::const_iterator it3 = vec5.begin();
@@ -174,13 +172,18 @@ int main()
     std::cout << (it3 == vec5.begin()) << std::endl;
     std::cout << "---" << std::endl;
     
+    // build const_iterator from iterator
+    vector<int>::const_iterator it5(vec1.begin());
+    std::cout << *it5 << std::endl;
+    std::cout << "---" << std::endl;
     
     
-    it = vec4.begin();
-    while (it != vec4.end())
-    {
-        std::cout << *it++ << std::endl;
-    }
+    // it = vec4.begin();
+    // while (it != vec4.end())
+    // {
+    //     std::cout << *it++ << std::endl;
+    // }
+    // std::cout << "---" << std::endl;
 
     
     // // comp btw iterator and const it

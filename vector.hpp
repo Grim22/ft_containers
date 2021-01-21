@@ -336,8 +336,14 @@ public:
     {
         return iterator(this->base + this->size_);
     };
-    const_iterator begin() const;
-    const_iterator end() const;
+    const_iterator begin() const
+    {
+        return const_iterator(this->base);
+    };
+    const_iterator end() const
+    {
+        return const_iterator(this->base + this->size_);
+    };
     reverse_iterator rbegin();
     const_reverse_iterator rbegin() const;
     reverse_iterator rend();
