@@ -11,10 +11,14 @@ namespace ft
 {
 
 
-// we define iterator and const_iterator classes separately, then we use typedefs to make them member types of vector
-// (we could also have defined them inside the vect)
 namespace vec // for iterator definition, to differentiate them from other container iterator
 {
+
+// we define one templated itereator class, that can represent both iterator and const_iterator
+// here template argument T is a pointer type
+// cf. __normal_iterator of stl_iterator.h
+// TO DO: add non member comparison operators, to make possible comparison between const and non const iterators (and more)
+
 template<class T>
 class iterator
 {
@@ -23,13 +27,13 @@ class iterator
     public:
         // T is a pointer (int * for eg). so it is also an iterator, so iterator_traits works on it
         // sometimes we want to return int or int & --> we will use value_type and reference (we can't use *T to design "int") 
-        // those typedefs that may be needed when our iterator is used
         typedef typename std::iterator_traits<T>::value_type value_type; //
         typedef typename std::iterator_traits<T>::reference reference;
         typedef typename std::iterator_traits<T>::pointer pointer;
         typedef typename std::iterator_traits<T>::difference_type difference_type;
         typedef typename std::iterator_traits<T>::iterator_category iterator_category;
         // Rq: if T is of type const int *, value type will be CONST int and reference type will be CONST reference
+        // those typedefs are also needed by standard algorithm (for ex. by std::reverse_iterator<iterator> ?). cf std::iterator_traits on cplusplus.com
         
         iterator(): ptr(NULL) {};
         
@@ -160,131 +164,262 @@ iterator<T> operator+(typename iterator<T>::difference_type n, const iterator<T>
 }
 
 
-template<class T>
-class const_iterator: public std::iterator<std::random_access_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
-{
+
+// Here we define iterator and const_iterator classes separately, then we use typedefs to make them member types of vector
+// (we could also have defined them inside the vect)
+// TO DO: add non member comparison operators, to make possible comparison between const and non const iterators (and more)
+
+// template <class T>
+// class iterator: public std::iterator<std::random_access_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
+// {
+//     private:
+//         T* ptr;
+//     public:
+//         typedef typename std::iterator<std::random_access_iterator_tag, T>::difference_type difference_type;
+        
+//         iterator(): ptr(NULL) {};
+//         iterator(T *ptr): ptr(ptr) {};
+//         iterator(const iterator &copy): ptr(copy.ptr) {};
+//         iterator &operator=(const iterator &rhs)
+//         {
+//             this->ptr = rhs.ptr;
+//             return *this;
+//         };
+//         ~iterator() {};
+
+//         // (1) access        
+//         T &operator*() const
+//         {
+//             return *this->ptr;
+//         };
+//         T &operator[](difference_type n) const
+//         {
+//             return this->ptr[n];
+//         };
+//         T *operator->() const
+//         {
+//             return this->ptr;
+//         };
+//         T *base() const // access to the underlying pointer (read access only) --> done this way in the stl iterator
+//         {
+//             return this->ptr;
+//         }
+
+//         // (2) arithmetics
+
+//         // (2.1) binary
+//         // substracting two pointers returns a difference_type
+//         difference_type operator-(const iterator &rhs) const
+//         {
+//             return (this->ptr - rhs.ptr);
+//         }
+
+//         // unlike ++ += -- -=, these operators do not modify this: they return a new iterator
+//         iterator operator-(difference_type n) const
+//         {
+//             return iterator(this->ptr - n);
+//         }
+//         iterator operator+(difference_type n) const
+//         {
+//             return iterator(this->ptr + n);
+
+//         }
+
+//         // (2.2) unary
+//         iterator& operator++()// preincrement (++a)
+//         {
+//             this->ptr++;
+//             return *this;
+//         };
+//         iterator operator++(int) // postincrement (a++)
+//         {
+//             iterator tmp(*this);
+//             this->ptr++;
+//             return tmp;
+//         };
+//         iterator& operator--()
+//         {
+//             this->ptr--;
+//             return *this;
+//         };
+//         iterator& operator-=(difference_type n)
+//         {
+//             this->ptr -= n;
+//             return *this;
+//         };
+//         iterator& operator+=(difference_type n)
+//         {
+//             this->ptr += n;
+//             return *this;
+//         };
+//         iterator operator--(int)
+//         {
+//             iterator tmp(*this);
+//             this->ptr--;
+//             return tmp;
+//         };
+
+//         // (3) comparison
+//         bool operator==(const iterator &rhs) const
+//         {
+//             return (this->ptr == rhs.ptr);
+//         }
+//         bool operator!=(const iterator &rhs) const
+//         {
+//             return (this->ptr != rhs.ptr);
+//         }
+//         bool operator>=(const iterator &rhs) const
+//         {
+//             return (this->ptr >= rhs.ptr);
+//         }
+//         bool operator>(const iterator &rhs) const
+//         {
+//             return (this->ptr > rhs.ptr);
+//         }
+//         bool operator<=(const iterator &rhs) const
+//         {
+//             return (this->ptr <= rhs.ptr);
+//         }
+//         bool operator<(const iterator &rhs) const
+//         {
+//             return (this->ptr < rhs.ptr);
+//         }
+// };
+
+// // we need this non member operator+ to perform symetrical operations:
+// // 3 + it (and not only it + 3)
+// template<class T>
+// iterator<T> operator+(typename iterator<T>::difference_type n, const iterator<T> &it)
+// {
+//     return iterator<T>(it.base() + n);
+// }
+
+
+// template<class T>
+// class const_iterator: public std::iterator<std::random_access_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
+// {
     
-    private:
-        const T* ptr; // diff(0)
-    public:
-        typedef typename std::iterator<std::random_access_iterator_tag, T>::difference_type difference_type;
+//     private:
+//         const T* ptr; // diff(0)
+//     public:
+//         typedef typename std::iterator<std::random_access_iterator_tag, T>::difference_type difference_type;
         
-        const_iterator(): ptr(NULL) {};
-        const_iterator(const T *ptr): ptr(ptr) {}; // diff(1)
-        const_iterator(const const_iterator &copy): ptr(copy.ptr) {};
-        const_iterator(const iterator<T> &copy): ptr(copy.base()) {}; // diff(2)  -- needed to be able to build a const_iterator from an iterator
-        const_iterator &operator=(const const_iterator &rhs)
-        {
-            this->ptr = rhs.ptr;
-            return *this;
-        };
-        ~const_iterator() {};
+//         const_iterator(): ptr(NULL) {};
+//         const_iterator(const T *ptr): ptr(ptr) {}; // diff(1)
+//         const_iterator(const const_iterator &copy): ptr(copy.ptr) {};
+//         const_iterator(const iterator<T> &copy): ptr(copy.base()) {}; // diff(2)  -- needed to be able to build a const_iterator from an iterator
+//         const_iterator &operator=(const const_iterator &rhs)
+//         {
+//             this->ptr = rhs.ptr;
+//             return *this;
+//         };
+//         ~const_iterator() {};
         
-        // (1) access 
-        // diff(3) -- return value is const for all of these functions
-        const T &operator*() const
-        {
-            return *this->ptr;
-        };
-        const T &operator[](difference_type n) const
-        {
-            return this->ptr[n];
-        };
-        const T *operator->() const
-        {
-            return this->ptr;
-        };
-        const T *base() const // access to the underlying pointer (read access only) --> done this way in the stl const_iterator
-        {
-            return this->ptr;
-        }
+//         // (1) access 
+//         // diff(3) -- return value is const for all of these functions
+//         const T &operator*() const
+//         {
+//             return *this->ptr;
+//         };
+//         const T &operator[](difference_type n) const
+//         {
+//             return this->ptr[n];
+//         };
+//         const T *operator->() const
+//         {
+//             return this->ptr;
+//         };
+//         const T *base() const // access to the underlying pointer (read access only) --> done this way in the stl const_iterator
+//         {
+//             return this->ptr;
+//         }
 
-        // (2) arithmetics
-        // (2.1) binary
-        // substracting two pointers returns a difference_type
-        difference_type operator-(const const_iterator &rhs) const
-        {
-            return (this->ptr - rhs.ptr);
-        }
+//         // (2) arithmetics
+//         // (2.1) binary
+//         // substracting two pointers returns a difference_type
+//         difference_type operator-(const const_iterator &rhs) const
+//         {
+//             return (this->ptr - rhs.ptr);
+//         }
 
-        // unlike ++ += -- -=, these operators do not modify this: they return a new const_iterator
-        const_iterator operator-(difference_type n) const
-        {
-            return const_iterator(this->ptr - n);
-        }
-        const_iterator operator+(difference_type n) const
-        {
-            return const_iterator(this->ptr + n);
-        }
+//         // unlike ++ += -- -=, these operators do not modify this: they return a new const_iterator
+//         const_iterator operator-(difference_type n) const
+//         {
+//             return const_iterator(this->ptr - n);
+//         }
+//         const_iterator operator+(difference_type n) const
+//         {
+//             return const_iterator(this->ptr + n);
+//         }
 
-        // (2.2) unary
-        const_iterator& operator++()// preincrement (++a)
-        {
-            this->ptr++;
-            return *this;
-        };
-        const_iterator operator++(int) // postincrement (a++)
-        {
-            const_iterator tmp(*this);
-            this->ptr++;
-            return tmp;
-        };
-        const_iterator& operator--()
-        {
-            this->ptr--;
-            return *this;
-        };
-        const_iterator& operator-=(difference_type n)
-        {
-            this->ptr -= n;
-            return *this;
-        };
-        const_iterator& operator+=(difference_type n)
-        {
-            this->ptr += n;
-            return *this;
-        };
-        const_iterator operator--(int)
-        {
-            const_iterator tmp(*this);
-            this->ptr--;
-            return tmp;
-        };
+//         // (2.2) unary
+//         const_iterator& operator++()// preincrement (++a)
+//         {
+//             this->ptr++;
+//             return *this;
+//         };
+//         const_iterator operator++(int) // postincrement (a++)
+//         {
+//             const_iterator tmp(*this);
+//             this->ptr++;
+//             return tmp;
+//         };
+//         const_iterator& operator--()
+//         {
+//             this->ptr--;
+//             return *this;
+//         };
+//         const_iterator& operator-=(difference_type n)
+//         {
+//             this->ptr -= n;
+//             return *this;
+//         };
+//         const_iterator& operator+=(difference_type n)
+//         {
+//             this->ptr += n;
+//             return *this;
+//         };
+//         const_iterator operator--(int)
+//         {
+//             const_iterator tmp(*this);
+//             this->ptr--;
+//             return tmp;
+//         };
 
-        // (3) comparison
-        bool operator==(const const_iterator &rhs) const
-        {
-            return (this->ptr == rhs.ptr);
-        }
-        bool operator!=(const const_iterator &rhs) const
-        {
-            return (this->ptr != rhs.ptr);
-        }
-        bool operator>=(const const_iterator &rhs) const
-        {
-            return (this->ptr >= rhs.ptr);
-        }
-        bool operator>(const const_iterator &rhs) const
-        {
-            return (this->ptr > rhs.ptr);
-        }
-        bool operator<=(const const_iterator &rhs) const
-        {
-            return (this->ptr <= rhs.ptr);
-        }
-        bool operator<(const const_iterator &rhs) const
-        {
-            return (this->ptr < rhs.ptr);
-        }
-};
+//         // (3) comparison
+//         bool operator==(const const_iterator &rhs) const
+//         {
+//             return (this->ptr == rhs.ptr);
+//         }
+//         bool operator!=(const const_iterator &rhs) const
+//         {
+//             return (this->ptr != rhs.ptr);
+//         }
+//         bool operator>=(const const_iterator &rhs) const
+//         {
+//             return (this->ptr >= rhs.ptr);
+//         }
+//         bool operator>(const const_iterator &rhs) const
+//         {
+//             return (this->ptr > rhs.ptr);
+//         }
+//         bool operator<=(const const_iterator &rhs) const
+//         {
+//             return (this->ptr <= rhs.ptr);
+//         }
+//         bool operator<(const const_iterator &rhs) const
+//         {
+//             return (this->ptr < rhs.ptr);
+//         }
+// };
 
-// we need this non member operator+ to perform symetrical operations:
-// 3 + it (and not only it + 3)
-template<class T>
-const_iterator<T> operator+(typename const_iterator<T>::difference_type n, const const_iterator<T> &it)
-{
-    return const_iterator<T>(it.base() + n);
-}
+// // we need this non member operator+ to perform symetrical operations:
+// // 3 + it (and not only it + 3)
+// template<class T>
+// const_iterator<T> operator+(typename const_iterator<T>::difference_type n, const const_iterator<T> &it)
+// {
+//     return const_iterator<T>(it.base() + n);
+// }
 
 
 }; // end of vec scope
@@ -307,6 +442,8 @@ public:
     
     typedef vec::iterator<T*> iterator;
     typedef vec::iterator<const T*> const_iterator;
+    // typedef vec::iterator<T> iterator;
+    // typedef vec::const_iterator<T> const_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;    
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
 
