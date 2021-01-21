@@ -21,23 +21,30 @@ class iterator
     private:
         T ptr;
     public:
-        // provide some typedefs that may be needed when our iterator is used
         // T is a pointer (int * for eg). so it is also an iterator, so iterator_traits works on it
         // sometimes we want to return int or int & --> we will use value_type and reference (we can't use *T to design "int") 
+        // those typedefs that may be needed when our iterator is used
         typedef typename std::iterator_traits<T>::value_type value_type; //
         typedef typename std::iterator_traits<T>::reference reference;
         typedef typename std::iterator_traits<T>::pointer pointer;
         typedef typename std::iterator_traits<T>::difference_type difference_type;
         typedef typename std::iterator_traits<T>::iterator_category iterator_category;
-        // if T is of type const int *, value type will be CONST int and reference type will be CONST reference
+        // Rq: if T is of type const int *, value type will be CONST int and reference type will be CONST reference
         
         iterator(): ptr(NULL) {};
-        iterator(T ptr): ptr(ptr) {};
-        // iterator(value_type* ptr): ptr(ptr) {};
-        // iterator(const value_type* ptr): ptr(ptr) {};
-        // iterator(const iterator &copy): ptr(copy.ptr) {};
-        // template <class it>
-        // iterator(it copy): ptr(copy.base()) {};
+        
+        // to work with our template constructor below, we replace the 1st form (T ptr) with two alternatives (if we keep only the first form, the compiler gets mixed up)
+        // iterator(T ptr): ptr(ptr) {};
+        iterator(value_type* ptr): ptr(ptr) {};
+        iterator(const value_type* ptr): ptr(ptr) {};
+
+        
+        // this contructor is suposed to accept iterators and const_iterators (to allow construction of a const_iterator from an iterator)
+        // as it is now, it accepts everything --> enable_if needed to make it compliant
+        template <class it>
+        iterator(it copy): ptr(copy.base()) {};
+        // iterator(const iterator &copy): ptr(copy.ptr) {}; // not needed if templated version below is present
+        
         iterator &operator=(const iterator &rhs)
         {
             this->ptr = rhs.ptr;
