@@ -16,16 +16,28 @@ namespace ft
 namespace vec // for iterator definition, to differentiate them from other container iterator
 {
 template<class T>
-class iterator: public std::iterator<std::random_access_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
+class iterator
 {
     private:
-        T* ptr;
+        T ptr;
     public:
-        typedef typename std::iterator<std::random_access_iterator_tag, T>::difference_type difference_type;
+        // provide some typedefs that may be needed when our iterator is used
+        // T is a pointer (int * for eg). so it is also an iterator, so iterator_traits works on it
+        // sometimes we want to return int or int & --> we will use value_type and reference (we can't use *T to design "int") 
+        typedef typename std::iterator_traits<T>::value_type value_type; //
+        typedef typename std::iterator_traits<T>::reference reference;
+        typedef typename std::iterator_traits<T>::pointer pointer;
+        typedef typename std::iterator_traits<T>::difference_type difference_type;
+        typedef typename std::iterator_traits<T>::iterator_category iterator_category;
+        // if T is of type const int *, value type will be CONST int and reference type will be CONST reference
         
         iterator(): ptr(NULL) {};
-        iterator(T *ptr): ptr(ptr) {};
-        iterator(const iterator &copy): ptr(copy.ptr) {};
+        iterator(T ptr): ptr(ptr) {};
+        // iterator(value_type* ptr): ptr(ptr) {};
+        // iterator(const value_type* ptr): ptr(ptr) {};
+        // iterator(const iterator &copy): ptr(copy.ptr) {};
+        // template <class it>
+        // iterator(it copy): ptr(copy.base()) {};
         iterator &operator=(const iterator &rhs)
         {
             this->ptr = rhs.ptr;
@@ -34,19 +46,19 @@ class iterator: public std::iterator<std::random_access_iterator_tag, T> // has 
         ~iterator() {};
 
         // (1) access        
-        T &operator*() const
+        reference operator*() const
         {
             return *this->ptr;
         };
-        T &operator[](difference_type n) const
+        reference operator[](difference_type n) const
         {
             return this->ptr[n];
         };
-        T *operator->() const
+        pointer operator->() const
         {
             return this->ptr;
         };
-        T *base() const // access to the underlying pointer (read access only) --> done this way in the stl iterator
+        pointer base() const // access to the underlying pointer (read access only) --> done this way in the stl iterator
         {
             return this->ptr;
         }
@@ -286,8 +298,8 @@ private:
 
 public:
     
-    typedef vec::iterator<T> iterator;
-    typedef vec::const_iterator<T> const_iterator;
+    typedef vec::iterator<T*> iterator;
+    typedef vec::iterator<const T*> const_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;    
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
 

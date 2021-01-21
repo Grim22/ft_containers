@@ -124,6 +124,7 @@ int main()
 
     // const_iterator
     const vector<int> vec5(vec4.begin(), vec4.end());
+    std::cout << "---" << std::endl;
 
     // -- & ++
     vector<int>::const_iterator it3 = vec5.begin();
