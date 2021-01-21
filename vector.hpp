@@ -14,9 +14,10 @@ template<class T>
 class iterator: public std::iterator<std::random_access_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
 {
     private:
-        typedef typename std::iterator<std::random_access_iterator_tag, T>::difference_type difference_type;
         T* ptr;
     public:
+        typedef typename std::iterator<std::random_access_iterator_tag, T>::difference_type difference_type;
+        
         iterator(): ptr(NULL) {};
         iterator(T *ptr): ptr(ptr) {};
         iterator(const iterator &copy): ptr(copy.ptr) {};
@@ -39,29 +40,25 @@ class iterator: public std::iterator<std::random_access_iterator_tag, T> // has 
         {
             return this->ptr;
         };
-        T *get_ptr() const
+        T *base() const // access to the underlying pointer (read access only) --> done this way in the stl iterator
         {
             return this->ptr;
         }
         // substracting two pointers returns a difference_type
-        difference_type operator-(const iterator &rhs)
+        difference_type operator-(const iterator &rhs) const
         {
             return (this->ptr - rhs.ptr);
         }
 
         // unlike ++ += -- -=, these operators do not modify this: they return a new iterator
-        iterator operator-(difference_type n)
+        iterator operator-(difference_type n) const
         {
             return iterator(this->ptr - n);
         }
-        iterator operator+(difference_type n)
+        iterator operator+(difference_type n) const
         {
             return iterator(this->ptr + n);
         }
-        // non member overload made friend in order to access ptr
-        template <class X>
-        friend ft::iterator<X> operator+(typename ft::iterator<X>::difference_type n, const ft::iterator<X> &it);
-        
         iterator& operator++()// preincrement (++a)
         {
             this->ptr++;
@@ -121,12 +118,12 @@ class iterator: public std::iterator<std::random_access_iterator_tag, T> // has 
         }
 };
 
-// we need non member to perform symetrical operations:
+// we need this non member operator+ to perform symetrical operations:
 // 3 + it (and not only it + 3)
 template<class T>
 iterator<T> operator+(typename ft::iterator<T>::difference_type n, const ft::iterator<T> &it)
 {
-    return ft::iterator<T>(it.ptr + n);
+    return ft::iterator<T>(it.base() + n);
 }
 
 
