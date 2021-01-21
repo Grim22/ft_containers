@@ -164,7 +164,6 @@ iterator<T> operator+(typename iterator<T>::difference_type n, const iterator<T>
 }
 
 
-
 // Here we define iterator and const_iterator classes separately, then we use typedefs to make them member types of vector
 // (we could also have defined them inside the vect)
 // TO DO: add non member comparison operators, to make possible comparison between const and non const iterators (and more)
@@ -421,7 +420,6 @@ iterator<T> operator+(typename iterator<T>::difference_type n, const iterator<T>
 //     return const_iterator<T>(it.base() + n);
 // }
 
-
 }; // end of vec scope
 
 
@@ -451,6 +449,7 @@ private:
 
 public:
     // constructors & destructor
+
     explicit vector (): base(NULL), size_(0), capacity_(0) {};
     explicit vector (size_type n, const value_type& val = value_type()): base(new T[n]), size_(n), capacity_(n)
     {
@@ -468,20 +467,21 @@ public:
             it++;
         }
     };
-    // vector (const vector& x): base(new T[x.capacity_]), size_(x.size_), capacity_(x.size_)
-    // {
-    //     const_iterator it = x.begin();
-    //     for (size_type i = 0; i < this->size_; i++)
-    //     {
-    //         this->base[i] = *it;
-    //         it++;
-    //     }
-    // }
+    vector (const vector& x): base(new T[x.capacity_]), size_(x.size_), capacity_(x.size_)
+    {
+        const_iterator it = x.begin();
+        for (size_type i = 0; i < this->size_; i++)
+        {
+            this->base[i] = *it;
+            it++;
+        }
+    }
     ~vector()
     {
         delete [] this->base;
     };
     vector& operator= (const vector& x);
+
 
     // iterator
     iterator begin()
@@ -500,13 +500,28 @@ public:
     {
         return const_iterator(this->base + this->size_);
     };
-    reverse_iterator rbegin();
-    const_reverse_iterator rbegin() const;
-    reverse_iterator rend();
-    const_reverse_iterator rend() const;
+    reverse_iterator rbegin()
+    {
+        return reverse_iterator(this->end());
+    };
+    const_reverse_iterator rbegin() const
+    {
+        return reverse_iterator(this->end());
+    };
+    reverse_iterator rend()
+    {
+        return reverse_iterator(this->begin());
+    };
+    const_reverse_iterator rend() const
+    {
+        return reverse_iterator(this->begin());
+    };
 
     // capacity
-    bool empty() const;
+    bool empty() const
+    {
+        return (this->size_ == 0);
+    };
     size_type size() const 
     { 
         return this->size_; 
@@ -550,7 +565,13 @@ public:
         this->base = new_base;
 
     };
-    void pop_back();
+    void pop_back()
+    {
+        if (this->empty())
+            return ;
+        this->size_--;
+        this->base[this->size_].~T();
+    };
     iterator insert (iterator position, const value_type& val);
     void insert (iterator position, size_type n, const value_type& val);
     void insert (iterator position, iterator first, iterator last);
@@ -582,155 +603,6 @@ public:
 }
 
     
-// class iterator
-
-
-// template<class T>
-// ft::iterator<T>::iterator()
-// {
-// }
-// template<class T>
-// ft::iterator<T>::iterator(const iterator &copy): ptr(copy.ptr)
-// {
-// }
-// template<class T>
-// ft::iterator<T>::iterator(T *ptr): ptr(ptr)
-// {
-// }
-// template<class T>
-// ft::iterator<T>::~iterator()
-// {
-// }
-// template<class T>
-// ft::iterator<T> &ft::iterator<T>::operator=(const iterator &rhs)
-// {
-//     this->ptr = rhs.ptr;
-//     return *this;
-// }
-// template<class T>
-// T &ft::iterator<T>::operator*() const
-// {
-//     return this->ptr->content;
-// }
-// template<class T>
-// T *ft::iterator<T>::operator->() const
-// {
-//     return &this->ptr->content;
-// }
-// template<class T>
-// ft::iterator<T>& ft::iterator<T>::operator++() // preincrement (++a)
-// {
-//     this->ptr = this->ptr->next;
-//     return *this;
-// }
-// template<class T>
-// ft::iterator<T> ft::iterator<T>::operator++(int) // postincrement (a++)
-// {
-//     iterator tmp(*this);
-//     this->ptr = this->ptr->next;
-//     return tmp;
-// }
-// template<class T>
-// ft::iterator<T>& ft::iterator<T>::operator--()
-// {
-//     this->ptr = this->ptr->prev;
-//     return *this;    
-// }
-// template<class T>
-// ft::iterator<T> ft::iterator<T>::operator--(int)
-// {
-//     iterator tmp(*this);
-//     this->ptr = this->ptr->prev;
-//     return tmp;
-// }
-// template<class T>
-// bool ft::iterator<T>::operator==(const iterator &rhs) const
-// {
-//     return (this->ptr == rhs.ptr);
-// }
-// template<class T>
-// bool ft::iterator<T>::operator!=(const iterator &rhs) const
-// {
-//     return (this->ptr != rhs.ptr);
-// }
-
-
-// class const iterator
-
-// template<class T>
-// ft::const_iterator<T>::const_iterator()
-// {
-// }
-// template<class T>
-// ft::const_iterator<T>::const_iterator(const const_iterator &copy): ptr(copy.ptr)
-// {
-// }
-// // template<class T>
-// // ft::const_iterator<T>::const_iterator(ft::iterator<T> copy): ptr(copy.as_node())
-// // {
-// // }
-// template<class T>
-// ft::const_iterator<T>::const_iterator(T *ptr): ptr(ptr)
-// {
-// }
-// template<class T>
-// ft::const_iterator<T>::~const_iterator()
-// {
-// }
-// template<class T>
-// ft::const_iterator<T> &ft::const_iterator<T>::operator=(const const_iterator &rhs)
-// {
-//     this->ptr = rhs.ptr;
-//     return *this;
-// }
-// template<class T>
-// const T &ft::const_iterator<T>::operator*() const
-// {
-//     return this->ptr->content;
-// }
-// template<class T>
-// const T *ft::const_iterator<T>::operator->() const
-// {
-//     return &this->ptr->content;
-// }
-// template<class T>
-// ft::const_iterator<T>& ft::const_iterator<T>::operator++() // preincrement (++a)
-// {
-//     this->ptr = this->ptr->next;
-//     return *this;
-// }
-// template<class T>
-// ft::const_iterator<T> ft::const_iterator<T>::operator++(int) // postincrement (a++)
-// {
-//     const_iterator tmp(*this);
-//     this->ptr = this->ptr->next;
-//     return tmp;
-// }
-// template<class T>
-// ft::const_iterator<T>& ft::const_iterator<T>::operator--()
-// {
-//     this->ptr = this->ptr->prev;
-//     return *this;    
-// }
-// template<class T>
-// ft::const_iterator<T> ft::const_iterator<T>::operator--(int)
-// {
-//     const_iterator tmp(*this);
-//     this->ptr = this->ptr->prev;
-//     return tmp;
-// }
-// template<class T>
-// bool ft::const_iterator<T>::operator==(const const_iterator &rhs) const
-// {
-//     return (this->ptr == rhs.ptr);
-// }
-// template<class T>
-// bool ft::const_iterator<T>::operator!=(const const_iterator &rhs) const
-// {
-//     return (this->ptr != rhs.ptr);
-// }
-
-
 // // list class
 
 // // private functions
