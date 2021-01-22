@@ -540,7 +540,27 @@ public:
     // const T &back() const;
 
     // modifiers
-    void assign (size_type n, const value_type& val);
+    void assign (size_type n, const value_type& val)
+    {
+        if (this->capacity_ < n)
+        {
+            delete [] this->base;
+            this->base = new T[n];
+            this->capacity_ = n;
+        }
+        else
+        {
+            for (size_type i = 0; i < this->size_; i++)
+                this->base[i].~T();
+        }
+        this->size_ = n;
+
+        // we use "placement new": object is constructed at the given memory location
+        // we cant use assignation (this->base[i] = val), as this->base[i] is no longer a T object (we have destroyed it)
+        for (size_type i = 0; i < n; i++)
+            new(this->base + i) T(val);
+
+    };
     void assign (iterator first, iterator last);
     // template<class inputiterator> // not ready either
     // void assign (inputiterator first, inputiterator last)
@@ -552,10 +572,12 @@ public:
             this->size_++;
             return ;
         }
+
         if (this->capacity_)
             this->capacity_ = this->capacity_ * 2;
         else
             this->capacity_ = 1;
+        
         T *new_base = new T[this->capacity_]; 
         for (size_type i = 0; i < this->size_; i++)
             new_base[i] = this->base[i];

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "vector.hpp"
+#include "Fixed.hpp"
 
 
 #ifndef STD
@@ -199,26 +200,52 @@ int main()
     // // std::cout << (it3 == it4) << std::endl;
 
     // reverse iterator and empty
-    vector<int> vec5;
-    std::cout << vec5.empty() << std::endl;
-    vec5.push_back(2); 
-    vec5.push_back(3); 
-    vec5.push_back(4); 
-    vec5.push_back(5);
-    std::cout << vec5.empty() << std::endl;
-    displayvec(vec5);
-    displayvec_reverse(vec5);
+    // vector<int> vec5;
+    // std::cout << vec5.empty() << std::endl;
+    // vec5.push_back(2); 
+    // vec5.push_back(3); 
+    // vec5.push_back(4); 
+    // vec5.push_back(5);
+    // std::cout << vec5.empty() << std::endl;
+    // displayvec(vec5);
+    // displayvec_reverse(vec5);
 
+    // // pop back
+    // std::cout << "size: " << vec5.size() << std::endl;   
+    // std::cout << "cap: " << vec5.capacity() << std::endl;   
+    // std::cout << "---" << std::endl;
+    // vec5.pop_back();
+    // vec5.pop_back();
+    // vec5.pop_back();
+    // vec5.pop_back();
+    // std::cout << "size: " << vec5.size() << std::endl;   
+    // std::cout << "cap: " << vec5.capacity() << std::endl;   
+    // std::cout << "---" << std::endl;
+    // displayvec(vec5);
 
-    std::cout << "size: " << vec5.size() << std::endl;   
-    std::cout << "cap: " << vec5.capacity() << std::endl;   
+    // // assign
+    vector<int> vec6(4, 6);
+    vec6.assign(2, 8);
+    std::cout << "size: " << vec6.size() << std::endl;   
+    std::cout << "cap: " << vec6.capacity() << std::endl;   
     std::cout << "---" << std::endl;
-    vec5.pop_back();
-    vec5.pop_back();
-    vec5.pop_back();
-    vec5.pop_back();
-    std::cout << "size: " << vec5.size() << std::endl;   
-    std::cout << "cap: " << vec5.capacity() << std::endl;   
+    displayvec(vec6);
+    vec6.assign(3, 7);
+    std::cout << "size: " << vec6.size() << std::endl;   
+    std::cout << "cap: " << vec6.capacity() << std::endl;   
     std::cout << "---" << std::endl;
-    displayvec(vec5);
+    displayvec(vec6);
+
+    // assign with fixed
+    // Fixed a(3);
+    // vector<Fixed> vec8;
+    // vec8.push_back(a);
+    // Fixed a(8);
+    // std::cout << "---" << std::endl;
+    // vector<Fixed> vec7(4, Fixed(6));
+    // std::cout << "---" << std::endl;
+    // vec7.assign(1, Fixed(8));
+    // std::cout << "---" << std::endl;
+    // vec7.assign(3, Fixed(7));
+    // std::cout << "---" << std::endl;
 }
