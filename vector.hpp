@@ -446,39 +446,54 @@ public:
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
 
 private:
-
+    void delete_base()
+    {
+        // delete [] this->base; cant do that, as our array was not allocated with new []
+        for (size_type i = 0; i < this->size_; i++)
+            this->base[i].~T(); // call destructor for each element
+        delete this->base; // free the whole memory block
+    }
 public:
     // constructors & destructor
 
     explicit vector (): base(NULL), size_(0), capacity_(0) {};
-    explicit vector (size_type n, const value_type& val = value_type()): base(new T[n]), size_(n), capacity_(n)
+    // first we allocate memory without calling constructor
+    // then we call constructor at chosen location ("placement new", does not allocate memory)
+    // Rq: alternative is to call new T[n] and then assign val to every element of the array = for each element, call default constructor then call assignement operator = expensive
+    // chosen option allows us to construct only the elements we need (we allocate enough memory for [capacity] elements but only construct [size] element )
+    // https://lokiastari.com/blog/2016/02/27/vector/index.html
+    explicit vector (size_type n, const value_type& val = value_type()): base(reinterpret_cast<T*> (::operator new(n * sizeof(T)))), size_(n), capacity_(n)
     {
         for (size_type i = 0; i < n; i++)
-            this->base[i] = val;
+            // this->base[i] = val;
+            new (this->base + i) T(val);
     };
     // template <class InputIterator>
     // vector (InputIterator first, InputIterator last);
-    vector(iterator first, iterator last): base(new T[last - first]), size_(last - first), capacity_(last - first)
+    vector(iterator first, iterator last): base(reinterpret_cast<T*>(::operator new ((last - first) * sizeof(T)))), size_(last - first), capacity_(last - first)
     {
         iterator it = first;
         for (size_type i = 0; i < this->size_; i++)
         {
-            this->base[i] = *it;
+            // this->base[i] = *it;
+            new (this->base + i) T(*it);
             it++;
         }
     };
-    vector (const vector& x): base(new T[x.capacity_]), size_(x.size_), capacity_(x.size_)
+    vector (const vector& x): base(reinterpret_cast<T*>(::operator new (x.capacity_ * sizeof(T)))), size_(x.size_), capacity_(x.size_)
     {
         const_iterator it = x.begin();
         for (size_type i = 0; i < this->size_; i++)
         {
-            this->base[i] = *it;
+            // this->base[i] = *it;
+            new (this->base + i) T(*it);
             it++;
         }
     }
     ~vector()
     {
-        delete [] this->base;
+        // // delete [] this->base; cant do that, as our array was not allocated with new []
+        this->clear();
     };
     vector& operator= (const vector& x);
 
@@ -542,13 +557,15 @@ public:
     // modifiers
     void assign (size_type n, const value_type& val)
     {
-        if (this->capacity_ < n)
+        if (this->capacity_ < n) // not enough room -> reallocate
         {
-            delete [] this->base;
-            this->base = new T[n];
+            // delete [] this->base;
+            this->delete_base();
+            // this->base = new T[n];
+            this->base = reinterpret_cast<T*>(::operator new(n * sizeof(T)));
             this->capacity_ = n;
         }
-        else
+        else // enough room -> destroy elements
         {
             for (size_type i = 0; i < this->size_; i++)
                 this->base[i].~T();
@@ -566,24 +583,29 @@ public:
     // void assign (inputiterator first, inputiterator last)
     void push_back(const value_type& val)
     {
-        if (this->capacity_ > this->size_)
+        if (this->capacity_ > this->size_) // if enough capacity
         {
-            this->base[this->size_] = val;
+            // this->base[this->size_] = val;
+            new(this->base + this->size_) T(val);
             this->size_++;
             return ;
         }
 
+        // set new capacity
         if (this->capacity_)
             this->capacity_ = this->capacity_ * 2;
         else
             this->capacity_ = 1;
         
-        T *new_base = new T[this->capacity_]; 
+        // create a new base, fill it with old base, then delete and replace old base
+        T *new_base = reinterpret_cast<T*>(::operator new (this->capacity_ * sizeof(T)));
         for (size_type i = 0; i < this->size_; i++)
-            new_base[i] = this->base[i];
-        new_base[this->size_] = val;
+            // new_base[i] = this->base[i];
+            new(new_base + i) T(this->base[i]);
+        // new_base[this->size_] = val;
+        new(new_base + this->size_) T(val);
         this->size_++;
-        delete [] this->base;
+        this->delete_base();
         this->base = new_base;
 
     };
@@ -600,8 +622,12 @@ public:
     iterator erase (iterator position);
     iterator erase (iterator first, iterator last);
     void swap (vector& x);
-    void clear();
-
+    void clear()
+    {
+        this->delete_base();
+        this->size_ = 0;
+        this->capacity_ = 0;
+    };
 };
 
     // non member functions (relationnal operators)
