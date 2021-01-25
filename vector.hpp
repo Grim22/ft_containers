@@ -551,7 +551,25 @@ public:
         return this->capacity_; 
     };
     size_type max_size() const;
-    void resize (size_type n, value_type val = value_type());
+    void resize (size_type n, value_type val = value_type())
+    {
+        if (this->size_ > n)
+        {
+            while (this->size_ > n)
+            {
+                this->size_--;
+                this->base[this->size_].~T();
+            }
+            return ;
+        }
+        // n >= this->size
+        // size_type new_cap;
+        // if ()
+        // this->reserve(n);
+        // for (size_type i = this->size_; i < n; i++)
+        //     new (this->base + i) T(val);
+    }
+
     void reserve (size_type n)
     {
         if (this->capacity_ >= n) // not enough room -> reallocate
@@ -641,6 +659,9 @@ public:
         this->delete_base();
         this->base = new_base;
 
+
+        // this->resize(this->size_ + 1, val);
+
     };
     void pop_back()
     {
@@ -648,6 +669,7 @@ public:
             return ;
         this->size_--;
         this->base[this->size_].~T();
+        // this->resize(this->size_ - 1);
     };
     iterator insert (iterator position, const value_type& val);
     void insert (iterator position, size_type n, const value_type& val);
