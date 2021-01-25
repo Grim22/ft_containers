@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "vector.hpp"
-#include "Fixed.hpp"
+// #include "Fixed.hpp"
 
 
 #ifndef STD
@@ -228,6 +228,7 @@ int main()
     std::cout << "---" << std::endl;
     displayvec(vec7);
 
+
     // assign with fixed
     // Fixed a(3);
     // vector<Fixed> vec8;
@@ -239,4 +240,25 @@ int main()
     // std::cout << "---" << std::endl;
     // vec9.assign(3, Fixed(7));
     // std::cout << "---" << std::endl;
+
+    // reserve
+    vector<int>vec10(4, 8);
+    vec10.reserve(15);
+    std::cout << "size: " << vec10.size() << std::endl;   
+    std::cout << "cap: " << vec10.capacity() << std::endl;   
+    std::cout << "---" << std::endl;
+    displayvec(vec10);
+
+    // op =
+    vector<int>vec11(5, 9);
+    vec11 = vec10;
+    std::cout << "size: " << vec11.size() << std::endl;   
+    std::cout << "cap: " << vec11.capacity() << std::endl;   
+    std::cout << "---" << std::endl;
+    displayvec(vec11);
+    vec11 = vector<int>(6, 10);
+    std::cout << "size: " << vec11.size() << std::endl;   
+    std::cout << "cap: " << vec11.capacity() << std::endl;   
+    std::cout << "---" << std::endl;
+    displayvec(vec11);
 }

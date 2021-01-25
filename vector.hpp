@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iterator>
 #include <memory>
+#include <cstring> //memcpy, memove
 #include <algorithm> // max
 
 
@@ -451,7 +452,7 @@ private:
         // delete [] this->base; cant do that, as our array was not allocated with new []
         for (size_type i = 0; i < this->size_; i++)
             this->base[i].~T(); // call destructor for each element
-        delete this->base; // free the whole memory block
+        delete this->base; // free the whole memory block // not mandatory ?
     }
 public:
     // constructors & destructor
@@ -495,7 +496,21 @@ public:
         // // delete [] this->base; cant do that, as our array was not allocated with new []
         this->clear();
     };
-    vector& operator= (const vector& x);
+    vector& operator= (const vector& x)
+    {
+        for (size_type i = 0; i < this->size_; i++)
+            this->base[i].~T(); // call destructor for each element
+        // if (x.size_ > this->capacity_)
+        // {
+        //     delete this->base;
+        //     this->capacity_ = x.size_;
+        //     this->base = reinterpret_cast<T*>(::operator new (x.capacity_ * sizeof(T)));
+        // }
+        this->reserve(x.size_);
+        this->size_ = x.size_;
+        std::memcpy(this->base, x.base, x.size_ * sizeof(T));
+        return *this;
+    };
 
 
     // iterator
@@ -547,6 +562,16 @@ public:
     };
     size_type max_size() const;
     void resize (size_type n, value_type val = value_type());
+    void reserve (size_type n)
+    {
+        if (this->capacity_ >= n) // not enough room -> reallocate
+            return ;
+        T* old_base = base;
+        this->base = reinterpret_cast<T*>(::operator new(n * sizeof(T)));
+        std::memcpy(this->base, old_base, this->size_ * sizeof(T));
+        this->capacity_ = n;
+        delete old_base;
+    };
 
     // // element access
     // T &front();
@@ -559,9 +584,7 @@ public:
     {
         if (this->capacity_ < n) // not enough room -> reallocate
         {
-            // delete [] this->base;
-            this->delete_base();
-            // this->base = new T[n];
+            this->clear();
             this->base = reinterpret_cast<T*>(::operator new(n * sizeof(T)));
             this->capacity_ = n;
         }
@@ -605,7 +628,7 @@ public:
         // new_base[this->size_] = val;
         new(new_base + this->size_) T(val);
         this->size_++;
-        this->delete_base();
+        this->delete_base(); // rather than clear(), so we dont "lose" size
         this->base = new_base;
 
     };
