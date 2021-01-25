@@ -15,6 +15,9 @@ using namespace NAMESPACE;
 
 void displayvec(vector<int> lst)
 {
+    std::cout << "size: " << lst.size() << std::endl;   
+    std::cout << "cap: " << lst.capacity() << std::endl;   
+    std::cout << "---" << std::endl;
     vector<int>::iterator it = lst.begin();
     while (it != lst.end())
     {
@@ -210,22 +213,13 @@ int main()
     vec6.pop_back();
     vec6.pop_back();
     vec6.pop_back();
-    std::cout << "size: " << vec6.size() << std::endl;   
-    std::cout << "cap: " << vec6.capacity() << std::endl;   
-    std::cout << "---" << std::endl;
     displayvec(vec6);
 
     // // assign
     vector<int> vec7(4, 6);
     vec7.assign(2, 8);
-    std::cout << "size: " << vec7.size() << std::endl;   
-    std::cout << "cap: " << vec7.capacity() << std::endl;   
-    std::cout << "---" << std::endl;
     displayvec(vec7);
     vec7.assign(3, 7);
-    std::cout << "size: " << vec7.size() << std::endl;   
-    std::cout << "cap: " << vec7.capacity() << std::endl;   
-    std::cout << "---" << std::endl;
     displayvec(vec7);
 
 
@@ -244,21 +238,17 @@ int main()
     // reserve
     vector<int>vec10(4, 8);
     vec10.reserve(15);
-    std::cout << "size: " << vec10.size() << std::endl;   
-    std::cout << "cap: " << vec10.capacity() << std::endl;   
-    std::cout << "---" << std::endl;
     displayvec(vec10);
 
     // op =
     vector<int>vec11(5, 9);
     vec11 = vec10;
-    std::cout << "size: " << vec11.size() << std::endl;   
-    std::cout << "cap: " << vec11.capacity() << std::endl;   
-    std::cout << "---" << std::endl;
     displayvec(vec11);
     vec11 = vector<int>(6, 10);
-    std::cout << "size: " << vec11.size() << std::endl;   
-    std::cout << "cap: " << vec11.capacity() << std::endl;   
-    std::cout << "---" << std::endl;
     displayvec(vec11);
+
+    // assign iterator
+    vector<int> vec12(3, 9);
+    vec12.assign(vec10.begin(), vec10.end());
+    displayvec(vec12);
 }

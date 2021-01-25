@@ -434,8 +434,8 @@ private:
 
 private:
     T *base;
-    size_t size_;
-    size_t capacity_;
+    size_type size_;
+    size_type capacity_;
 
 public:
     
@@ -498,11 +498,7 @@ public:
     };
     vector& operator= (const vector& x)
     {
-        for (size_type i = 0; i < this->size_; i++)
-            this->base[i].~T(); // call destructor for each element
-        this->reserve(x.size_);
-        this->size_ = x.size_;
-        std::memcpy(this->base, x.base, x.size_ * sizeof(T));
+        this->assign(x.begin(), x.end());
         return *this;
     };
 
@@ -560,10 +556,17 @@ public:
     {
         if (this->capacity_ >= n) // not enough room -> reallocate
             return ;
-        T* old_base = base;
+
+        // create a new base, allocate it and then copy old_base into it
+        T* old_base = this->base;
         this->base = reinterpret_cast<T*>(::operator new(n * sizeof(T)));
-        std::memcpy(this->base, old_base, this->size_ * sizeof(T));
+        for (size_type i = 0; i < this->size_; i++)
+            new(this->base + i) T(old_base[i]);
         this->capacity_ = n;
+
+        // free old_base
+        for (size_type i = 0; i < this->size_; i++)
+            old_base[i].~T();
         delete old_base;
     };
 
@@ -576,20 +579,14 @@ public:
     // modifiers
     void assign (size_type n, const value_type& val)
     {
-        // if (this->capacity_ < n) // not enough room -> reallocate
-        // {
-        //     this->clear();
-        //     this->base = reinterpret_cast<T*>(::operator new(n * sizeof(T)));
-        //     this->capacity_ = n;
-        // }
-        // else // enough room -> destroy elements
-        // {
-        //     for (size_type i = 0; i < this->size_; i++)
-        //         this->base[i].~T();
-        // }
         for (size_type i = 0; i < this->size_; i++)
             this->base[i].~T();
-        this->reserve(n);
+        if (this->capacity_ < n) // not enough room -> reallocate
+        {
+            delete this->base;
+            this->base = reinterpret_cast<T*>(::operator new(n * sizeof(T)));
+            this->capacity_ = n;
+        }
         this->size_ = n;
 
         // we use "placement new": object is constructed at the given memory location
@@ -598,9 +595,26 @@ public:
             new(this->base + i) T(val);
 
     };
-    void assign (iterator first, iterator last);
     // template<class inputiterator> // not ready either
     // void assign (inputiterator first, inputiterator last)
+    void assign (const_iterator first, const_iterator last)
+    {
+        for (size_type i = 0; i < this->size_; i++)
+            this->base[i].~T();
+        if (this->capacity_ < static_cast<size_type>(last - first)) // not enough room -> reallocate
+        {
+            delete this->base;
+            this->base = reinterpret_cast<T*>(::operator new((last - first) * sizeof(T)));
+            this->capacity_ = last - first;
+        }
+        this->size_ = last - first;
+
+        // we use "placement new": object is constructed at the given memory location
+        // we cant use assignation (this->base[i] = val), as this->base[i] is no longer a T object (we have destroyed it)
+        for (const_iterator it = first; it != last; it++)
+            new(this->base + (it - first)) T(*it);
+
+    };
     void push_back(const value_type& val)
     {
         if (this->capacity_ > this->size_) // if enough capacity
