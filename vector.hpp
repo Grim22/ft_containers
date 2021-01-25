@@ -500,12 +500,6 @@ public:
     {
         for (size_type i = 0; i < this->size_; i++)
             this->base[i].~T(); // call destructor for each element
-        // if (x.size_ > this->capacity_)
-        // {
-        //     delete this->base;
-        //     this->capacity_ = x.size_;
-        //     this->base = reinterpret_cast<T*>(::operator new (x.capacity_ * sizeof(T)));
-        // }
         this->reserve(x.size_);
         this->size_ = x.size_;
         std::memcpy(this->base, x.base, x.size_ * sizeof(T));
@@ -582,17 +576,20 @@ public:
     // modifiers
     void assign (size_type n, const value_type& val)
     {
-        if (this->capacity_ < n) // not enough room -> reallocate
-        {
-            this->clear();
-            this->base = reinterpret_cast<T*>(::operator new(n * sizeof(T)));
-            this->capacity_ = n;
-        }
-        else // enough room -> destroy elements
-        {
-            for (size_type i = 0; i < this->size_; i++)
-                this->base[i].~T();
-        }
+        // if (this->capacity_ < n) // not enough room -> reallocate
+        // {
+        //     this->clear();
+        //     this->base = reinterpret_cast<T*>(::operator new(n * sizeof(T)));
+        //     this->capacity_ = n;
+        // }
+        // else // enough room -> destroy elements
+        // {
+        //     for (size_type i = 0; i < this->size_; i++)
+        //         this->base[i].~T();
+        // }
+        for (size_type i = 0; i < this->size_; i++)
+            this->base[i].~T();
+        this->reserve(n);
         this->size_ = n;
 
         // we use "placement new": object is constructed at the given memory location
@@ -623,12 +620,11 @@ public:
         // create a new base, fill it with old base, then delete and replace old base
         T *new_base = reinterpret_cast<T*>(::operator new (this->capacity_ * sizeof(T)));
         for (size_type i = 0; i < this->size_; i++)
-            // new_base[i] = this->base[i];
             new(new_base + i) T(this->base[i]);
-        // new_base[this->size_] = val;
+        // this->reserve(this->capacity_);
         new(new_base + this->size_) T(val);
         this->size_++;
-        this->delete_base(); // rather than clear(), so we dont "lose" size
+        this->delete_base();
         this->base = new_base;
 
     };
