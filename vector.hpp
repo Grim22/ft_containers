@@ -688,12 +688,35 @@ public:
             return ;
         this->resize(this->size_ - 1);
     };
-    iterator insert (iterator position, const value_type& val);
-    void insert (iterator position, size_type n, const value_type& val);
-    // inserer 8 et 9 dans 0 1 2 3 4 avec position = 2
+    iterator insert (iterator position, const value_type& val)
+    {
+        size_type pos = position - this->begin();
+        this->insert(position, 1, val);
+        return this->begin() + pos;
+    };
+    void insert (iterator position, size_type n, const value_type& val)
+    {
+        size_type end = this->end() -1 - this->begin();
+        size_type pos = position - this->begin();
+        
+        this->resize(this->size_ + n); 
+
+        position = this->begin() + pos;
+        iterator old_end = this->begin() + end;
+        size_type offset(n);
+        for (iterator it = old_end; it >= position ; it--)
+            *(it + offset) = *it;
+        for (size_type i = 0; i < n; i++)
+        {
+            *position = val;
+            position++;
+        }
+    };
+
     void insert (iterator position, iterator first, iterator last)
     {
         // schema des etapes
+        // inserer 8 et 9 dans 0 1 2 3 4 avec position = 2
         // 0 1 2 3 4 NULL
         // 0 1 2 3 4 X X NULL after resize (X is a default constructed T)
         // 0 1 2 3 2 3 4 NULL after moving elements 2 3 and 4 towards the end

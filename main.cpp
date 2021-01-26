@@ -315,7 +315,7 @@ int main()
         std::cerr << e.what() << std::endl;
     }
 
-    // insert
+    // insert with iterators
     vector<int> vec14;
     vec14.push_back(0);
     vec14.push_back(1);
@@ -346,5 +346,32 @@ int main()
     std::cout << "size: " << vec14.size() << std::endl;
     std::cout << "cap: " << vec14.capacity() << std::endl;
     displayvec(vec14);
+
+    // insert range
+    vec17.insert(vec17.begin(), 4, 70);
+    std::cout << "size: " << vec17.size() << std::endl;
+    std::cout << "cap: " << vec17.capacity() << std::endl;
+    vec17.insert(vec17.begin(), 20, 90);
+    std::cout << "size: " << vec17.size() << std::endl;
+    std::cout << "cap: " << vec17.capacity() << std::endl;
+    displayvec(vec17);
+
+    // insert single
+    std::cout << "ret: " << *vec15.insert(vec15.begin(), 99) << std::endl;
+    std::cout << "size: " << vec15.size() << std::endl;
+    std::cout << "cap: " << vec15.capacity() << std::endl;
+    std::cout << "ret: " << *vec15.insert(vec15.begin(), 96) << std::endl;
+    std::cout << "size: " << vec15.size() << std::endl;
+    std::cout << "cap: " << vec15.capacity() << std::endl;
+    std::cout << "ret: " << *vec15.insert(vec15.begin(), 93) << std::endl;
+    std::cout << "size: " << vec15.size() << std::endl;
+    std::cout << "cap: " << vec15.capacity() << std::endl;
+    std::cout << "ret: " << *vec15.insert(vec15.begin(), 90) << std::endl;
+    std::cout << "size: " << vec15.size() << std::endl;
+    std::cout << "cap: " << vec15.capacity() << std::endl;
+    std::cout << "ret: " << *vec15.insert(vec15.end(), 87) << std::endl;
+    std::cout << "size: " << vec15.size() << std::endl;
+    std::cout << "cap: " << vec15.capacity() << std::endl;
+    displayvec(vec15);
     
 }
