@@ -690,7 +690,41 @@ public:
     };
     iterator insert (iterator position, const value_type& val);
     void insert (iterator position, size_type n, const value_type& val);
-    void insert (iterator position, iterator first, iterator last);
+    // inserer 8 et 9 dans 0 1 2 3 4 avec position = 2
+    void insert (iterator position, iterator first, iterator last)
+    {
+        // schema des etapes
+        // 0 1 2 3 4 NULL
+        // 0 1 2 3 4 X X NULL after resize (X is a default constructed T)
+        // 0 1 2 3 2 3 4 NULL after moving elements 2 3 and 4 towards the end
+        // 0 1 8 9 2 3 4 NULL after inserting 8 & 9 at position
+
+        // save end and position "offset" (to retrieve it in case resize needs to reallocate)
+        size_type end = this->end() -1 - this->begin();
+        size_type pos = position - this->begin();
+        
+        this->resize(this->size_ + last - first); // allocates new storage if new size > capacity (the rule for determining new capacity is the same in insert as in resize)
+        
+        // we now have new Ts at the end of the array
+        // we will do assignations to insert elements and relocate others
+        
+        // retrieve position and end
+        position = this->begin() + pos;
+        iterator old_end = this->begin() + end;
+
+        // decaller de [offset] tous les elements de position jusqu'a old_end
+        // le faire en partant de la fin, pour eviter "decraser" des elements
+        size_type offset(last - first);
+        for (iterator it = old_end; it >= position ; it--)
+            *(it + offset) = *it;
+        // inserer a position les elements de first a last
+        for (iterator it = first; it < last ; it++)
+        {
+            *position = *it;
+            position++;
+        }
+        
+    };
     iterator erase (iterator position);
     iterator erase (iterator first, iterator last);
     void swap (vector& x);

@@ -314,5 +314,37 @@ int main()
     {
         std::cerr << e.what() << std::endl;
     }
+
+    // insert
+    vector<int> vec14;
+    vec14.push_back(0);
+    vec14.push_back(1);
+    vec14.push_back(2);
+    vec14.push_back(3);
+    vec14.push_back(4);
+    vector<int> vec15;
+    vec15.push_back(8);
+    vec15.push_back(9);
+    vec15.push_back(10);
+    vec15.push_back(11);
+    vec14.insert(vec14.begin() + 2, vec15.begin(), vec15.begin() + 2);
+    std::cout << "size: " << vec14.size() << std::endl;
+    std::cout << "cap: " << vec14.capacity() << std::endl;
+    vec14.insert(vec14.end(), vec15.begin(), vec15.end());
+    std::cout << "size: " << vec14.size() << std::endl;
+    std::cout << "cap: " << vec14.capacity() << std::endl;
+    vec14.insert(vec14.begin(), vec15.begin(), vec15.end());
+    std::cout << "size: " << vec14.size() << std::endl;
+    std::cout << "cap: " << vec14.capacity() << std::endl;
+    vec14.insert(vec14.begin(), vec15.begin(), vec15.begin());
+    std::cout << "size: " << vec14.size() << std::endl;
+    std::cout << "cap: " << vec14.capacity() << std::endl;
+    displayvec(vec14);
+
+    vector<int> vec17;
+    vec17.insert(vec17.begin(), vec15.begin(), vec15.end());
+    std::cout << "size: " << vec14.size() << std::endl;
+    std::cout << "cap: " << vec14.capacity() << std::endl;
+    displayvec(vec14);
     
 }
