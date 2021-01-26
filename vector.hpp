@@ -4,8 +4,8 @@
 #include <iostream>
 #include <iterator>
 #include <memory>
-#include <cstring> //memcpy, memove
 #include <algorithm> // max
+#include <stdexcept> // out of range error
 
 
 namespace ft
@@ -550,7 +550,11 @@ public:
     { 
         return this->capacity_; 
     };
-    size_type max_size() const;
+    size_type max_size() const
+    {
+        std::allocator< T > al;
+        return al.max_size();
+    };
     void resize (size_type n, value_type val = value_type())
     {
         if (this->size_ > n)
@@ -597,10 +601,43 @@ public:
     };
 
     // // element access
-    // T &front();
-    // const T &front() const;
-    // T &back();
-    // const T &back() const;
+    T &front()
+    {
+        return this->base[0];
+    };
+    const T &front() const
+    {
+        return this->base[0];
+    };
+    T &back()
+    {
+        return this->base[this->size_ - 1];
+    };
+    const T &back() const
+    {
+        return this->base[this->size_ - 1];
+    };
+    T& operator[] (size_type n)
+    {
+        return this->base[n];
+    };
+    const T& operator[] (size_type n) const
+    {
+        return this->base[n];
+    };
+    T& at (size_type n)
+    {
+        if (n >= this->size_)
+            throw std::out_of_range("vector");
+        return this->base[n];
+    };
+    const T& at (size_type n) const
+    {
+        if (n >= this->size_)
+            throw std::out_of_range("vector");
+        return this->base[n];
+    };
+
 
     // modifiers
     void assign (size_type n, const value_type& val)
@@ -643,33 +680,7 @@ public:
     };
     void push_back(const value_type& val)
     {
-        // if (this->capacity_ > this->size_) // if enough capacity
-        // {
-        //     // this->base[this->size_] = val;
-        //     new(this->base + this->size_) T(val);
-        //     this->size_++;
-        //     return ;
-        // }
-
-        // // set new capacity
-        // if (this->capacity_)
-        //     this->capacity_ = this->capacity_ * 2;
-        // else
-        //     this->capacity_ = 1;
-        
-        // // create a new base, fill it with old base, then delete and replace old base
-        // T *new_base = reinterpret_cast<T*>(::operator new (this->capacity_ * sizeof(T)));
-        // for (size_type i = 0; i < this->size_; i++)
-        //     new(new_base + i) T(this->base[i]);
-        // // this->reserve(this->capacity_);
-        // new(new_base + this->size_) T(val);
-        // this->size_++;
-        // this->delete_base();
-        // this->base = new_base;
-
-
         this->resize(this->size_ + 1, val);
-
     };
     void pop_back()
     {

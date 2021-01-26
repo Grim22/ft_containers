@@ -296,4 +296,23 @@ int main()
     std::cout << "size: " << vec13.size() << std::endl;
     std::cout << "cap: " << vec13.capacity() << std::endl;
     displayvec(vec13);
+
+    // max size
+    std::cout << vec13.max_size() << std::endl;
+
+    // element access
+    std::cout << vec13.back() << std::endl;
+    std::cout << vec13.front() << std::endl;
+    std::cout << vec13[3] << std::endl;
+    std::cout << vec13[5] << std::endl;
+    std::cout << vec13[15] << std::endl;
+    try
+    {
+        std::cout << vec13.at(115) << std::endl;
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+    
 }
