@@ -562,12 +562,20 @@ public:
             }
             return ;
         }
-        // n >= this->size
-        // size_type new_cap;
-        // if ()
-        // this->reserve(n);
-        // for (size_type i = this->size_; i < n; i++)
-        //     new (this->base + i) T(val);
+
+        // ajust capacity
+        size_type new_cap(n);
+        if (n > this->capacity_ && n < this->capacity_ * 2)
+            new_cap = this->capacity_ * 2;
+        this->reserve(new_cap);
+        // if n <= capacity, capacity will not grow
+        // else if capacity < n < 2 * capacity, capacity will grow to 2*capacity
+        // else (n >= 2 * cap), it will grow to n
+
+        // add elems
+        for (size_type i = this->size_; i < n; i++)
+            new (this->base + i) T(val);
+        this->size_ = n;
     }
 
     void reserve (size_type n)
@@ -635,41 +643,39 @@ public:
     };
     void push_back(const value_type& val)
     {
-        if (this->capacity_ > this->size_) // if enough capacity
-        {
-            // this->base[this->size_] = val;
-            new(this->base + this->size_) T(val);
-            this->size_++;
-            return ;
-        }
+        // if (this->capacity_ > this->size_) // if enough capacity
+        // {
+        //     // this->base[this->size_] = val;
+        //     new(this->base + this->size_) T(val);
+        //     this->size_++;
+        //     return ;
+        // }
 
-        // set new capacity
-        if (this->capacity_)
-            this->capacity_ = this->capacity_ * 2;
-        else
-            this->capacity_ = 1;
+        // // set new capacity
+        // if (this->capacity_)
+        //     this->capacity_ = this->capacity_ * 2;
+        // else
+        //     this->capacity_ = 1;
         
-        // create a new base, fill it with old base, then delete and replace old base
-        T *new_base = reinterpret_cast<T*>(::operator new (this->capacity_ * sizeof(T)));
-        for (size_type i = 0; i < this->size_; i++)
-            new(new_base + i) T(this->base[i]);
-        // this->reserve(this->capacity_);
-        new(new_base + this->size_) T(val);
-        this->size_++;
-        this->delete_base();
-        this->base = new_base;
+        // // create a new base, fill it with old base, then delete and replace old base
+        // T *new_base = reinterpret_cast<T*>(::operator new (this->capacity_ * sizeof(T)));
+        // for (size_type i = 0; i < this->size_; i++)
+        //     new(new_base + i) T(this->base[i]);
+        // // this->reserve(this->capacity_);
+        // new(new_base + this->size_) T(val);
+        // this->size_++;
+        // this->delete_base();
+        // this->base = new_base;
 
 
-        // this->resize(this->size_ + 1, val);
+        this->resize(this->size_ + 1, val);
 
     };
     void pop_back()
     {
         if (this->empty())
             return ;
-        this->size_--;
-        this->base[this->size_].~T();
-        // this->resize(this->size_ - 1);
+        this->resize(this->size_ - 1);
     };
     iterator insert (iterator position, const value_type& val);
     void insert (iterator position, size_type n, const value_type& val);

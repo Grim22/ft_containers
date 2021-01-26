@@ -273,10 +273,27 @@ int main()
 
     // resize
     vector<int> vec13;
+    vec13.push_back(3);
+    vec13.push_back(3);
+    vec13.push_back(3);
+    vec13.push_back(3);
+    vec13.push_back(3);
+    std::cout << "size: " << vec13.size() << std::endl;   
     std::cout << "cap: " << vec13.capacity() << std::endl;
-    vec13.resize(3);
+    vec13.resize(17); // n > 2 * cap
+    std::cout << "size: " << vec13.size() << std::endl;   
     std::cout << "cap: " << vec13.capacity() << std::endl;
-    // vec13.resize();
-    std::cout << "cap: " << vec13.capacity() << std::endl;   
+    vec13.push_back(3);
+    std::cout << "size: " << vec13.size() << std::endl;   
+    std::cout << "cap: " << vec13.capacity() << std::endl;
+    vec13.resize(40, 4); // n < 2 * cap && n > cap
+    std::cout << "size: " << vec13.size() << std::endl;   
+    std::cout << "cap: " << vec13.capacity() << std::endl;
+    vec13.resize(50, 5); // n < cap && n > size
+    std::cout << "size: " << vec13.size() << std::endl;
+    std::cout << "cap: " << vec13.capacity() << std::endl;
+    vec13.resize(45); // n < size
+    std::cout << "size: " << vec13.size() << std::endl;
+    std::cout << "cap: " << vec13.capacity() << std::endl;
     displayvec(vec13);
 }
