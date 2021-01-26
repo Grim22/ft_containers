@@ -712,7 +712,9 @@ public:
             position++;
         }
     };
-
+    
+    // template <class InputIterator>
+    // void insert (iterator position, InputIterator first, InputIterator last);
     void insert (iterator position, iterator first, iterator last)
     {
         // schema des etapes
