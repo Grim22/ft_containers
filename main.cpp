@@ -373,5 +373,57 @@ int main()
     std::cout << "size: " << vec15.size() << std::endl;
     std::cout << "cap: " << vec15.capacity() << std::endl;
     displayvec(vec15);
+
+    // erase iterator / single
+    vector<int>vec18;
+    vec18.push_back(1);
+    vec18.push_back(2);
+    vec18.push_back(3);
+    vec18.push_back(4);
+    vec18.push_back(5);
+    vec18.push_back(6);
+    vec18.push_back(7);
+    std::cout << "size: " << vec18.size() << std::endl;
+    std::cout << "cap: " << vec18.capacity() << std::endl;
+    std::cout << "---" << std::endl;
+    
+    vector<int>::iterator it6;
+    it6 = vec18.erase(vec18.begin(), vec18.begin() + 1);
+    if (it6 != vec18.end())
+        std::cout << "ret: " << *it6 << std::endl;
+    std::cout << "size: " << vec18.size() << std::endl;
+    std::cout << "cap: " << vec18.capacity() << std::endl;
+    displayvec(vec18);
+    
+    it6 = vec18.erase(vec18.begin() + 1, vec18.begin() + 2);
+    if (it6 != vec18.end())
+        std::cout << "ret: " << *it6 << std::endl;
+    std::cout << "size: " << vec18.size() << std::endl;
+    std::cout << "cap: " << vec18.capacity() << std::endl;
+    displayvec(vec18);
+    
+    it6 = vec18.erase(vec18.end() - 2, vec18.end());
+    if (it6 != vec18.end())
+        std::cout << "ret: " << *it6 << std::endl;
+    std::cout << "size: " << vec18.size() << std::endl;
+    std::cout << "cap: " << vec18.capacity() << std::endl;
+    displayvec(vec18);
+    
+    it6 = vec18.erase(vec18.begin()); // erase single
+    if (it6 != vec18.end())
+        std::cout << "ret: " << *it6 << std::endl;
+    std::cout << "size: " << vec18.size() << std::endl;
+    std::cout << "cap: " << vec18.capacity() << std::endl;
+    displayvec(vec18);
+
+    it6 = vec18.erase(vec18.begin(), vec18.end());
+    if (it6 != vec18.end())
+        std::cout << "ret: " << *it6 << std::endl;
+    std::cout << "size: " << vec18.size() << std::endl;
+    std::cout << "cap: " << vec18.capacity() << std::endl;
+    displayvec(vec18);
+
+    // erase single
+    
     
 }

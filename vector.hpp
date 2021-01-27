@@ -750,9 +750,24 @@ public:
         }
         
     };
-    iterator erase (iterator position);
-    iterator erase (iterator first, iterator last);
-    void swap (vector& x);
+    iterator erase (iterator position)
+    {
+        return this->erase(position, position + 1);
+    }
+    iterator erase (iterator first, iterator last)
+    {
+        size_type distance(first - this->begin());
+        size_type offset(last - first);
+        // decaler de [offset] vers la gauche tous les elements a partir de last
+        for (iterator it = last; it < this->end() ; it++)
+            *(it - offset) = *it;
+        // pop_back les [offset] derniers elements
+        for (size_type i = 0; i < offset; i++)
+            pop_back();
+        // return the element that is now where first was
+        // "An iterator pointing to the new location of the element that followed the last element erased by the function call."
+        return this->begin() + distance;
+    };
     void clear()
     {
         this->delete_base();
