@@ -5,6 +5,7 @@
 #include <iterator>
 #include <memory>
 
+#include "enable_if.hpp"
 
 namespace ft
 {
@@ -128,10 +129,13 @@ public:
     // constructors & destructor
     explicit list ();
     explicit list (size_type n, const T val = T());
-    list (iterator first, iterator last); // better not to call by reference, for cases like list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
-    // template <class InputIterator> // not ready yet, needs some kind of enable_if to check the nature of the template argument. For now we will use the version below
-    // list(InputIterator first, InputIterator last);
-    list (T *first, T *last); // additional constructor, useful as inputiterator constructor is not functionnal
+    template <class InputIterator> 
+    list(InputIterator first, typename enable_if<!is_integral<InputIterator>::val, InputIterator>::type last);
+    // list (iterator first, iterator last); 
+    // Rq: better not to call by reference, for cases like list(it, it++) (if we call by reference, first and last are the same object. We want them to copies)
+    
+    // list (T *first, T *last); // additional constructor, useful when inputiterator constructors were deactivated
+    
     list (const list& x);
     ~list();
     list& operator= (const list& x);
@@ -470,19 +474,22 @@ ft::list<T>::list(const list<T>& x): lst(new node_type)
         this->push_back(*it++);
 }
     
+// template<class T>
+// ft::list<T>::list(ft::list<T>::iterator first, ft::list<T>::iterator last): lst(new node_type)
 template<class T>
-ft::list<T>::list(ft::list<T>::iterator first, ft::list<T>::iterator last): lst(new node_type)
+template <class InputIterator> 
+ft::list<T>::list(InputIterator first, typename enable_if<!is_integral<InputIterator>::val, InputIterator>::type last): lst(new node_type)
 {
-    for (ft::list<T>::iterator it = first; it != last; it++)
+    for (InputIterator it = first; it != last; it++)
         this->push_back(*it);
 }
 
-template<class T>
-ft::list<T>::list(T* first, T* last): lst(new node_type)
-{
-    for (T* it = first; it != last; it++)
-        this->push_back(*it);
-}
+// template<class T>
+// ft::list<T>::list(T* first, T* last): lst(new node_type)
+// {
+//     for (T* it = first; it != last; it++)
+//         this->push_back(*it);
+// }
 
 template<class T>
 ft::list<T>& ft::list<T>::operator=(const list<T>& x)
