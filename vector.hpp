@@ -7,33 +7,7 @@
 #include <algorithm> // max
 #include <stdexcept> // out of range error
 
-
-template <bool b, typename T>
-struct enable_if
-{
-
-};
-
-template <typename T>
-struct enable_if<true, T>
-{
-    typedef T type;
-};
-
-
-// define our is_integral
-
-template <typename T>
-struct is_integral
-{
-    static const bool val = false;
-};
-
-template <>
-struct is_integral<int>
-{
-    static const bool val = true;
-};
+#include "enable_if.hpp"
 
 namespace ft
 {
@@ -494,7 +468,7 @@ public:
     // if it is, SFNIAE will skip this constructor, and go to other constructors --> it will use the vector(size_type n, value_type val) constructor
     // it it is not, it will go on (compilation error will occur if it is not an inputiterator either -- a Fixed for example)
     template <class InputIterator>
-    vector (InputIterator first, typename enable_if<!is_integral<InputIterator>::val , InputIterator>::type last): base(reinterpret_cast<T*>(::operator new ((last - first) * sizeof(T)))), size_(last - first), capacity_(last - first)
+    vector (InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::val , InputIterator>::type last): base(reinterpret_cast<T*>(::operator new ((last - first) * sizeof(T)))), size_(last - first), capacity_(last - first)
     {
         iterator it = first;
         for (size_type i = 0; i < this->size_; i++)
