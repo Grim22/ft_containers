@@ -423,7 +423,68 @@ int main()
     std::cout << "cap: " << vec18.capacity() << std::endl;
     displayvec(vec18);
 
-    // erase single
-    
+    // clear
+    vec15.clear();
+    std::cout << "size: " << vec15.size() << std::endl;
+    std::cout << "cap: " << vec15.capacity() << std::endl;
+    displayvec(vec15);
+    vector<int>vec19;
+    vec19.clear();
+    std::cout << "size: " << vec19.size() << std::endl;
+    std::cout << "cap: " << vec19.capacity() << std::endl;
+    displayvec(vec19);
+
+    //  swap
+    vec15.assign(3, 5);
+    vec15.swap(vec19);
+    std::cout << "size: " << vec19.size() << std::endl;
+    std::cout << "cap: " << vec19.capacity() << std::endl;
+    displayvec(vec19);
+    std::cout << "size: " << vec15.size() << std::endl;
+    std::cout << "cap: " << vec15.capacity() << std::endl;
+    displayvec(vec15);
+    vec15.swap(vec19);
+    std::cout << "size: " << vec19.size() << std::endl;
+    std::cout << "cap: " << vec19.capacity() << std::endl;
+    displayvec(vec19);
+    std::cout << "size: " << vec15.size() << std::endl;
+    std::cout << "cap: " << vec15.capacity() << std::endl;
+    displayvec(vec15);
+
+   // relationnal op
+   vec19.clear();
+   vec18.clear();
+   vec17.clear();
+   vec17.assign(4, 12);
+   vec18.assign(3, 12);
+   vec19.push_back(12);
+   vec19.push_back(12);
+   vec19.push_back(10);
+   vec19.push_back(12);
+   vector<int> vec20(4, 12);
+   std::cout << (vec17 == vec18) << std::endl;
+   std::cout << (vec17 == vec19) << std::endl;
+   std::cout << (vec17 == vec20) << std::endl;
+    std::cout << "---" << std::endl;
+   std::cout << (vec17 != vec18) << std::endl;
+   std::cout << (vec17 != vec19) << std::endl;
+   std::cout << (vec17 != vec20) << std::endl;
+    std::cout << "---" << std::endl;
+   std::cout << (vec17 > vec18) << std::endl;
+   std::cout << (vec17 > vec19) << std::endl;
+   std::cout << (vec17 > vec20) << std::endl;
+    std::cout << "---" << std::endl;
+   std::cout << (vec17 >= vec18) << std::endl;
+   std::cout << (vec17 >= vec19) << std::endl;
+   std::cout << (vec17 >= vec20) << std::endl;
+    std::cout << "---" << std::endl;
+   std::cout << (vec17 < vec18) << std::endl;
+   std::cout << (vec17 < vec19) << std::endl;
+   std::cout << (vec17 < vec20) << std::endl;
+    std::cout << "---" << std::endl;
+   std::cout << (vec17 <= vec18) << std::endl;
+   std::cout << (vec17 <= vec19) << std::endl;
+   std::cout << (vec17 <= vec20) << std::endl;
+
     
 }
