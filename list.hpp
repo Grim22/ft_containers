@@ -178,7 +178,7 @@ public:
     iterator insert (iterator position, const value_type& val);
     void insert (iterator position, size_type n, const value_type& val);
     template<class inputiterator>
-    void insert (inputiterator position, inputiterator first, typename enable_if<!is_integral<inputiterator>::val, inputiterator>::type last);
+    void insert (iterator position, inputiterator first, typename enable_if<!is_integral<inputiterator>::val, inputiterator>::type last);
     iterator erase (iterator position);
     iterator erase (iterator first, iterator last);
 
@@ -733,7 +733,7 @@ void ft::list<T>::insert(iterator position, size_type n, const value_type& val)
 // void ft::list<T>::insert(iterator position, iterator first, iterator last)
 template<class T>
 template<class inputiterator>
-void ft::list<T>::insert (inputiterator position, inputiterator first, typename enable_if<!is_integral<inputiterator>::val, inputiterator>::type last)
+void ft::list<T>::insert (iterator position, inputiterator first, typename enable_if<!is_integral<inputiterator>::val, inputiterator>::type last)
 {
     // prevent infinite loop (this is a case of "undefined behaviour")
     inputiterator it(first);

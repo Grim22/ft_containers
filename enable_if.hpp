@@ -26,9 +26,43 @@ struct is_integral
 };
 
 template <>
+struct is_integral<bool>
+{
+    static const bool val = true;
+};
+
+template <>
+struct is_integral<char>
+{
+    static const bool val = true;
+
+};
+template <>
+struct is_integral<short int>
+{
+    static const bool val = true;
+
+};
+
+template <>
+struct is_integral<long int>
+{
+    static const bool val = true;
+
+};
+
+template <>
+struct is_integral<unsigned int>
+{
+    static const bool val = true;
+
+};
+
+template <>
 struct is_integral<int>
 {
     static const bool val = true;
+
 };
 
 };
