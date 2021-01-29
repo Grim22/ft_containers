@@ -468,9 +468,9 @@ public:
     // if it is, SFNIAE will skip this constructor, and go to other constructors --> it will use the vector(size_type n, value_type val) constructor
     // it it is not, it will go on (compilation error will occur if it is not an inputiterator either -- a Fixed for example)
     template <class InputIterator>
-    vector (InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::val , InputIterator>::type last): base(reinterpret_cast<T*>(::operator new ((last - first) * sizeof(T)))), size_(last - first), capacity_(last - first)
+    vector (InputIterator first, typename enable_if<!is_integral<InputIterator>::val , InputIterator>::type last): base(reinterpret_cast<T*>(::operator new ((last - first) * sizeof(T)))), size_(last - first), capacity_(last - first)
     {
-        iterator it = first;
+        InputIterator it = first;
         for (size_type i = 0; i < this->size_; i++)
         {
             // this->base[i] = *it;
@@ -662,9 +662,9 @@ public:
             new(this->base + i) T(val);
 
     };
-    // template<class inputiterator> // not ready either
-    // void assign (inputiterator first, inputiterator last)
-    void assign (const_iterator first, const_iterator last)
+    // void assign (const_iterator first, const_iterator last)
+    template<class inputiterator> 
+    void assign (inputiterator first, typename enable_if<!is_integral<inputiterator>::val, inputiterator>::type last)
     {
         for (size_type i = 0; i < this->size_; i++)
             this->base[i].~T();
@@ -678,7 +678,7 @@ public:
 
         // we use "placement new": object is constructed at the given memory location
         // we cant use assignation (this->base[i] = val), as this->base[i] is no longer a T object (we have destroyed it)
-        for (const_iterator it = first; it != last; it++)
+        for (inputiterator it = first; it != last; it++)
             new(this->base + (it - first)) T(*it);
 
     };
@@ -717,9 +717,9 @@ public:
         }
     };
     
-    // template <class InputIterator>
-    // void insert (iterator position, InputIterator first, InputIterator last);
-    void insert (iterator position, iterator first, iterator last)
+    // void insert (iterator position, iterator first, iterator last)
+    template <class inputiterator>
+    void insert (iterator position, inputiterator first, typename enable_if<!is_integral<inputiterator>::val, inputiterator>::type last)
     {
         // schema des etapes
         // inserer 8 et 9 dans 0 1 2 3 4 avec position = 2
@@ -747,7 +747,7 @@ public:
         for (iterator it = old_end; it >= position ; it--)
             *(it + offset) = *it;
         // inserer a position les elements de first a last
-        for (iterator it = first; it < last ; it++)
+        for (inputiterator it = first; it != last ; it++)
         {
             *position = *it;
             position++;
