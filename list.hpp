@@ -104,14 +104,14 @@ bool operator!=(const const_iterator<T> &lhs, const iterator<T> &rhs)
 template<class T>
 class list
 {
-private:
+public:
     // member types
-    typedef node<T> node_type;
     typedef T value_type; // 1st param of template
     typedef unsigned long size_type;
 
 private:
     node_type *lst;
+    typedef node<T> node_type;
 
 public:
     

@@ -5,7 +5,7 @@
 #include <iterator>
 #include <memory>
 #include <algorithm> // max
-#include <stdexcept> // out of range error
+#include <stdexcept> // out of range error, lenght_error
 
 #include "enable_if.hpp"
 
@@ -428,17 +428,10 @@ iterator<T> operator+(typename iterator<T>::difference_type n, const iterator<T>
 template<class T>
 class vector
 {
-private:
+public:
     // member types
     typedef T value_type; // 1st param of template
     typedef unsigned long size_type;
-
-private:
-    T *base;
-    size_type size_;
-    size_type capacity_;
-
-public:
     
     typedef vec::iterator<T*> iterator;
     typedef vec::iterator<const T*> const_iterator;
@@ -446,6 +439,11 @@ public:
     // typedef vec::const_iterator<T> const_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;    
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
+
+private:
+    T *base;
+    size_type size_;
+    size_type capacity_;
 
 public:
     // constructors & destructor
@@ -492,7 +490,8 @@ public:
     ~vector()
     {
         this->clear();
-        delete this->base;
+        ::operator delete (this->base);
+        // delete this->base;
         // if (this->base)
         // {
         //     this->capacity_ = 0;
@@ -592,6 +591,8 @@ public:
             return ;
 
         // create a new base, allocate it and then copy old_base into it
+        if (n > this->max_size())
+            throw std::length_error("vector::reserve");
         T* old_base = this->base;
         this->base = reinterpret_cast<T*>(::operator new(n * sizeof(T)));
         for (size_type i = 0; i < this->size_; i++)
