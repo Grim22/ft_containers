@@ -165,6 +165,39 @@ iterator<T> operator+(typename iterator<T>::difference_type n, const iterator<T>
     return iterator<T>(it.base() + n);
 }
 
+// allow comparison between const and non const iterators
+template<class T, class U>
+bool operator==(const iterator<T> &rhs, const iterator<U> &lhs)
+{
+    return (lhs.base() == rhs.base());
+}
+
+template<class T, class U>
+bool operator!=(const iterator<T> &rhs, const iterator<U> &lhs)
+{
+    return (lhs.base() != rhs.base());
+}
+template<class T, class U>
+bool operator<(const iterator<T> &rhs, const iterator<U> &lhs)
+{
+    return (rhs.base() < lhs.base());
+}
+template<class T, class U>
+bool operator<=(const iterator<T> &rhs, const iterator<U> &lhs)
+{
+    return (rhs.base() <= lhs.base());
+}
+template<class T, class U>
+bool operator>(const iterator<T> &rhs, const iterator<U> &lhs)
+{
+    return (rhs.base() > lhs.base());
+}
+template<class T, class U>
+bool operator>=(const iterator<T> &rhs, const iterator<U> &lhs)
+{
+    return (rhs.base() >= lhs.base());
+}
+
 
 // Here we define iterator and const_iterator classes separately, then we use typedefs to make them member types of vector
 // (we could also have defined them inside the vect)
