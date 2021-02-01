@@ -574,12 +574,14 @@ public:
 
         // ajust capacity
         size_type new_cap(n);
-        if (n > this->capacity_ && n < this->capacity_ * 2)
-            new_cap = this->capacity_ * 2;
+        if (n > this->capacity_ && n < this->size_ * 2)
+            new_cap = this->size_ * 2;
         this->reserve(new_cap);
+        
         // if n <= capacity, capacity will not grow
-        // else if capacity < n < 2 * capacity, capacity will grow to 2*capacity
-        // else (n >= 2 * cap), it will grow to n
+        // ON MACOS ONLY: else if capacity < n < 2 * capacity, capacity will grow to 2*capacity
+        // ON LINUX: else if capacity < n < 2 * size, capacity will grow to 2*size
+        // else it will grow to n
 
         // add elems
         for (size_type i = this->size_; i < n; i++)
@@ -589,7 +591,7 @@ public:
 
     void reserve (size_type n)
     {
-        if (this->capacity_ >= n) // not enough room -> reallocate
+        if (this->capacity_ >= n) // enough room -> dont reallocate
             return ;
 
         // create a new base, allocate it and then copy old_base into it
@@ -688,8 +690,9 @@ public:
     };
     void push_back(const value_type& val)
     {
-        this->resize(this->size_ + 1, val);
-    };
+        this->resize(this->size_ + 1, val); 
+    }
+
     void pop_back()
     {
         if (this->empty())
