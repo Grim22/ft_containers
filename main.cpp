@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "vector.hpp"
+#include <list>
 // #include "Fixed.hpp"
 
 
@@ -37,6 +38,8 @@ void displayvec_reverse(vector<int> lst)
 
 int main()
 {
+    std::list<int> lst(4, 8);
+    
     // capacity & size (1 - with default constuctor)
     vector<int> vec;
     for (size_t i = 0; i < 10; i++)
@@ -63,6 +66,11 @@ int main()
     vector<int> vec2(vec1.begin(), vec1.end());
     std::cout << "size: " << vec2.size() << std::endl;   
     std::cout << "cap: " << vec2.capacity() << std::endl;   
+    std::cout << "---" << std::endl;
+    // input iterator sent
+    vector<int> vec2b(lst.begin(), lst.end());
+    std::cout << "size: " << vec2b.size() << std::endl;   
+    std::cout << "cap: " << vec2b.capacity() << std::endl;   
     std::cout << "---" << std::endl;
 
     // capacity & size (4 - with copy constructor)
@@ -271,6 +279,13 @@ int main()
     std::cout << "---" << std::endl;
     displayvec(vec12);
 
+    // assign iterator with inputiterator
+    vec12.assign(++lst.begin(), --lst.end());
+    std::cout << "size: " << vec12.size() << std::endl;   
+    std::cout << "cap: " << vec12.capacity() << std::endl;   
+    std::cout << "---" << std::endl;
+    displayvec(vec12);
+
     // resize
     vector<int> vec13;
     vec13.push_back(3);
@@ -339,6 +354,11 @@ int main()
     vec14.insert(vec14.begin(), vec15.begin(), vec15.begin());
     std::cout << "size: " << vec14.size() << std::endl;
     // std::cout << "cap: " << vec14.capacity() << std::endl;
+    displayvec(vec14);
+
+    // insert with input iterators
+    vec14.insert(vec14.begin(), lst.begin(), lst.end());
+    std::cout << "size: " << vec14.size() << std::endl;
     displayvec(vec14);
 
     vector<int> vec17;

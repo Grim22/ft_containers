@@ -2,7 +2,7 @@
 #define VECTOR_HPP
 
 #include <iostream>
-#include <iterator>
+#include <iterator> // distance
 #include <memory>
 #include <algorithm> // max
 #include <stdexcept> // out of range error, lenght_error
@@ -465,8 +465,10 @@ public:
     // our enable if checks if InputIterator is of "integral type"
     // if it is, SFNIAE will skip this constructor, and go to other constructors --> it will use the vector(size_type n, value_type val) constructor
     // it it is not, it will go on (compilation error will occur if it is not an inputiterator either -- a Fixed for example)
+
+    // as it is first and last are inputiterators, we cant use operator -, we have to use std::distance (that uses operator++ repeatedly)
     template <class InputIterator>
-    vector (InputIterator first, typename enable_if<!is_integral<InputIterator>::val , InputIterator>::type last): base(reinterpret_cast<T*>(::operator new ((last - first) * sizeof(T)))), size_(last - first), capacity_(last - first)
+    vector (InputIterator first, typename enable_if<!is_integral<InputIterator>::val , InputIterator>::type last): base(reinterpret_cast<T*>(::operator new (std::distance(first, last) * sizeof(T)))), size_(std::distance(first, last)), capacity_(std::distance(first, last))
     {
         InputIterator it = first;
         for (size_type i = 0; i < this->size_; i++)
@@ -602,7 +604,7 @@ public:
         // free old_base
         for (size_type i = 0; i < this->size_; i++)
             old_base[i].~T();
-        delete old_base;
+        ::operator delete (old_base);
     };
 
     // // element access
@@ -633,13 +635,13 @@ public:
     T& at (size_type n)
     {
         if (n >= this->size_)
-            throw std::out_of_range("vector");
+            throw std::out_of_range("vector::at trying to access an out of range element");
         return this->base[n];
     };
     const T& at (size_type n) const
     {
         if (n >= this->size_)
-            throw std::out_of_range("vector");
+            throw std::out_of_range("vector::at trying to access an out of range element");
         return this->base[n];
     };
 
@@ -651,7 +653,7 @@ public:
             this->base[i].~T();
         if (this->capacity_ < n) // not enough room -> reallocate
         {
-            delete this->base;
+            ::operator delete (this->base);
             this->base = reinterpret_cast<T*>(::operator new(n * sizeof(T)));
             this->capacity_ = n;
         }
@@ -667,20 +669,21 @@ public:
     template<class inputiterator> 
     void assign (inputiterator first, typename enable_if<!is_integral<inputiterator>::val, inputiterator>::type last)
     {
+        size_type distance = std::distance(first, last);
         for (size_type i = 0; i < this->size_; i++)
             this->base[i].~T();
-        if (this->capacity_ < static_cast<size_type>(last - first)) // not enough room -> reallocate
+        if (this->capacity_ < static_cast<size_type>(distance)) // not enough room -> reallocate
         {
-            delete this->base;
-            this->base = reinterpret_cast<T*>(::operator new((last - first) * sizeof(T)));
-            this->capacity_ = last - first;
+            ::operator delete (this->base);
+            this->base = reinterpret_cast<T*>(::operator new(distance * sizeof(T)));
+            this->capacity_ = distance;
         }
-        this->size_ = last - first;
+        this->size_ = distance;
 
         // we use "placement new": object is constructed at the given memory location
         // we cant use assignation (this->base[i] = val), as this->base[i] is no longer a T object (we have destroyed it)
         for (inputiterator it = first; it != last; it++)
-            new(this->base + (it - first)) T(*it);
+            new(this->base + std::distance(first, it)) T(*it);
 
     };
     void push_back(const value_type& val)
@@ -733,7 +736,8 @@ public:
         size_type end = this->end() -1 - this->begin();
         size_type pos = position - this->begin();
         
-        this->resize(this->size_ + last - first); // allocates new storage if new size > capacity (the rule for determining new capacity is the same in insert as in resize)
+        size_type distance = std::distance(first, last);
+        this->resize(this->size_ + distance); // allocates new storage if new size > capacity (the rule for determining new capacity is the same in insert as in resize)
         
         // we now have new Ts at the end of the array
         // we will do assignations to insert elements and relocate others
@@ -742,11 +746,10 @@ public:
         position = this->begin() + pos;
         iterator old_end = this->begin() + end;
 
-        // decaller de [offset] tous les elements de position jusqu'a old_end
+        // decaller de [distance] tous les elements de position jusqu'a old_end
         // le faire en partant de la fin, pour eviter "decraser" des elements
-        size_type offset(last - first);
         for (iterator it = old_end; it >= position ; it--)
-            *(it + offset) = *it;
+            *(it + distance) = *it;
         // inserer a position les elements de first a last
         for (inputiterator it = first; it != last ; it++)
         {
