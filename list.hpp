@@ -110,8 +110,8 @@ public:
     typedef unsigned long size_type;
 
 private:
-    node_type *lst;
     typedef node<T> node_type;
+    node_type *lst;
 
 public:
     
