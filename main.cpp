@@ -4,11 +4,7 @@
 int main()
 {
     node<int, char> *root;
-    root = new node<int, char>;
-    root->left = NULL;
-    root->right = NULL;
-    root->value = 'c';
-    root->key = 8;
+    root = new node<int, char>(8, 'c');
     insert<int, char>(root, 4, 'b');
     insert<int, char>(root, 12, 'd');
     insert<int, char>(root, 11, 'd');
