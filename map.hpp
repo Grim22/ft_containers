@@ -66,6 +66,18 @@ map_node<key_type, value_type> *search(map_node<key_type, value_type> *root, key
 }
 
 template <class key_type, class value_type>
+map_node<key_type, value_type> *search_parent_ptr(map_node<key_type, value_type> *root, key_type key)
+{
+    if (root == NULL || root->key == key)
+        return root;
+
+    if (root->key > key)
+        return search(root->left, key);
+    else
+        return search(root->right, key);
+}
+
+template <class key_type, class value_type>
 map_node<key_type, value_type> *search_min(map_node<key_type, value_type> *root)
 {
     while (root->left != NULL)
@@ -82,14 +94,38 @@ map_node<key_type, value_type> *search_max(map_node<key_type, value_type> *root)
 }
 
 template <class key_type, class value_type>
+map_node<key_type, value_type> *search_max_parent(map_node<key_type, value_type> *root)
+{
+    if (root->right == NULL)
+        return NULL;
+    while (root->right->right != NULL)
+        root = root->right;
+    return root;
+}
+
+// template <class key_type, class value_type>
+// void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
+// {
+//     map_node<key_type, value_type> *node = search(root, key);
+//     map_node<key_type, value_type> *parent = search_parent(root, key);
+//     if (node->right == NULL && node->left == NULL)
+//     {
+//         delete node;
+//         ;
+//     }
+//     if (node->right == NULL && node->left == NULL)
+
+// }
+
+
+
+template <class key_type, class value_type>
 void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
 {
-    // std::cout << "key: " << root->key;
-    // std::cout << "looking for: " << key << std::endl;
+     if (root == NULL)
+         return;
     if (root->key == key)
     {
-        // delete root
-        // return
         // case #1: root has no child: delete root and set is to NULL
         if (root->left == NULL && root->right == NULL)
         {
@@ -100,38 +136,44 @@ void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
         // case #2: root has 1 child: relink child to root parent, then delete root
         if (root->right && root->left == NULL)
         {
-            // // 1 -relink child to root parent
-            // // 1 - a - get parent
-            // map_node<key_type, value_type> *parent = get_parent(root->key);
-            // // 1 - b - link parent to child (on the left or on the right)
-            // if (root == parent->right)
-            //     parent->right = root->right
-            // else
-            //     parent->left = root->right
-            // // delete root
-            // delete root;
-            // return ;
-            root->key = root->right->key;
-            root->value = root->right->value;
-            delete_map_node(root->right, root->key);
+            map_node<key_type, value_type> *child = root->right;
+            delete root;
+            root = child; // (root is a reference to root->left / root->right from the previous call (in root's parent). So when we modify root we modify parent->left or parent->right)
             return ;
         }
         if (root->left && root->right == NULL)
         {
-            root->key = root->left->key;
-            root->value = root->left->value;
-            delete_map_node(root->left, root->key);
+            map_node<key_type, value_type> *child = root->left;
+            delete root;
+            root = child;
             return ;
         }
-        // case 3: root has 2 childs
+        // case 3: root has 2 children
         else
         {
-            // map_node<key_type, value_type> *tmp = search_min(root->right);
-            map_node<key_type, value_type> *tmp = search_max(root->left);
-            root->key = tmp->key;
-            root->value = tmp->value;
-            // delete_map_node(root->right, tmp->key);
-            delete_map_node(root->left, tmp->key);
+            // relink max of left subtree in place of root:
+
+            // 1 - find max and max_parent
+            map_node<key_type, value_type> *max = search_max(root->left);
+            map_node<key_type, value_type> *max_parent = search_max_parent(root->left);
+            if (max_parent == NULL)
+                max_parent = root;
+
+            // 2 - link max parent to max's child (max can have only one child: left)
+            if (max == max_parent->left)
+                max_parent->left = max->left;
+            else
+                max_parent->right = max->left;
+            
+            // 3 - update max left and right
+            max->left = root->left;
+            max->right = root->right;
+            
+            // 4 - delete root
+            delete root;
+            // 5 - link root parent to max (root is a reference to root->left / root->right from the previous call (in root's parent). So when we modify root we modify parent->left or parent->right
+            root = max;
+
             return ;
         }
     }
