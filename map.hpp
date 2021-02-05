@@ -103,22 +103,6 @@ map_node<key_type, value_type> *search_max_parent(map_node<key_type, value_type>
     return root;
 }
 
-// template <class key_type, class value_type>
-// void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
-// {
-//     map_node<key_type, value_type> *node = search(root, key);
-//     map_node<key_type, value_type> *parent = search_parent(root, key);
-//     if (node->right == NULL && node->left == NULL)
-//     {
-//         delete node;
-//         ;
-//     }
-//     if (node->right == NULL && node->left == NULL)
-
-// }
-
-
-
 template <class key_type, class value_type>
 void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
 {
@@ -193,15 +177,15 @@ void print_in_order(map_node<key_type, value_type> *&root)
         print_in_order(root->right);
 }
 
-// template <class key_type, class value_type>
-// void delete_in_order(map_node<key_type, value_type> *&root)
-// {
-//     if (root->left)
-//         delete_in_order(root->left);
-//     delete root;
-//     if (root->right)
-//         delete_in_order(root->right);
-// }
+template <class key_type, class value_type>
+void delete_postfix(map_node<key_type, value_type> *&root)
+{
+    if (root->left)
+        delete_postfix(root->left);
+    if (root->right)
+        delete_postfix(root->right);
+    delete root;
+}
 
 
 template<class key, class T>
@@ -216,9 +200,9 @@ public:
 
 private:
     typedef map_node<key, T> node_type;
-    node_type *root;
 
 public:
+    node_type *root;
     
     // typedef iterator<T> iterator;
     // typedef const_iterator<T> const_iterator;
@@ -240,13 +224,19 @@ public:
     map (const map& x);
     ~map() 
     {
-        // delete_in_order(this->root);
+        delete_postfix(this->root);
     };
     map& operator= (const map& x);
 
+    size_type erase (const key_type& k)
+    {
+        delete_map_node(this->root, k);
+        return 0;
+    };
     void print(void)
     {
         print_in_order(this->root);
+        std::cout << "---" << std::endl;
     }
 
     // // iterator

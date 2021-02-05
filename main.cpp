@@ -38,39 +38,42 @@ int main()
     std::cout << tmp->key << std::endl;
     std::cout << "---" << std::endl;
 
+    // delete
     print_in_order(root);
     std::cout << "---" << std::endl;
-    // delete
     delete_map_node(root, 12);
     print_in_order(root);
     std::cout << "---" << std::endl;
-    std::cout << root->right->key << std::endl;
-    tmp = search(root, 11);
-    std::cout << tmp->left->key << std::endl;
-    std::cout << tmp->right->key << std::endl;
-    std::cout << "---" << std::endl;
     delete_map_node(root, 4);
     print_in_order(root);
+    std::cout << "---" << std::endl;
     delete_map_node(root, 6);
     print_in_order(root);
+    std::cout << "---" << std::endl;
     delete_map_node(root, 2);
-    // delete_map_node(root, 10);
-    // std::cout << tmp->left->key << std::endl;
-    // delete_map_node(root, 10);
-    // delete_map_node(root, 4);
-    // delete_map_node(root, 6);
-    // delete_map_node(root, 13);
-    // delete_map_node(root, 11);
+    print_in_order(root);
+    std::cout << "---" << std::endl;
+    delete_map_node(root, 8);
+    print_in_order(root);
+    std::cout << "---" << std::endl;
     std::cout << "---" << std::endl;
 
-    // std::map<char, int> first;
-    // first['b'] = 20;
-    // first['c'] = 30;
-    // first['a'] = 10;
-    // std::cout << first.begin()->first << std::endl;
-    // std::cout << "---" << std::endl;
-    // ft::map<char, int> second(first.begin(), first.end());
-    // second.print();
+    std::map<char, int> first;
+    first['b'] = 20;
+    first['c'] = 30;
+    first['a'] = 10;
+    std::cout << first.begin()->first << std::endl;
+    std::cout << "---" << std::endl;
+    ft::map<char, int> second(first.begin(), first.end());
+    second.print();
+    std::cout << second.root->key << std::endl;
+    std::cout << second.root->left << std::endl;
+    std::cout << second.root->right << std::endl;
+    second.erase('b');
+    second.erase('c');
+    std::cout << "---" << std::endl;
+    second.print();
+    // second.erase('a'); // not working
 
 
 }
