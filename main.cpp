@@ -57,23 +57,34 @@ int main()
     print_in_order(root);
     std::cout << "---" << std::endl;
     std::cout << "---" << std::endl;
+    // delete_map_node(root, 9);
+    // delete_map_node(root, 10);
+    // delete_map_node(root, 13);
+    // delete_map_node(root, 11);
+    delete_postfix(root);
 
     std::map<char, int> first;
     first['b'] = 20;
     first['c'] = 30;
     first['a'] = 10;
-    std::cout << first.begin()->first << std::endl;
-    std::cout << "---" << std::endl;
+    
+    // iterator constructor
     ft::map<char, int> second(first.begin(), first.end());
     second.print();
-    std::cout << second.root->key << std::endl;
-    std::cout << second.root->left << std::endl;
-    std::cout << second.root->right << std::endl;
+    
+    // erase
     second.erase('b');
     second.erase('c');
     std::cout << "---" << std::endl;
     second.print();
-    // second.erase('a'); // not working
+    std::cout << "---" << std::endl;
+    second.erase('a'); // not working
+    second.print();
+    std::cout << "---" << std::endl;
+    
+    // clear
+    ft::map<char, int> map1(first.begin(), first.end());
+    map1.clear();
 
 
 }

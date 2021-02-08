@@ -136,6 +136,7 @@ void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
         else
         {
             // relink max of left subtree in place of root:
+            // alternative: relink min of right subtree
 
             // 1 - find max and max_parent
             map_node<key_type, value_type> *max = search_max(root->left);
@@ -168,8 +169,10 @@ void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
 }
 
 template <class key_type, class value_type>
-void print_in_order(map_node<key_type, value_type> *&root)
+void print_in_order(map_node<key_type, value_type> *root)
 {
+    if (root == NULL)
+        return ;
     if (root->left)
         print_in_order(root->left);
     std::cout << root->key << std::endl;
@@ -180,11 +183,14 @@ void print_in_order(map_node<key_type, value_type> *&root)
 template <class key_type, class value_type>
 void delete_postfix(map_node<key_type, value_type> *&root)
 {
+    if (root == NULL)
+        return ;
     if (root->left)
         delete_postfix(root->left);
     if (root->right)
         delete_postfix(root->right);
     delete root;
+    root = NULL;
 }
 
 
@@ -213,7 +219,7 @@ public:
     // constructors & destructor
     explicit map (): root(NULL) {};
     template <class InputIterator> 
-    map(InputIterator first, InputIterator last)
+    map(InputIterator first, InputIterator last): root(NULL)
     {
         while (first != last)
         {
@@ -238,7 +244,10 @@ public:
         print_in_order(this->root);
         std::cout << "---" << std::endl;
     }
-
+    void clear(void)
+    {
+        delete_postfix(this->root);
+    }
     // // iterator
     // ft::list<T>::iterator begin();
     // ft::list<T>::iterator end();
