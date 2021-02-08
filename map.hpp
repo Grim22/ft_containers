@@ -37,6 +37,54 @@ struct map_node
     {};
 };
 
+namespace mp
+{
+    template <class Key_type, class T>
+    class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
+    {
+        typedef map_node<Key_type, T> node_type;
+        typedef std::pair<const Key_type, T> value_type; // 1st param of template
+
+        private:
+            node_type *ptr;
+        public:
+            iterator(): ptr(NULL){};
+            iterator(node_type *ptr): ptr(ptr) {};
+            iterator(const iterator &copy): ptr(copy.ptr) {};
+            iterator &operator=(const iterator &rhs)
+            {
+                this->ptr = rhs.ptr;
+                return ptr;
+            };
+            ~iterator() {};
+            
+            node_type *as_node(); // needed to access node from outisde the class (from list for example): it would be better to declare list as a friend class (thats the way it is done in the STL) but we're not allowed to
+            const node_type *as_node() const;
+            value_type &operator*() const
+            {
+                return value_type(this->ptr->key, this->ptr->value);
+            };
+            value_type *operator->() const
+            {
+                return &value_type(this->ptr->key, this->ptr->value);
+            };
+            iterator& operator++() // preincrement (++a)
+            {
+                // this->ptr = this
+            };
+            iterator operator++(int); // postincrement (a++)
+            iterator& operator--();
+            iterator operator--(int);
+            bool operator==(const iterator &rhs) const;
+            bool operator!=(const iterator &rhs) const;
+    };
+}
+
+
+// the functions below cant stay here alone
+// -> put them inside map as private functions
+// Rq: they can't be called with "this", instead of "root", as they are recursive
+
 template <class key_type, class value_type>
 void insert(map_node<key_type, value_type> *&root, key_type key, value_type val)
 {
@@ -65,17 +113,17 @@ map_node<key_type, value_type> *search(map_node<key_type, value_type> *root, key
         return search(root->right, key);
 }
 
-template <class key_type, class value_type>
-map_node<key_type, value_type> *search_parent_ptr(map_node<key_type, value_type> *root, key_type key)
-{
-    if (root == NULL || root->key == key)
-        return root;
+// template <class key_type, class value_type>
+// map_node<key_type, value_type> *search_parent_ptr(map_node<key_type, value_type> *root, key_type key)
+// {
+//     if (root == NULL || root->key == key)
+//         return root;
 
-    if (root->key > key)
-        return search(root->left, key);
-    else
-        return search(root->right, key);
-}
+//     if (root->key > key)
+//         return search(root->left, key);
+//     else
+//         return search(root->right, key);
+// }
 
 template <class key_type, class value_type>
 map_node<key_type, value_type> *search_min(map_node<key_type, value_type> *root)
@@ -228,9 +276,12 @@ public:
         }
     };
     map (const map& x);
+    // {
+    //     // this->map(x.begin(), x.end());
+    // };
     ~map() 
     {
-        delete_postfix(this->root);
+        this->delete_postfix(this->root);
     };
     map& operator= (const map& x);
 
@@ -246,7 +297,20 @@ public:
     }
     void clear(void)
     {
-        delete_postfix(this->root);
+        this->delete_postfix(this->root);
+    }
+    
+private:
+    void delete_postfix(node_type *&root)
+    {
+        if (root == NULL)
+            return ;
+        if (root->left)
+            delete_postfix(root->left);
+        if (root->right)
+            delete_postfix(root->right);
+        delete root;
+        root = NULL;
     }
     // // iterator
     // ft::list<T>::iterator begin();
