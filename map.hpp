@@ -61,14 +61,16 @@ namespace mp
 
         private:
             node_type *ptr;
+            node_type *root;
         public:
-            iterator(): ptr(NULL){};
-            iterator(node_type *ptr): ptr(ptr) {};
+            iterator(): ptr(NULL), root(NULL){};
+            iterator(node_type *ptr, node_type *root): ptr(ptr), root(root) {};
             iterator(const iterator &copy): ptr(copy.ptr) {};
             iterator &operator=(const iterator &rhs)
             {
                 this->ptr = rhs.ptr;
-                return ptr;
+                this->root = rhs.root;
+                return *this;
             };
             ~iterator() {};
             
@@ -84,7 +86,33 @@ namespace mp
             };
             iterator& operator++() // preincrement (++a)
             {
-                // this->ptr = this
+                // if (this->ptr == NULL)
+                //     return NULL;
+                if (this->ptr->right) // if righ subtree, return leftmost of right subtree
+                {
+                    std::cout << "right" << std::endl;
+                    this->ptr = this->ptr->search_min();
+                    return *this;
+                }
+                // else go down the tree from root
+                // visit each parent node
+                // return the "deepest" parent node for which key is in left
+                node_type *tmp(this->root);
+                Key_type key(this->ptr->value.first);
+                node_type *ret(NULL); // will store the successor (or NULL if no successor if found)
+                std::cout << "go down" << std::endl;
+                while (tmp->value.first != key)
+                {
+                    if (tmp->value.first > key) // key is left -> update ret
+                    {
+                        ret = tmp;
+                        tmp = tmp->left;
+                    }
+                    else // key is right -> do not update right
+                        tmp = tmp->right;
+                }
+                this->ptr = ret;
+                return *this;
             };
             iterator operator++(int); // postincrement (a++)
             iterator& operator--();
@@ -316,7 +344,7 @@ public:
     }
     iterator begin()
     {
-        return iterator(this->root->search_min());
+        return iterator(this->root->search_min(), this->root);
     }
     
 private:
