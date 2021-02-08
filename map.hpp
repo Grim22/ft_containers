@@ -27,14 +27,28 @@ namespace ft
 template <class Key_type, class Value_type>
 struct map_node
 {
+    typedef std::pair<const Key_type, Value_type> pair;
     map_node* left;
     map_node* right;
-    Key_type key;
-    Value_type value;
-    map_node(): left(NULL), right(NULL), key(Key_type()), value(Value_type())
+    pair value; // permet à operator-> dans iterator de retourner par reference
+    map_node(): left(NULL), right(NULL), pair(pair())
     {};
-    map_node(Key_type key, Value_type val):left(NULL), right(NULL), key(key), value(val)
+    map_node(Key_type key, Value_type val):left(NULL), right(NULL), value(key, val)
     {};
+    map_node* search_max()
+    {
+        map_node *tmp = this;
+        while (tmp->right != NULL)
+            tmp = tmp->right;
+        return tmp;
+    }
+    map_node* search_min()
+    {
+        map_node *tmp = this;
+        while (tmp->left != NULL)
+            tmp = tmp->left;
+        return tmp;
+    }
 };
 
 namespace mp
@@ -43,7 +57,7 @@ namespace mp
     class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
         typedef map_node<Key_type, T> node_type;
-        typedef std::pair<const Key_type, T> value_type; // 1st param of template
+        typedef std::pair<const Key_type, T> value_type;
 
         private:
             node_type *ptr;
@@ -62,11 +76,11 @@ namespace mp
             const node_type *as_node() const;
             value_type &operator*() const
             {
-                return value_type(this->ptr->key, this->ptr->value);
+                return this->ptr->value;
             };
             value_type *operator->() const
             {
-                return &value_type(this->ptr->key, this->ptr->value);
+                return &this->ptr->value;
             };
             iterator& operator++() // preincrement (++a)
             {
@@ -93,9 +107,9 @@ void insert(map_node<key_type, value_type> *&root, key_type key, value_type val)
         root = new map_node<key_type, value_type>(key, val);
         return;
     }
-    if (root->key == key)
+    if (root->value.first == key)
         return ;
-    else if (root->key > key)
+    else if (root->value.first > key)
         insert(root->left, key, val);
     else
         insert(root->right, key, val);
@@ -104,10 +118,10 @@ void insert(map_node<key_type, value_type> *&root, key_type key, value_type val)
 template <class key_type, class value_type>
 map_node<key_type, value_type> *search(map_node<key_type, value_type> *root, key_type key)
 {
-    if (root == NULL || root->key == key)
+    if (root == NULL || root->value.first == key)
         return root;
 
-    if (root->key > key)
+    if (root->value.first > key)
         return search(root->left, key);
     else
         return search(root->right, key);
@@ -156,7 +170,7 @@ void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
 {
      if (root == NULL)
          return;
-    if (root->key == key)
+    if (root->value.first == key)
     {
         // case #1: root has no child: delete root and set is to NULL
         if (root->left == NULL && root->right == NULL)
@@ -210,7 +224,7 @@ void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
             return ;
         }
     }
-    if (root->key > key)
+    if (root->value.first > key)
         delete_map_node(root->left, key);
     else
         delete_map_node(root->right, key);
@@ -223,7 +237,7 @@ void print_in_order(map_node<key_type, value_type> *root)
         return ;
     if (root->left)
         print_in_order(root->left);
-    std::cout << root->key << std::endl;
+    std::cout << root->value.first << std::endl;
     if (root->right)
         print_in_order(root->right);
 }
@@ -251,6 +265,7 @@ public:
     typedef T mapped_type; // 2st param of template
     typedef std::pair<const key, T> value_type; // 1st param of template
     typedef unsigned long size_type;
+    typedef ft::mp::iterator<key, T> iterator;
 
 private:
     typedef map_node<key, T> node_type;
@@ -298,6 +313,10 @@ public:
     void clear(void)
     {
         this->delete_postfix(this->root);
+    }
+    iterator begin()
+    {
+        return iterator(this->root->search_min());
     }
     
 private:

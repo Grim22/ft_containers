@@ -22,20 +22,20 @@ int main()
     // search
     tmp = search(root, 2);
     if (tmp)
-        std::cout << tmp->key << std::endl; 
+        std::cout << tmp->value.first << std::endl; 
     tmp = search(root, 10);
     if (tmp)
-        std::cout << tmp->key << std::endl; 
+        std::cout << tmp->value.first << std::endl; 
     tmp = search(root, 15);
     if (tmp)
-        std::cout << tmp->key << std::endl; 
+        std::cout << tmp->value.first << std::endl; 
     std::cout << "---" << std::endl;
 
     // search max
     tmp = search_max(root);
-    std::cout << tmp->key << std::endl;
+    std::cout << tmp->value.first << std::endl;
     tmp = search_max_parent(root);
-    std::cout << tmp->key << std::endl;
+    std::cout << tmp->value.first << std::endl;
     std::cout << "---" << std::endl;
 
     // delete
@@ -85,6 +85,10 @@ int main()
     // clear
     ft::map<char, int> map1(first.begin(), first.end());
     map1.clear();
+
+    // begin
+    ft::map<char, int> map2(first.begin(), first.end());
+    std::cout << map2.begin()->first << std::endl;
 
 
 }
