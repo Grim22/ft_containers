@@ -91,7 +91,7 @@ namespace mp
                 if (this->ptr->right) // if righ subtree, return leftmost of right subtree
                 {
                     std::cout << "right" << std::endl;
-                    this->ptr = this->ptr->search_min();
+                    this->ptr = this->ptr->right->search_min();
                     return *this;
                 }
                 // else go down the tree from root
@@ -128,19 +128,19 @@ namespace mp
 // Rq: they can't be called with "this", instead of "root", as they are recursive
 
 template <class key_type, class value_type>
-void insert(map_node<key_type, value_type> *&root, key_type key, value_type val)
+std::pair<map_node<key_type, value_type>*, bool> insert(map_node<key_type, value_type> *&root, key_type key, value_type val)
 {
     if (root == nullptr)
     {
         root = new map_node<key_type, value_type>(key, val);
-        return;
+        return std::pair<map_node<key_type, value_type>*, bool>(root, true);
     }
     if (root->value.first == key)
-        return ;
+        return std::pair<map_node<key_type, value_type>*, bool>(root, false);
     else if (root->value.first > key)
-        insert(root->left, key, val);
+        return (insert(root->left, key, val));
     else
-        insert(root->right, key, val);
+        return (insert(root->right, key, val));
 }
 
 template <class key_type, class value_type>
@@ -314,7 +314,7 @@ public:
     {
         while (first != last)
         {
-            insert(this->root, first->first, first->second);
+            ft::insert(this->root, first->first, first->second);
             first++;
         }
     };
@@ -346,6 +346,14 @@ public:
     {
         return iterator(this->root->search_min(), this->root);
     }
+    std::pair<iterator,bool> insert (const value_type& val)
+    {
+        std::pair<node_type*, bool> p = ft::insert(this->root, val.first, val.second);
+        return std::pair<iterator, bool>(iterator(p.first, this->root), p.second);
+    };
+    iterator insert (iterator position, const value_type& val);
+    template <class InputIterator>
+    void insert (InputIterator first, InputIterator last);
     
 private:
     void delete_postfix(node_type *&root)

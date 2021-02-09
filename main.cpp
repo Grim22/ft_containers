@@ -76,7 +76,7 @@ int main()
     second.erase('b');
     second.erase('c');
     second.print();
-    second.erase('a'); // not working
+    second.erase('a');
     second.print();
     
     // clear
@@ -86,11 +86,40 @@ int main()
     // begin
     ft::map<char, int> map2(first.begin(), first.end());
     map2.print();
+    std::cout << map2.root->value.first << std::endl;
+    std::cout << "---" << std::endl;
     ft::map<char, int>::iterator it;
     it = map2.begin();
     std::cout << it->first << std::endl;
     std::cout << (++it)->first << std::endl;
     std::cout << (++it)->first << std::endl;
+    std::cout << "---" << std::endl;
+
+    // insert
+    ft::map<int, char> map3;
+    map3.insert(std::pair<char, int>(10, 'a'));
+    map3.insert(std::pair<char, int>(5, 'a'));
+    map3.insert(std::pair<char, int>(8, 'a'));
+    map3.insert(std::pair<char, int>(15, 'a'));
+    map3.insert(std::pair<char, int>(7, 'a'));
+    map3.insert(std::pair<char, int>(1, 'a'));
+    map3.print();
+    map3.erase(15);
+    map3.print();
+    map3.erase(8);
+    map3.print();
+    map3.erase(5);
+    map3.print();
+    map3.erase(10);
+    map3.erase(10);
+    map3.print();
+    // ft::map<int, char>::iterator it2 = map3.begin();
+    // std::cout << it2->first << std::endl;
+    // std::cout << (++it2)->first << std::endl;
+    // std::cout << (++it2)->first << std::endl;
+    // std::cout << (++it2)->first << std::endl;
+    // std::cout << (++it2)->first << std::endl;
+    // std::cout << (++it2)->first << std::endl;
 
 
 }
