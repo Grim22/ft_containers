@@ -298,13 +298,13 @@ public:
     typedef std::pair<const key, T> value_type; // 1st param of template
     typedef unsigned long size_type;
     typedef ft::mp::iterator<key, T> iterator;
-    typedef std::pair<iterator, bool> pair_iterator;
+    typedef std::pair<iterator, bool> pair_iterator; // return type of insert
 
 private:
     typedef map_node<key, T> node_type;
+    node_type *root;
 
 public:
-    node_type *root;
     
     // typedef iterator<T> iterator;
     // typedef const_iterator<T> const_iterator;

@@ -69,7 +69,7 @@ int main()
     first['a'] = 10;
     
     // iterator constructor
-    ft::map<char, int> second(first.begin(), first.end());
+    map<char, int> second(first.begin(), first.end());
     second.print();
     
     // erase
@@ -80,15 +80,14 @@ int main()
     second.print();
     
     // clear
-    ft::map<char, int> map1(first.begin(), first.end());
+    map<char, int> map1(first.begin(), first.end());
     map1.clear();
 
     // begin
-    ft::map<char, int> map2(first.begin(), first.end());
+    map<char, int> map2(first.begin(), first.end());
     map2.print();
-    std::cout << map2.root->value.first << std::endl;
     std::cout << "---" << std::endl;
-    ft::map<char, int>::iterator it;
+    map<char, int>::iterator it;
     it = map2.begin();
     std::cout << it->first << std::endl;
     std::cout << (++it)->first << std::endl;
@@ -96,9 +95,10 @@ int main()
     std::cout << "---" << std::endl;
 
     // insert
-    ft::map<int, char> map3;
-    ft::map<int, char>::pair_iterator p;
-    ft::map<int, char>::iterator it3;
+    map<int, char> map3;
+    map<int, char>::pair_iterator p;
+    map<int, char>::iterator it3;
+    
     map3.insert(std::pair<char, int>(10, 'a'));
     map3.insert(std::pair<char, int>(5, 'a'));
     map3.insert(std::pair<char, int>(8, 'a'));
@@ -119,7 +119,7 @@ int main()
     std::cout << (++it3)->first << std::endl;
 
     // iterator ++
-    ft::map<int, char>::iterator it2 = map3.begin();
+    map<int, char>::iterator it2 = map3.begin();
     map3.erase(10); // root node is erased -> doesnt alter it2
     std::cout << it2->first << std::endl;
     std::cout << (++it2)->first << std::endl;
