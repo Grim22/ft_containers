@@ -59,12 +59,12 @@ namespace mp
         typedef map_node<Key_type, T> node_type;
         typedef std::pair<const Key_type, T> value_type;
 
-        private:
+        public:
             node_type *ptr;
-            node_type *root;
+            node_type **root; // pointer on this->root (so when this->root is updated, it is also updated)
         public:
             iterator(): ptr(NULL), root(NULL){};
-            iterator(node_type *ptr, node_type *root): ptr(ptr), root(root) {};
+            iterator(node_type *ptr, node_type **root): ptr(ptr), root(root) {};
             iterator(const iterator &copy): ptr(copy.ptr) {};
             iterator &operator=(const iterator &rhs)
             {
@@ -97,7 +97,7 @@ namespace mp
                 // else go down the tree from root
                 // visit each parent node
                 // return the "deepest" parent node for which key is in left
-                node_type *tmp(this->root);
+                node_type *tmp(*this->root);
                 Key_type key(this->ptr->value.first);
                 node_type *ret(NULL); // will store the successor (or NULL if no successor if found)
                 std::cout << "go down" << std::endl;
@@ -344,12 +344,12 @@ public:
     }
     iterator begin()
     {
-        return iterator(this->root->search_min(), this->root);
+        return iterator(this->root->search_min(), &this->root);
     }
     std::pair<iterator,bool> insert (const value_type& val)
     {
         std::pair<node_type*, bool> p = ft::insert(this->root, val.first, val.second);
-        return std::pair<iterator, bool>(iterator(p.first, this->root), p.second);
+        return std::pair<iterator, bool>(iterator(p.first, &this->root), p.second);
     };
     iterator insert (iterator position, const value_type& val);
     template <class InputIterator>
