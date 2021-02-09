@@ -97,26 +97,35 @@ int main()
 
     // insert
     ft::map<int, char> map3;
+    ft::map<int, char>::pair_iterator p;
+    ft::map<int, char>::iterator it3;
     map3.insert(std::pair<char, int>(10, 'a'));
     map3.insert(std::pair<char, int>(5, 'a'));
     map3.insert(std::pair<char, int>(8, 'a'));
     map3.insert(std::pair<char, int>(15, 'a'));
     map3.insert(std::pair<char, int>(7, 'a'));
-    map3.insert(std::pair<char, int>(1, 'a'));
-    ft::map<int, char>::iterator it2 = map3.begin();
-    ft::map_node<int, char> *node;
-    node = *(it2.root);
-    std::cout << node->value.first << std::endl;
-    map3.erase(10);
-    node = *(it2.root);
-    std::cout << node->value.first << std::endl;
+    // test insert return value
+    p = map3.insert(std::pair<char, int>(1, 'a'));
+    std::cout << p.second << std::endl;
+    p = map3.insert(std::pair<char, int>(1, 'a'));
+    std::cout << p.second << std::endl;
     std::cout << "---" << std::endl;
+    it3 = p.first;
+    std::cout << it3->first << std::endl;
+    std::cout << (++it3)->first << std::endl;
+    std::cout << (++it3)->first << std::endl;
+    std::cout << (++it3)->first << std::endl;
+    std::cout << (++it3)->first << std::endl;
+    std::cout << (++it3)->first << std::endl;
+
+    // iterator ++
+    ft::map<int, char>::iterator it2 = map3.begin();
+    map3.erase(10); // root node is erased -> doesnt alter it2
     std::cout << it2->first << std::endl;
     std::cout << (++it2)->first << std::endl;
     std::cout << (++it2)->first << std::endl;
     std::cout << (++it2)->first << std::endl;
     std::cout << (++it2)->first << std::endl;
-    // std::cout << (++it2)->first << std::endl;
 
 
 }

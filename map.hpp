@@ -65,7 +65,11 @@ namespace mp
         public:
             iterator(): ptr(NULL), root(NULL){};
             iterator(node_type *ptr, node_type **root): ptr(ptr), root(root) {};
-            iterator(const iterator &copy): ptr(copy.ptr) {};
+            // void get_root_value()
+            // {
+            //     std::cout << "it root: " << (*this->root)->value.first << std::endl;
+            // };
+            iterator(const iterator &copy): ptr(copy.ptr), root(copy.root) {};
             iterator &operator=(const iterator &rhs)
             {
                 this->ptr = rhs.ptr;
@@ -294,6 +298,7 @@ public:
     typedef std::pair<const key, T> value_type; // 1st param of template
     typedef unsigned long size_type;
     typedef ft::mp::iterator<key, T> iterator;
+    typedef std::pair<iterator, bool> pair_iterator;
 
 private:
     typedef map_node<key, T> node_type;
@@ -346,10 +351,11 @@ public:
     {
         return iterator(this->root->search_min(), &this->root);
     }
-    std::pair<iterator,bool> insert (const value_type& val)
+    pair_iterator insert (const value_type& val)
     {
         std::pair<node_type*, bool> p = ft::insert(this->root, val.first, val.second);
-        return std::pair<iterator, bool>(iterator(p.first, &this->root), p.second);
+        iterator it(p.first, &this->root);
+        return pair_iterator(it, p.second);
     };
     iterator insert (iterator position, const value_type& val);
     template <class InputIterator>
