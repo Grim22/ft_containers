@@ -56,6 +56,7 @@ namespace mp
     template <class Key_type, class T>
     class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
+        public:
         typedef map_node<Key_type, T> node_type;
         typedef std::pair<const Key_type, T> value_type;
 
@@ -461,8 +462,8 @@ public:
     
     typedef ft::mp::iterator<key, T> iterator;
     typedef ft::mp::const_iterator<key, T> const_iterator;
-    // typedef std::reverse_iterator<iterator> reverse_iterator;    
-    // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
+    typedef std::reverse_iterator<iterator> reverse_iterator;    
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
     typedef std::pair<iterator, bool> pair_iterator; // return type of insert
 
 public:
@@ -484,9 +485,15 @@ public:
     }
     ~map() 
     {
-        this->delete_postfix(this->root);
+        this->clear();
     };
-    map& operator= (const map& x);
+    map& operator= (const map& x)
+    {
+        this->clear();
+        for (const_iterator it = x.begin(); it != x.end(); it++)
+            ft::insert(this->root, it->first, it->second);
+        return *this;
+    };
 
     size_type erase (const key_type& k)
     {
@@ -502,6 +509,8 @@ public:
     {
         this->delete_postfix(this->root);
     }
+
+    // iterator
     iterator begin()
     {
         if (this->root == NULL)
@@ -522,6 +531,23 @@ public:
     {
         return const_iterator(NULL, &this->root);
     }
+    // reverse_iterator rbegin()
+    // {
+    //     return reverse_iterator(this->end());
+    // };
+    // const_reverse_iterator rbegin() const
+    // {
+    //     return reverse_iterator(this->end());
+    // };
+    // reverse_iterator rend()
+    // {
+    //     return reverse_iterator(this->begin());
+    // };
+    // const_reverse_iterator rend() const
+    // {
+    //     return reverse_iterator(this->begin());
+    // };
+
     pair_iterator insert (const value_type& val)
     {
         std::pair<node_type*, bool> p = ft::insert(this->root, val.first, val.second);

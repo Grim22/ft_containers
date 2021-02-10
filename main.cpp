@@ -142,10 +142,6 @@ int main()
     std::cout << (++it2)->first << std::endl;
     std::cout << (it2++)->first << std::endl;
     std::cout << (it2)->first << std::endl;
-    // ++it2;
-    // ++it2;
-    // ++it2;
-    // ++it2;
     std::cout << "---" << std::endl;
     std::cout << (it2)->first << std::endl;
     std::cout << (--it2)->first << std::endl;
@@ -163,17 +159,26 @@ int main()
 
     // construct const_iterator from iterator
     map<int, char>::const_iterator it4(it2);
+    
     std::cout << (++it4)->first << std::endl;
     std::cout << (--it4)->first << std::endl;
     std::cout << "---" << std::endl;
 
+    // operator =
+    map<int, char> map4;
+    map4.insert(std::pair<char, int>(100, 'a'));
+    map4 = map3;
+    print(map4);
+
+    // // reverse iterator
+    // map<int, char>::reverse_iterator it5 = map4.rbegin();
+    // while(it5 != map4.rend())
+    // {
+    //     std::cout << it5->first << std::endl;
+    //     it5++;
+    // }
 
 
-    // begin & end
-    print(map3);
-    // for (map<int, char>::iterator it = map3.begin() ; it != map3.end() ; it++)
-    //     std::cout << "key: " << it->first << " val: " << it->second << std::endl;
-    
 
 
 }
