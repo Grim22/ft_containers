@@ -90,11 +90,12 @@ namespace mp
             };
             iterator& operator++() // preincrement (++a)
             {
-                // if (this->ptr == NULL)
-                //     return NULL;
+                if (this->ptr == NULL)
+                    return *this; // if we have arrived at the end (this->ptr == NULL), ++ will have no effect
+
                 if (this->ptr->right) // if righ subtree, return leftmost of right subtree
                 {
-                    std::cout << "right" << std::endl;
+                    // std::cout << "right" << std::endl;
                     this->ptr = this->ptr->right->search_min();
                     return *this;
                 }
@@ -104,7 +105,7 @@ namespace mp
                 node_type *tmp(*this->root);
                 Key_type key(this->ptr->value.first);
                 node_type *ret(NULL); // will store the successor (or NULL if no successor if found)
-                std::cout << "go down" << std::endl;
+                // std::cout << "go down" << std::endl;
                 while (tmp->value.first != key)
                 {
                     if (tmp->value.first > key) // key is left -> update ret
@@ -118,11 +119,55 @@ namespace mp
                 this->ptr = ret;
                 return *this;
             };
-            iterator operator++(int); // postincrement (a++)
-            iterator& operator--();
-            iterator operator--(int);
-            bool operator==(const iterator &rhs) const;
-            bool operator!=(const iterator &rhs) const;
+            iterator operator++(int) // postincrement (a++)
+            {
+                iterator tmp(*this);
+                ++*this;
+                return tmp;
+            }
+            iterator& operator--()
+            {
+                if (this->ptr == NULL)
+                    return *this; // if we have arrived at the end (this->ptr == NULL), -- will have no effect
+                if (this->ptr->left) 
+                {
+                    // std::cout << "left" << std::endl;
+                    this->ptr = this->ptr->left->search_max();
+                    return *this;
+                }
+                node_type *tmp(*this->root);
+                Key_type key(this->ptr->value.first);
+                node_type *ret(NULL); // will store the successor (or NULL if no successor if found)
+                // std::cout << "go down" << std::endl;
+                while (tmp->value.first != key)
+                {
+                    if (tmp->value.first < key) 
+                    {
+                        ret = tmp;
+                        tmp = tmp->right;
+                    }
+                    else
+                        tmp = tmp->left;
+                }
+                this->ptr = ret;
+                return *this;
+            };
+            iterator operator--(int)
+            {
+                iterator tmp(*this);
+                --*this;
+                return tmp;
+            }
+            bool operator==(const iterator &rhs) const
+            {
+                if (this->ptr == rhs.ptr && *this->root == *rhs.root)
+                    return true;
+                return false;
+            }
+            bool operator!=(const iterator &rhs) const
+            {
+                return (!(*this == rhs));
+            }
     };
 }
 
@@ -322,11 +367,12 @@ public:
             ft::insert(this->root, first->first, first->second);
             first++;
         }
-    };
-    map (const map& x);
-    // {
-    //     // this->map(x.begin(), x.end());
-    // };
+    }
+    map (const map& x) // will create an unbalanced tree, as elements are inserted sorted
+    {
+        for (iterator it = x.begin(); it != x.end(); it++)
+            ft::insert(this->root, it->first, it->second);
+    }
     ~map() 
     {
         this->delete_postfix(this->root);
@@ -350,6 +396,10 @@ public:
     iterator begin()
     {
         return iterator(this->root->search_min(), &this->root);
+    }
+    iterator end()
+    {
+        return iterator(NULL, &this->root);
     }
     pair_iterator insert (const value_type& val)
     {

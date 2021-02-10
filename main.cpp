@@ -4,6 +4,12 @@
 
 using namespace ft;
 
+void print(map<int, char> mp)
+{
+    for (map<int, char>::iterator it = mp.begin() ; it != mp.end() ; it++)
+        std::cout << "key: " << it->first << " val: " << it->second << std::endl;
+}
+
 int main()
 {
     // map_node<int, char> *root;
@@ -101,7 +107,7 @@ int main()
     
     map3.insert(std::pair<char, int>(10, 'a'));
     map3.insert(std::pair<char, int>(5, 'a'));
-    map3.insert(std::pair<char, int>(8, 'a'));
+    map3.insert(std::pair<char, int>(8, 'x'));
     map3.insert(std::pair<char, int>(15, 'a'));
     map3.insert(std::pair<char, int>(7, 'a'));
     // test insert return value
@@ -118,14 +124,38 @@ int main()
     std::cout << (++it3)->first << std::endl;
     std::cout << (++it3)->first << std::endl;
 
-    // iterator ++
+    // iterator ++ & --
     map<int, char>::iterator it2 = map3.begin();
     map3.erase(10); // root node is erased -> doesnt alter it2
+    map3.print();
     std::cout << it2->first << std::endl;
     std::cout << (++it2)->first << std::endl;
     std::cout << (++it2)->first << std::endl;
     std::cout << (++it2)->first << std::endl;
-    std::cout << (++it2)->first << std::endl;
+    std::cout << (it2++)->first << std::endl;
+    std::cout << (it2)->first << std::endl;
+    // ++it2;
+    // ++it2;
+    // ++it2;
+    // ++it2;
+    std::cout << "---" << std::endl;
+    std::cout << (it2)->first << std::endl;
+    std::cout << (--it2)->first << std::endl;
+    std::cout << (--it2)->first << std::endl;
+    std::cout << (--it2)->first << std::endl;
+    std::cout << (it2--)->first << std::endl;
+    std::cout << (it2)->first << std::endl;
+
+    // iterator comparison
+    std::cout << (it2 == map3.begin()) << std::endl;
+    std::cout << (++it2 == map3.begin()) << std::endl;
+    std::cout << (++it2 != map3.begin()) << std::endl;
+
+    // begin & end
+    print(map3);
+    // for (map<int, char>::iterator it = map3.begin() ; it != map3.end() ; it++)
+    //     std::cout << "key: " << it->first << " val: " << it->second << std::endl;
+    
 
 
 }
