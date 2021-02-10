@@ -91,9 +91,11 @@ namespace mp
             };
             iterator& operator++() // preincrement (++a)
             {
-                if (this->ptr == NULL)
-                    return *this; // if we have arrived at the end (this->ptr == NULL), ++ will have no effect
-
+                if (this->ptr == NULL) // past_the_end or before_the_begining -> go to first elem
+                {
+                    this->ptr = (*this->root)->search_min();
+                    return *this; 
+                }
                 if (this->ptr->right) // if righ subtree, return leftmost of right subtree
                 {
                     // std::cout << "right" << std::endl;
@@ -113,7 +115,7 @@ namespace mp
                     {
                         ret = tmp;
                         tmp = tmp->left;
-                    }
+                    }   
                     else // key is right -> do not update right
                         tmp = tmp->right;
                 }
@@ -128,8 +130,11 @@ namespace mp
             }
             iterator& operator--()
             {
-                if (this->ptr == NULL)
-                    return *this; // if we have arrived at the end (this->ptr == NULL), -- will have no effect
+                if (this->ptr == NULL) // go to last elem
+                {
+                    this->ptr = (*this->root)->search_max();
+                    return *this;
+                }
                 if (this->ptr->left) 
                 {
                     // std::cout << "left" << std::endl;
@@ -138,7 +143,7 @@ namespace mp
                 }
                 node_type *tmp(*this->root);
                 typename T::first_type key(this->ptr->value.first);
-                node_type *ret(NULL); // will store the successor (or NULL if no successor if found)
+                node_type *ret(NULL);
                 // std::cout << "go down" << std::endl;
                 while (tmp->value.first != key)
                 {
@@ -208,7 +213,10 @@ namespace mp
             const_iterator& operator++()
             {
                 if (this->ptr == NULL)
+                {
+                    this->ptr = (*this->root)->search_min();
                     return *this; 
+                }
 
                 if (this->ptr->right) 
                 {
@@ -241,7 +249,10 @@ namespace mp
             const_iterator& operator--()
             {
                 if (this->ptr == NULL)
+                {
+                    this->ptr = (*this->root)->search_max();
                     return *this; 
+                }
                 if (this->ptr->left) 
                 {
                     // std::cout << "left" << std::endl;
@@ -313,18 +324,6 @@ map_node<T> *search(map_node<T> *root, T elem)
     else
         return search(root->right, elem);
 }
-
-// template <class key_type, class value_type>
-// map_node<key_type, value_type> *search_parent_ptr(map_node<key_type, value_type> *root, key_type key)
-// {
-//     if (root == NULL || root->key == key)
-//         return root;
-
-//     if (root->key > key)
-//         return search(root->left, key);
-//     else
-//         return search(root->right, key);
-// }
 
 template <class T>
 map_node<T> *search_min(map_node<T> *root)
@@ -417,18 +416,6 @@ void delete_map_node(map_node<T> *&root, typename T::first_type key)
         delete_map_node(root->right, key);
 }
 
-// template <class key_type, class value_type>
-// void print_in_order(map_node<key_type, value_type> *root)
-// {
-//     if (root == NULL)
-//         return ;
-//     if (root->left)
-//         print_in_order(root->left);
-//     std::cout << root->value.first << std::endl;
-//     if (root->right)
-//         print_in_order(root->right);
-// }
-
 template <class T>
 void delete_postfix(map_node<T> *&root)
 {
@@ -499,11 +486,6 @@ public:
         delete_map_node(this->root, k);
         return 0;
     };
-    // void print(void)
-    // {
-    //     print_in_order(this->root);
-    //     std::cout << "---" << std::endl;
-    // }
     void clear(void)
     {
         this->delete_postfix(this->root);
@@ -530,22 +512,22 @@ public:
     {
         return const_iterator(NULL, &this->root);
     }
-    // reverse_iterator rbegin()
-    // {
-    //     return reverse_iterator(this->end());
-    // };
-    // const_reverse_iterator rbegin() const
-    // {
-    //     return reverse_iterator(this->end());
-    // };
-    // reverse_iterator rend()
-    // {
-    //     return reverse_iterator(this->begin());
-    // };
-    // const_reverse_iterator rend() const
-    // {
-    //     return reverse_iterator(this->begin());
-    // };
+    reverse_iterator rbegin()
+    {
+        return reverse_iterator(this->end());
+    };
+    const_reverse_iterator rbegin() const
+    {
+        return reverse_iterator(this->end());
+    };
+    reverse_iterator rend()
+    {
+        return reverse_iterator(this->begin());
+    };
+    const_reverse_iterator rend() const
+    {
+        return reverse_iterator(this->begin());
+    };
 
     pair_iterator insert (const value_type& val)
     {

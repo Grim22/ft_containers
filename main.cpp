@@ -171,12 +171,12 @@ int main()
     print(map4);
 
     // // reverse iterator
-    // map<int, char>::reverse_iterator it5 = map4.rbegin();
-    // while(it5 != map4.rend())
-    // {
-    //     std::cout << it5->first << std::endl;
-    //     it5++;
-    // }
+    map<int, char>::reverse_iterator it5 = map4.rbegin();
+    while(it5 != map4.rend())
+    {
+        std::cout << it5->first << std::endl;
+        it5++;
+    }
 
 
 
