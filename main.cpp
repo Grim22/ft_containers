@@ -2,11 +2,18 @@
 #include <map>
 #include <iostream>
 
-using namespace ft;
+#ifndef STD
+# define NAMESPACE ft
+#else
+# define NAMESPACE std
+#endif
 
-void print(map<int, char> mp)
+using namespace NAMESPACE;
+
+template<class U, class V>
+void print(map<U, V> mp)
 {
-    for (map<int, char>::iterator it = mp.begin() ; it != mp.end() ; it++)
+    for (typename map<U, V>::iterator it = mp.begin() ; it != mp.end() ; it++)
         std::cout << "key: " << it->first << " val: " << it->second << std::endl;
 }
 
@@ -69,21 +76,21 @@ int main()
     // // delete_map_node(root, 11);
     // delete_postfix(root);
 
-    std::map<char, int> first;
-    first['b'] = 20;
-    first['c'] = 30;
-    first['a'] = 10;
+    map<char, int> first;
+    first.insert(std::pair<char, int>('b', 20));
+    first.insert(std::pair<char, int>('c', 30));
+    first.insert(std::pair<char, int>('a', 10));
     
     // iterator constructor
     map<char, int> second(first.begin(), first.end());
-    second.print();
+    print(second);
     
     // erase
     second.erase('b');
     second.erase('c');
-    second.print();
+    print(second);
     second.erase('a');
-    second.print();
+    print(second);
     
     // clear
     map<char, int> map1(first.begin(), first.end());
@@ -91,7 +98,7 @@ int main()
 
     // begin
     map<char, int> map2(first.begin(), first.end());
-    map2.print();
+    print(map2);
     std::cout << "---" << std::endl;
     map<char, int>::iterator it;
     it = map2.begin();
@@ -102,7 +109,7 @@ int main()
 
     // insert
     map<int, char> map3;
-    map<int, char>::pair_iterator p;
+    std::pair<map<int, char>::iterator, bool> p;
     map<int, char>::iterator it3;
     
     map3.insert(std::pair<char, int>(10, 'a'));
@@ -110,6 +117,7 @@ int main()
     map3.insert(std::pair<char, int>(8, 'x'));
     map3.insert(std::pair<char, int>(15, 'a'));
     map3.insert(std::pair<char, int>(7, 'a'));
+
     // test insert return value
     p = map3.insert(std::pair<char, int>(1, 'a'));
     std::cout << p.second << std::endl;
@@ -127,7 +135,7 @@ int main()
     // iterator ++ & --
     map<int, char>::iterator it2 = map3.begin();
     map3.erase(10); // root node is erased -> doesnt alter it2
-    map3.print();
+    print(map3);
     std::cout << it2->first << std::endl;
     std::cout << (++it2)->first << std::endl;
     std::cout << (++it2)->first << std::endl;
@@ -145,11 +153,21 @@ int main()
     std::cout << (--it2)->first << std::endl;
     std::cout << (it2--)->first << std::endl;
     std::cout << (it2)->first << std::endl;
+    std::cout << "---" << std::endl;
 
     // iterator comparison
     std::cout << (it2 == map3.begin()) << std::endl;
     std::cout << (++it2 == map3.begin()) << std::endl;
     std::cout << (++it2 != map3.begin()) << std::endl;
+    std::cout << "---" << std::endl;
+
+    // construct const_iterator from iterator
+    map<int, char>::const_iterator it4(it2);
+    std::cout << (++it4)->first << std::endl;
+    std::cout << (--it4)->first << std::endl;
+    std::cout << "---" << std::endl;
+
+
 
     // begin & end
     print(map3);

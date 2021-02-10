@@ -61,10 +61,11 @@ namespace mp
 
         public:
             node_type *ptr;
-            node_type **root; // pointer on this->root (so when this->root is updated, it is also updated)
+            node_type *const *root; // pointer on this->root (so when this->root is updated, it is also updated)
+            // rq:: node_type *const *root means that root is a pointer to a const pointer: *root cannot be changed (we dont need to change it)
         public:
             iterator(): ptr(NULL), root(NULL){};
-            iterator(node_type *ptr, node_type **root): ptr(ptr), root(root) {};
+            iterator(node_type *ptr, node_type *const *root): ptr(ptr), root(root) {};
             // void get_root_value()
             // {
             //     std::cout << "it root: " << (*this->root)->value.first << std::endl;
@@ -78,8 +79,8 @@ namespace mp
             };
             ~iterator() {};
             
-            node_type *as_node(); // needed to access node from outisde the class (from list for example): it would be better to declare list as a friend class (thats the way it is done in the STL) but we're not allowed to
-            const node_type *as_node() const;
+            // node_type *as_node(); // needed to access node from outisde the class (from list for example): it would be better to declare list as a friend class (thats the way it is done in the STL) but we're not allowed to
+            // const node_type *as_node() const;
             value_type &operator*() const
             {
                 return this->ptr->value;
@@ -160,17 +161,126 @@ namespace mp
             }
             bool operator==(const iterator &rhs) const
             {
-                if (this->ptr == rhs.ptr && *this->root == *rhs.root)
-                    return true;
-                return false;
+                return (this->ptr == rhs.ptr);
             }
             bool operator!=(const iterator &rhs) const
             {
-                return (!(*this == rhs));
+                return (this->ptr != rhs.ptr);
+            }
+    };
+
+    template <class Key_type, class T>
+    class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
+    {
+        typedef map_node<Key_type, T> node_type;
+        typedef std::pair<const Key_type, T> value_type;
+
+        public:
+            const node_type *ptr; // diff (1)
+            node_type *const *root; 
+        public:
+            const_iterator(): ptr(NULL), root(NULL){};
+            const_iterator(node_type *ptr, node_type*const *root): ptr(ptr), root(root) {};
+            // void get_root_value()
+            // {
+            //     std::cout << "it root: " << (*this->root)->value.first << std::endl;
+            // };
+            const_iterator(const const_iterator &copy): ptr(copy.ptr), root(copy.root) {};
+            const_iterator(const iterator<Key_type, T> &copy): ptr(copy.ptr), root(copy.root) {}; // diff (4)
+            const_iterator &operator=(const const_iterator &rhs)
+            {
+                this->ptr = rhs.ptr;
+                this->root = rhs.root;
+                return *this;
+            };
+            ~const_iterator() {};
+            
+            // node_type *as_node(); 
+            // const node_type *as_node() const;
+            const value_type &operator*() const // diff (2)
+            {
+                return this->ptr->value;
+            };
+            const value_type *operator->() const // diff (3)
+            {
+                return &this->ptr->value;
+            };
+            const_iterator& operator++()
+            {
+                if (this->ptr == NULL)
+                    return *this; 
+
+                if (this->ptr->right) 
+                {
+                    this->ptr = this->ptr->right->search_min();
+                    return *this;
+                }
+                node_type *tmp(*this->root);
+                Key_type key(this->ptr->value.first);
+                node_type *ret(NULL); 
+                // std::cout << "go down" << std::endl;
+                while (tmp->value.first != key)
+                {
+                    if (tmp->value.first > key) 
+                    {
+                        ret = tmp;
+                        tmp = tmp->left;
+                    }
+                    else 
+                        tmp = tmp->right;
+                }
+                this->ptr = ret;
+                return *this;
+            };
+            const_iterator operator++(int) 
+            {
+                const_iterator tmp(*this);
+                ++*this;
+                return tmp;
+            }
+            const_iterator& operator--()
+            {
+                if (this->ptr == NULL)
+                    return *this; 
+                if (this->ptr->left) 
+                {
+                    // std::cout << "left" << std::endl;
+                    this->ptr = this->ptr->left->search_max();
+                    return *this;
+                }
+                node_type *tmp(*this->root);
+                Key_type key(this->ptr->value.first);
+                node_type *ret(NULL); 
+                // std::cout << "go down" << std::endl;
+                while (tmp->value.first != key)
+                {
+                    if (tmp->value.first < key) 
+                    {
+                        ret = tmp;
+                        tmp = tmp->right;
+                    }
+                    else
+                        tmp = tmp->left;
+                }
+                this->ptr = ret;
+                return *this;
+            };
+            const_iterator operator--(int)
+            {
+                const_iterator tmp(*this);
+                --*this;
+                return tmp;
+            }
+            bool operator==(const const_iterator &rhs) const
+            {
+                return (this->ptr == rhs.ptr);
+            }
+            bool operator!=(const const_iterator &rhs) const
+            {
+                return (this->ptr != rhs.ptr);
             }
     };
 }
-
 
 // the functions below cant stay here alone
 // -> put them inside map as private functions
@@ -342,8 +452,6 @@ public:
     typedef T mapped_type; // 2st param of template
     typedef std::pair<const key, T> value_type; // 1st param of template
     typedef unsigned long size_type;
-    typedef ft::mp::iterator<key, T> iterator;
-    typedef std::pair<iterator, bool> pair_iterator; // return type of insert
 
 private:
     typedef map_node<key, T> node_type;
@@ -351,10 +459,11 @@ private:
 
 public:
     
-    // typedef iterator<T> iterator;
-    // typedef const_iterator<T> const_iterator;
+    typedef ft::mp::iterator<key, T> iterator;
+    typedef ft::mp::const_iterator<key, T> const_iterator;
     // typedef std::reverse_iterator<iterator> reverse_iterator;    
     // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
+    typedef std::pair<iterator, bool> pair_iterator; // return type of insert
 
 public:
     // constructors & destructor
@@ -368,9 +477,9 @@ public:
             first++;
         }
     }
-    map (const map& x) // will create an unbalanced tree, as elements are inserted sorted
+    map (const map& x): root(NULL) // will create an unbalanced tree, as elements are inserted sorted
     {
-        for (iterator it = x.begin(); it != x.end(); it++)
+        for (const_iterator it = x.begin(); it != x.end(); it++)
             ft::insert(this->root, it->first, it->second);
     }
     ~map() 
@@ -384,22 +493,34 @@ public:
         delete_map_node(this->root, k);
         return 0;
     };
-    void print(void)
-    {
-        print_in_order(this->root);
-        std::cout << "---" << std::endl;
-    }
+    // void print(void)
+    // {
+    //     print_in_order(this->root);
+    //     std::cout << "---" << std::endl;
+    // }
     void clear(void)
     {
         this->delete_postfix(this->root);
     }
     iterator begin()
     {
+        if (this->root == NULL)
+            return iterator(NULL, NULL);
         return iterator(this->root->search_min(), &this->root);
+    }
+    const_iterator begin() const
+    {
+        if (this->root == NULL)
+            return const_iterator(NULL, NULL);
+        return const_iterator(this->root->search_min(), &this->root);
     }
     iterator end()
     {
         return iterator(NULL, &this->root);
+    }
+    const_iterator end() const
+    {
+        return const_iterator(NULL, &this->root);
     }
     pair_iterator insert (const value_type& val)
     {
