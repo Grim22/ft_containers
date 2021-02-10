@@ -24,16 +24,15 @@
 namespace ft
 {
 
-template <class Key_type, class Value_type>
+template <class T>
 struct map_node
 {
-    typedef std::pair<const Key_type, Value_type> pair;
     map_node* left;
     map_node* right;
-    pair value; // permet à operator-> dans iterator de retourner par reference
-    map_node(): left(NULL), right(NULL), pair(pair())
+    T value; 
+    map_node(): left(NULL), right(NULL), value(T())
     {};
-    map_node(Key_type key, Value_type val):left(NULL), right(NULL), value(key, val)
+    map_node(T val):left(NULL), right(NULL), value(val)
     {};
     map_node* search_max()
     {
@@ -53,12 +52,12 @@ struct map_node
 
 namespace mp
 {
-    template <class Key_type, class T>
+    template <class T>
     class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
         public:
-        typedef map_node<Key_type, T> node_type;
-        typedef std::pair<const Key_type, T> value_type;
+        typedef map_node<T> node_type;
+        typedef T value_type;
 
         public:
             node_type *ptr;
@@ -105,7 +104,7 @@ namespace mp
                 // visit each parent node
                 // return the "deepest" parent node for which key is in left
                 node_type *tmp(*this->root);
-                Key_type key(this->ptr->value.first);
+                typename T::first_type key(this->ptr->value.first);
                 node_type *ret(NULL); // will store the successor (or NULL if no successor if found)
                 // std::cout << "go down" << std::endl;
                 while (tmp->value.first != key)
@@ -138,7 +137,7 @@ namespace mp
                     return *this;
                 }
                 node_type *tmp(*this->root);
-                Key_type key(this->ptr->value.first);
+                typename T::first_type key(this->ptr->value.first);
                 node_type *ret(NULL); // will store the successor (or NULL if no successor if found)
                 // std::cout << "go down" << std::endl;
                 while (tmp->value.first != key)
@@ -170,11 +169,11 @@ namespace mp
             }
     };
 
-    template <class Key_type, class T>
+    template <class T>
     class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
-        typedef map_node<Key_type, T> node_type;
-        typedef std::pair<const Key_type, T> value_type;
+        typedef map_node<T> node_type;
+        typedef T value_type;
 
         public:
             const node_type *ptr; // diff (1)
@@ -187,7 +186,7 @@ namespace mp
             //     std::cout << "it root: " << (*this->root)->value.first << std::endl;
             // };
             const_iterator(const const_iterator &copy): ptr(copy.ptr), root(copy.root) {};
-            const_iterator(const iterator<Key_type, T> &copy): ptr(copy.ptr), root(copy.root) {}; // diff (4)
+            const_iterator(const iterator<T> &copy): ptr(copy.ptr), root(copy.root) {}; // diff (4)
             const_iterator &operator=(const const_iterator &rhs)
             {
                 this->ptr = rhs.ptr;
@@ -217,7 +216,7 @@ namespace mp
                     return *this;
                 }
                 node_type *tmp(*this->root);
-                Key_type key(this->ptr->value.first);
+                typename T::first_type key(this->ptr->value.first);
                 node_type *ret(NULL); 
                 // std::cout << "go down" << std::endl;
                 while (tmp->value.first != key)
@@ -250,7 +249,7 @@ namespace mp
                     return *this;
                 }
                 node_type *tmp(*this->root);
-                Key_type key(this->ptr->value.first);
+                typename T::first_type key(this->ptr->value.first);
                 node_type *ret(NULL); 
                 // std::cout << "go down" << std::endl;
                 while (tmp->value.first != key)
@@ -287,32 +286,32 @@ namespace mp
 // -> put them inside map as private functions
 // Rq: they can't be called with "this", instead of "root", as they are recursive
 
-template <class key_type, class value_type>
-std::pair<map_node<key_type, value_type>*, bool> insert(map_node<key_type, value_type> *&root, key_type key, value_type val)
+template <class T>
+std::pair<map_node<T>*, bool> insert(map_node<T> *&root, T elem)
 {
     if (root == nullptr)
     {
-        root = new map_node<key_type, value_type>(key, val);
-        return std::pair<map_node<key_type, value_type>*, bool>(root, true);
+        root = new map_node<T>(elem);
+        return std::pair<map_node<T>*, bool>(root, true);
     }
-    if (root->value.first == key)
-        return std::pair<map_node<key_type, value_type>*, bool>(root, false);
-    else if (root->value.first > key)
-        return (insert(root->left, key, val));
+    if (root->value.first == elem.first)
+        return std::pair<map_node<T>*, bool>(root, false);
+    else if (root->value.first > elem.first)
+        return (insert(root->left, elem));
     else
-        return (insert(root->right, key, val));
+        return (insert(root->right, elem));
 }
 
-template <class key_type, class value_type>
-map_node<key_type, value_type> *search(map_node<key_type, value_type> *root, key_type key)
+template <class T>
+map_node<T> *search(map_node<T> *root, T elem)
 {
-    if (root == NULL || root->value.first == key)
+    if (root == NULL || root->value.first == elem.first)
         return root;
 
-    if (root->value.first > key)
-        return search(root->left, key);
+    if (root->value.first > elem.first)
+        return search(root->left, elem);
     else
-        return search(root->right, key);
+        return search(root->right, elem);
 }
 
 // template <class key_type, class value_type>
@@ -327,24 +326,24 @@ map_node<key_type, value_type> *search(map_node<key_type, value_type> *root, key
 //         return search(root->right, key);
 // }
 
-template <class key_type, class value_type>
-map_node<key_type, value_type> *search_min(map_node<key_type, value_type> *root)
+template <class T>
+map_node<T> *search_min(map_node<T> *root)
 {
     while (root->left != NULL)
         root = root->left;
     return root;
 }
 
-template <class key_type, class value_type>
-map_node<key_type, value_type> *search_max(map_node<key_type, value_type> *root)
+template <class T>
+map_node<T> *search_max(map_node<T> *root)
 {
     while (root->right != NULL)
         root = root->right;
     return root;
 }
 
-template <class key_type, class value_type>
-map_node<key_type, value_type> *search_max_parent(map_node<key_type, value_type> *root)
+template <class T>
+map_node<T> *search_max_parent(map_node<T> *root)
 {
     if (root->right == NULL)
         return NULL;
@@ -353,8 +352,8 @@ map_node<key_type, value_type> *search_max_parent(map_node<key_type, value_type>
     return root;
 }
 
-template <class key_type, class value_type>
-void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
+template <class T>
+void delete_map_node(map_node<T> *&root, typename T::first_type key)
 {
      if (root == NULL)
          return;
@@ -370,14 +369,14 @@ void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
         // case #2: root has 1 child: relink child to root parent, then delete root
         if (root->right && root->left == NULL)
         {
-            map_node<key_type, value_type> *child = root->right;
+            map_node<T> *child = root->right;
             delete root;
             root = child; // (root is a reference to root->left / root->right from the previous call (in root's parent). So when we modify root we modify parent->left or parent->right)
             return ;
         }
         if (root->left && root->right == NULL)
         {
-            map_node<key_type, value_type> *child = root->left;
+            map_node<T> *child = root->left;
             delete root;
             root = child;
             return ;
@@ -389,8 +388,8 @@ void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
             // alternative: relink min of right subtree
 
             // 1 - find max and max_parent
-            map_node<key_type, value_type> *max = search_max(root->left);
-            map_node<key_type, value_type> *max_parent = search_max_parent(root->left);
+            map_node<T> *max = search_max(root->left);
+            map_node<T> *max_parent = search_max_parent(root->left);
             if (max_parent == NULL)
                 max_parent = root;
 
@@ -418,20 +417,20 @@ void delete_map_node(map_node<key_type, value_type> *&root, key_type key)
         delete_map_node(root->right, key);
 }
 
-template <class key_type, class value_type>
-void print_in_order(map_node<key_type, value_type> *root)
-{
-    if (root == NULL)
-        return ;
-    if (root->left)
-        print_in_order(root->left);
-    std::cout << root->value.first << std::endl;
-    if (root->right)
-        print_in_order(root->right);
-}
+// template <class key_type, class value_type>
+// void print_in_order(map_node<key_type, value_type> *root)
+// {
+//     if (root == NULL)
+//         return ;
+//     if (root->left)
+//         print_in_order(root->left);
+//     std::cout << root->value.first << std::endl;
+//     if (root->right)
+//         print_in_order(root->right);
+// }
 
-template <class key_type, class value_type>
-void delete_postfix(map_node<key_type, value_type> *&root)
+template <class T>
+void delete_postfix(map_node<T> *&root)
 {
     if (root == NULL)
         return ;
@@ -451,17 +450,17 @@ public:
     // member types
     typedef key key_type; // 1st param of template
     typedef T mapped_type; // 2st param of template
-    typedef std::pair<const key, T> value_type; // 1st param of template
+    typedef std::pair<const key, T> value_type;
     typedef unsigned long size_type;
 
 private:
-    typedef map_node<key, T> node_type;
+    typedef map_node<value_type> node_type;
     node_type *root;
 
 public:
     
-    typedef ft::mp::iterator<key, T> iterator;
-    typedef ft::mp::const_iterator<key, T> const_iterator;
+    typedef ft::mp::iterator<value_type> iterator;
+    typedef ft::mp::const_iterator<value_type> const_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;    
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
     typedef std::pair<iterator, bool> pair_iterator; // return type of insert
@@ -474,14 +473,14 @@ public:
     {
         while (first != last)
         {
-            ft::insert(this->root, first->first, first->second);
+            ft::insert(this->root, *first);
             first++;
         }
     }
     map (const map& x): root(NULL) // will create an unbalanced tree, as elements are inserted sorted
     {
         for (const_iterator it = x.begin(); it != x.end(); it++)
-            ft::insert(this->root, it->first, it->second);
+            ft::insert(this->root, *it);
     }
     ~map() 
     {
@@ -491,7 +490,7 @@ public:
     {
         this->clear();
         for (const_iterator it = x.begin(); it != x.end(); it++)
-            ft::insert(this->root, it->first, it->second);
+            ft::insert(this->root, *it);
         return *this;
     };
 
@@ -550,7 +549,7 @@ public:
 
     pair_iterator insert (const value_type& val)
     {
-        std::pair<node_type*, bool> p = ft::insert(this->root, val.first, val.second);
+        std::pair<node_type*, bool> p = ft::insert(this->root, val);
         iterator it(p.first, &this->root);
         return pair_iterator(it, p.second);
     };
