@@ -30,10 +30,13 @@ struct map_node
     map_node* left;
     map_node* right;
     T value; 
+
     map_node(): left(NULL), right(NULL), value(T())
     {};
     map_node(T val):left(NULL), right(NULL), value(val)
     {};
+    
+    // functions below work only with std::pair as template argument
     map_node* search_max()
     {
         map_node *tmp = this;
@@ -46,6 +49,15 @@ struct map_node
         map_node *tmp = this;
         while (tmp->left != NULL)
             tmp = tmp->left;
+        return tmp;
+    }
+    map_node *search_max_parent()
+    {
+        map_node *tmp = this;
+        if (tmp->right == NULL)
+            return NULL;
+        while (tmp->right->right != NULL)
+            tmp = tmp->right;
         return tmp;
     }
 };
@@ -325,31 +337,6 @@ map_node<T> *search(map_node<T> *root, T elem)
         return search(root->right, elem);
 }
 
-template <class T>
-map_node<T> *search_min(map_node<T> *root)
-{
-    while (root->left != NULL)
-        root = root->left;
-    return root;
-}
-
-template <class T>
-map_node<T> *search_max(map_node<T> *root)
-{
-    while (root->right != NULL)
-        root = root->right;
-    return root;
-}
-
-template <class T>
-map_node<T> *search_max_parent(map_node<T> *root)
-{
-    if (root->right == NULL)
-        return NULL;
-    while (root->right->right != NULL)
-        root = root->right;
-    return root;
-}
 
 template <class T>
 void delete_map_node(map_node<T> *&root, typename T::first_type key)
@@ -387,8 +374,8 @@ void delete_map_node(map_node<T> *&root, typename T::first_type key)
             // alternative: relink min of right subtree
 
             // 1 - find max and max_parent
-            map_node<T> *max = search_max(root->left);
-            map_node<T> *max_parent = search_max_parent(root->left);
+            map_node<T> *max = root->left->search_max();
+            map_node<T> *max_parent = root->left->search_max_parent();
             if (max_parent == NULL)
                 max_parent = root;
 
