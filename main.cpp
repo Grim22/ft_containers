@@ -14,7 +14,13 @@ template<class U, class V>
 void print(map<U, V> mp)
 {
     for (typename map<U, V>::iterator it = mp.begin() ; it != mp.end() ; it++)
-        std::cout << "key: " << it->first << " val: " << it->second << std::endl;
+    {
+        std::cout << "key: " << it->first;
+        // std::cout << " val: " << it->second;
+        std::cout << std::endl;
+    }
+    std::cout << "---" << std::endl;
+    
 }
 
 // useful because template arguments dont have to be specified: they are deduced from the function argument
@@ -27,87 +33,16 @@ std::pair<U,V> make_pairs(U u, V v)
 
 int main()
 {
-    // map_node<int, char> *root;
-    // root = new map_node<int, char>(8, 'c');
-    // insert<int, char>(root, 4, 'b');
-    // insert<int, char>(root, 12, 'd');
-    // insert<int, char>(root, 11, 'd');
-    // insert<int, char>(root, 13, 'd');
-    // insert<int, char>(root, 2, 'd');
-    // insert<int, char>(root, 6, 'd');
-    // insert<int, char>(root, 10, 'd');
-    // insert<int, char>(root, 9, 'd');
-    
-    // map_node<int, char> *tmp;
-
-    // // delete
-    // print_in_order(root);
-    // std::cout << "---" << std::endl;
-    // delete_map_node(root, 12);
-    // print_in_order(root);
-    // std::cout << "---" << std::endl;
-    // delete_map_node(root, 4);
-    // print_in_order(root);
-    // std::cout << "---" << std::endl;
-    // delete_map_node(root, 6);
-    // print_in_order(root);
-    // std::cout << "---" << std::endl;
-    // delete_map_node(root, 2);
-    // print_in_order(root);
-    // std::cout << "---" << std::endl;
-    // delete_map_node(root, 8);
-    // print_in_order(root);
-    // std::cout << "---" << std::endl;
-    // std::cout << "---" << std::endl;
-    // // delete_map_node(root, 9);
-    // // delete_map_node(root, 10);
-    // // delete_map_node(root, 13);
-    // // delete_map_node(root, 11);
-    // delete_postfix(root);
-
-    map<char, int> first;
-    first.insert(std::pair<char, int>('b', 20));
-    first.insert(std::pair<char, int>('c', 30));
-    first.insert(std::pair<char, int>('a', 10));
-    
-    // iterator constructor
-    map<char, int> second(first.begin(), first.end());
-    print(second);
-    
-    // erase
-    second.erase('b');
-    second.erase('c');
-    print(second);
-    second.erase('a');
-    print(second);
-    
-    // clear
-    map<char, int> map1(first.begin(), first.end());
-    map1.clear();
-
-    // begin
-    map<char, int> map2(first.begin(), first.end());
-    print(map2);
-    std::cout << "---" << std::endl;
-    map<char, int>::iterator it;
-    it = map2.begin();
-    std::cout << it->first << std::endl;
-    std::cout << (++it)->first << std::endl;
-    std::cout << (++it)->first << std::endl;
-    std::cout << "---" << std::endl;
-
     // insert
     map<int, char> map3;
     std::pair<map<int, char>::iterator, bool> p;
     map<int, char>::iterator it3;
-    
     map3.insert(make_pairs(10, 'a'));
     map3.insert(make_pairs(5, 'a'));
     map3.insert(make_pairs(8, 'x'));
     map3.insert(make_pairs(15, 'a'));
     map3.insert(make_pairs(7, 'a'));
-
-    // test insert return value
+    // insert return value
     p = map3.insert(make_pairs(1, 'a'));
     std::cout << p.second << std::endl;
     p = map3.insert(make_pairs(1, 'a'));
@@ -120,6 +55,22 @@ int main()
     std::cout << (++it3)->first << std::endl;
     std::cout << (++it3)->first << std::endl;
     std::cout << (++it3)->first << std::endl;
+
+    // erase
+    map<int, char> map5(map3);
+    print(map5);
+    map5.erase(8); // one child
+    print(map5);
+    map5.erase(5); // two child
+    print(map5);
+    map5.erase(15); // no child
+    print(map5);
+    map5.erase(10); // root
+    print(map5);
+    map5.erase(1); // root
+    print(map5);
+    map5.erase(7); // root
+    print(map5);
 
     // iterator ++ & --
     map<int, char>::iterator it2 = map3.begin();
@@ -166,6 +117,12 @@ int main()
         std::cout << it5->first << std::endl;
         it5++;
     }
+    
+    // clear and iterator constructor
+    map<int, char> map6(map3.begin(), map3.end());
+    print(map6);
+    map6.clear();
+    print(map6);
 
 
 
