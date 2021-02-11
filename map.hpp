@@ -64,16 +64,17 @@ struct map_node
 
 // helper functions for BST
 // Rq: as they are recursive and/or use a reference to pointer to map_node as argument, there is no need to put them inside the map_node class
+
 template <class T>
 std::pair<map_node<T>*, bool> insert(map_node<T> *&root, T elem)
 {
     if (root == nullptr)
     {
         root = new map_node<T>(elem);
-        return std::pair<map_node<T>*, bool>(root, true);
+        return std::make_pair(root, true);
     }
     if (root->value.first == elem.first)
-        return std::pair<map_node<T>*, bool>(root, false);
+        return std::make_pair(root, false);
     else if (root->value.first > elem.first)
         return (insert(root->left, elem));
     else
@@ -91,10 +92,10 @@ map_node<T> *search(map_node<T> *root, T elem)
         return search(root->right, elem);
 }
 template <class T>
-void delete_map_node(map_node<T> *&root, typename T::first_type key)
+size_t delete_map_node(map_node<T> *&root, typename T::first_type key)
 {
      if (root == NULL)
-         return;
+         return 0;
     if (root->value.first == key)
     {
         // case #1: root has no child: delete root and set is to NULL
@@ -102,7 +103,7 @@ void delete_map_node(map_node<T> *&root, typename T::first_type key)
         {
             delete root;
             root = NULL;
-            return;
+            return 1;
         }
         // case #2: root has 1 child: relink child to root parent, then delete root
         if (root->right && root->left == NULL)
@@ -110,14 +111,14 @@ void delete_map_node(map_node<T> *&root, typename T::first_type key)
             map_node<T> *child = root->right;
             delete root;
             root = child; // (root is a reference to root->left / root->right from the previous call (in root's parent). So when we modify root we modify parent->left or parent->right)
-            return ;
+            return 1;
         }
         if (root->left && root->right == NULL)
         {
             map_node<T> *child = root->left;
             delete root;
             root = child;
-            return ;
+            return 1;
         }
         // case 3: root has 2 children
         else
@@ -146,13 +147,13 @@ void delete_map_node(map_node<T> *&root, typename T::first_type key)
             // 5 - link root parent to max (root is a reference to root->left / root->right from the previous call (in root's parent). So when we modify root we modify parent->left or parent->right
             root = max;
 
-            return ;
+            return 1;
         }
     }
     if (root->value.first > key)
-        delete_map_node(root->left, key);
+        return (delete_map_node(root->left, key));
     else
-        delete_map_node(root->right, key);
+        return (delete_map_node(root->right, key));
 }
 template <class T>
 void delete_postfix(map_node<T> *&root)
@@ -452,16 +453,6 @@ public:
         return *this;
     };
 
-    size_type erase (const key_type& k)
-    {
-        delete_map_node(this->root, k);
-        return 0;
-    };
-    void clear(void)
-    {
-        this->delete_postfix(this->root);
-    }
-
     // iterator
     iterator begin()
     {
@@ -500,15 +491,72 @@ public:
         return reverse_iterator(this->begin());
     };
 
+    
+    // capacity
+    bool empty() const
+    {
+        return (this->size() == 0);
+    }
+    size_type size() const
+    {
+        size_type ret(0);
+        const_iterator it(this->begin());
+        const_iterator ite(this->end());
+        while (it != ite)
+        {
+            ret++;
+            it++;
+        }
+        return ret;
+    }
+    size_type max_size() const
+    {
+        std::allocator< node_type > al;
+        return al.max_size();
+
+    }
+
+    // elements access
+    mapped_type& operator[] (const key_type& k)
+    {
+        value_type elem(k, mapped_type());
+        iterator it(this->insert(elem).first);
+        return it->second;
+    }
+
+    // modifiers
+    void erase (iterator position);
+    void erase (iterator first, iterator last);
+    size_type erase (const key_type& k)
+    {
+        return (delete_map_node(this->root, k));
+    };
+    void clear(void)
+    {
+        this->delete_postfix(this->root);
+    }
+
     pair_iterator insert (const value_type& val)
     {
         std::pair<node_type*, bool> p = ft::insert(this->root, val);
         iterator it(p.first, &this->root);
         return pair_iterator(it, p.second);
     };
-    iterator insert (iterator position, const value_type& val);
+    iterator insert (iterator position, const value_type& val)
+    {
+        (void)position;
+        // dont know how to use that hint (if position is not a good hint, ft::insert(position, val) will insert it anyway...)
+        return (this->insert(val).first);
+    };
     template <class InputIterator>
-    void insert (InputIterator first, InputIterator last);
+    void insert (InputIterator first, InputIterator last)
+    {
+        while (first != last)
+        {
+            ft::insert(this->root, *first);
+            first++;
+        }
+    }
     
 private:
     void delete_postfix(node_type *&root)

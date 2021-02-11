@@ -16,7 +16,7 @@ void print(map<U, V> mp)
     for (typename map<U, V>::iterator it = mp.begin() ; it != mp.end() ; it++)
     {
         std::cout << "key: " << it->first;
-        // std::cout << " val: " << it->second;
+        std::cout << " val: " << it->second;
         std::cout << std::endl;
     }
     std::cout << "---" << std::endl;
@@ -118,11 +118,45 @@ int main()
         it5++;
     }
     
-    // clear and iterator constructor
+    // size, empty, clear and iterator constructor
     map<int, char> map6(map3.begin(), map3.end());
     print(map6);
+    std::cout << "size: " << map6.size() << std::endl;
+    std::cout << map6.empty() << std::endl;
     map6.clear();
+    std::cout << "size: " << map6.size() << std::endl;
+    std::cout << map6.empty() << std::endl;
     print(map6);
+
+    // max size: not the same as std, as our structure is differents from std's
+    // std::cout << map6.max_size() << std::endl;
+
+    // operator[]
+
+    map<int, char> map7;
+    map7[3] = 'a';
+    print(map7);
+    map7[2];
+    print(map7);
+    map7[3] = 'b';
+    map7[7] = map7[3];
+    print(map7);
+
+    // insert with hint
+    map7.insert(map7.begin(), make_pairs(22, 'x'));
+    print(map7);
+    
+    // insert with range
+    map<int, char> map8;
+    map8[10] = 'g';
+    map8[3] = 'g';
+    map8.insert(map7.begin(), map7.end());
+    print(map8);
+
+    // erase
+    std::cout << map8.erase(30) << std::endl;
+    std::cout << map8.erase(3) << std::endl;
+
 
 
 
