@@ -62,8 +62,117 @@ struct map_node
     }
 };
 
+// helper functions for BST
+// Rq: as they are recursive and/or use a reference to pointer to map_node as argument, there is no need to put them inside the map_node class
+template <class T>
+std::pair<map_node<T>*, bool> insert(map_node<T> *&root, T elem)
+{
+    if (root == nullptr)
+    {
+        root = new map_node<T>(elem);
+        return std::pair<map_node<T>*, bool>(root, true);
+    }
+    if (root->value.first == elem.first)
+        return std::pair<map_node<T>*, bool>(root, false);
+    else if (root->value.first > elem.first)
+        return (insert(root->left, elem));
+    else
+        return (insert(root->right, elem));
+}
+template <class T>
+map_node<T> *search(map_node<T> *root, T elem)
+{
+    if (root == NULL || root->value.first == elem.first)
+        return root;
+
+    if (root->value.first > elem.first)
+        return search(root->left, elem);
+    else
+        return search(root->right, elem);
+}
+template <class T>
+void delete_map_node(map_node<T> *&root, typename T::first_type key)
+{
+     if (root == NULL)
+         return;
+    if (root->value.first == key)
+    {
+        // case #1: root has no child: delete root and set is to NULL
+        if (root->left == NULL && root->right == NULL)
+        {
+            delete root;
+            root = NULL;
+            return;
+        }
+        // case #2: root has 1 child: relink child to root parent, then delete root
+        if (root->right && root->left == NULL)
+        {
+            map_node<T> *child = root->right;
+            delete root;
+            root = child; // (root is a reference to root->left / root->right from the previous call (in root's parent). So when we modify root we modify parent->left or parent->right)
+            return ;
+        }
+        if (root->left && root->right == NULL)
+        {
+            map_node<T> *child = root->left;
+            delete root;
+            root = child;
+            return ;
+        }
+        // case 3: root has 2 children
+        else
+        {
+            // relink max of left subtree in place of root:
+            // alternative: relink min of right subtree
+
+            // 1 - find max and max_parent
+            map_node<T> *max = root->left->search_max();
+            map_node<T> *max_parent = root->left->search_max_parent();
+            if (max_parent == NULL)
+                max_parent = root;
+
+            // 2 - link max parent to max's child (max can have only one child: left)
+            if (max == max_parent->left)
+                max_parent->left = max->left;
+            else
+                max_parent->right = max->left;
+            
+            // 3 - update max left and right
+            max->left = root->left;
+            max->right = root->right;
+            
+            // 4 - delete root
+            delete root;
+            // 5 - link root parent to max (root is a reference to root->left / root->right from the previous call (in root's parent). So when we modify root we modify parent->left or parent->right
+            root = max;
+
+            return ;
+        }
+    }
+    if (root->value.first > key)
+        delete_map_node(root->left, key);
+    else
+        delete_map_node(root->right, key);
+}
+template <class T>
+void delete_postfix(map_node<T> *&root)
+{
+    if (root == NULL)
+        return ;
+    if (root->left)
+        delete_postfix(root->left);
+    if (root->right)
+        delete_postfix(root->right);
+    delete root;
+    root = NULL;
+}
+
+
 namespace mp
 {
+    // iterators defined below:
+    // - store the root of the BST + a pointer to the node 
+    // - are "circular", in the sense that iterating (++ / --) on iterator with NULL ptr (corresponding to the element past the end / before the start) will go to the first/last element of the BST
     template <class T>
     class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
@@ -78,10 +187,6 @@ namespace mp
         public:
             iterator(): ptr(NULL), root(NULL){};
             iterator(node_type *ptr, node_type *const *root): ptr(ptr), root(root) {};
-            // void get_root_value()
-            // {
-            //     std::cout << "it root: " << (*this->root)->value.first << std::endl;
-            // };
             iterator(const iterator &copy): ptr(copy.ptr), root(copy.root) {};
             iterator &operator=(const iterator &rhs)
             {
@@ -91,8 +196,6 @@ namespace mp
             };
             ~iterator() {};
             
-            // node_type *as_node(); // needed to access node from outisde the class (from list for example): it would be better to declare list as a friend class (thats the way it is done in the STL) but we're not allowed to
-            // const node_type *as_node() const;
             value_type &operator*() const
             {
                 return this->ptr->value;
@@ -198,10 +301,6 @@ namespace mp
         public:
             const_iterator(): ptr(NULL), root(NULL){};
             const_iterator(node_type *ptr, node_type*const *root): ptr(ptr), root(root) {};
-            // void get_root_value()
-            // {
-            //     std::cout << "it root: " << (*this->root)->value.first << std::endl;
-            // };
             const_iterator(const const_iterator &copy): ptr(copy.ptr), root(copy.root) {};
             const_iterator(const iterator<T> &copy): ptr(copy.ptr), root(copy.root) {}; // diff (4)
             const_iterator &operator=(const const_iterator &rhs)
@@ -212,8 +311,6 @@ namespace mp
             };
             ~const_iterator() {};
             
-            // node_type *as_node(); 
-            // const node_type *as_node() const;
             const value_type &operator*() const // diff (2)
             {
                 return this->ptr->value;
@@ -305,123 +402,11 @@ namespace mp
     };
 }
 
-// the functions below cant stay here alone
-// -> put them inside map as private functions
-// Rq: they can't be called with "this", instead of "root", as they are recursive
-
-template <class T>
-std::pair<map_node<T>*, bool> insert(map_node<T> *&root, T elem)
-{
-    if (root == nullptr)
-    {
-        root = new map_node<T>(elem);
-        return std::pair<map_node<T>*, bool>(root, true);
-    }
-    if (root->value.first == elem.first)
-        return std::pair<map_node<T>*, bool>(root, false);
-    else if (root->value.first > elem.first)
-        return (insert(root->left, elem));
-    else
-        return (insert(root->right, elem));
-}
-
-template <class T>
-map_node<T> *search(map_node<T> *root, T elem)
-{
-    if (root == NULL || root->value.first == elem.first)
-        return root;
-
-    if (root->value.first > elem.first)
-        return search(root->left, elem);
-    else
-        return search(root->right, elem);
-}
-
-
-template <class T>
-void delete_map_node(map_node<T> *&root, typename T::first_type key)
-{
-     if (root == NULL)
-         return;
-    if (root->value.first == key)
-    {
-        // case #1: root has no child: delete root and set is to NULL
-        if (root->left == NULL && root->right == NULL)
-        {
-            delete root;
-            root = NULL;
-            return;
-        }
-        // case #2: root has 1 child: relink child to root parent, then delete root
-        if (root->right && root->left == NULL)
-        {
-            map_node<T> *child = root->right;
-            delete root;
-            root = child; // (root is a reference to root->left / root->right from the previous call (in root's parent). So when we modify root we modify parent->left or parent->right)
-            return ;
-        }
-        if (root->left && root->right == NULL)
-        {
-            map_node<T> *child = root->left;
-            delete root;
-            root = child;
-            return ;
-        }
-        // case 3: root has 2 children
-        else
-        {
-            // relink max of left subtree in place of root:
-            // alternative: relink min of right subtree
-
-            // 1 - find max and max_parent
-            map_node<T> *max = root->left->search_max();
-            map_node<T> *max_parent = root->left->search_max_parent();
-            if (max_parent == NULL)
-                max_parent = root;
-
-            // 2 - link max parent to max's child (max can have only one child: left)
-            if (max == max_parent->left)
-                max_parent->left = max->left;
-            else
-                max_parent->right = max->left;
-            
-            // 3 - update max left and right
-            max->left = root->left;
-            max->right = root->right;
-            
-            // 4 - delete root
-            delete root;
-            // 5 - link root parent to max (root is a reference to root->left / root->right from the previous call (in root's parent). So when we modify root we modify parent->left or parent->right
-            root = max;
-
-            return ;
-        }
-    }
-    if (root->value.first > key)
-        delete_map_node(root->left, key);
-    else
-        delete_map_node(root->right, key);
-}
-
-template <class T>
-void delete_postfix(map_node<T> *&root)
-{
-    if (root == NULL)
-        return ;
-    if (root->left)
-        delete_postfix(root->left);
-    if (root->right)
-        delete_postfix(root->right);
-    delete root;
-    root = NULL;
-}
-
 
 template<class key, class T>
 class map
 {
 public:
-    // member types
     typedef key key_type; // 1st param of template
     typedef T mapped_type; // 2st param of template
     typedef std::pair<const key, T> value_type;
@@ -432,7 +417,6 @@ private:
     node_type *root;
 
 public:
-    
     typedef ft::mp::iterator<value_type> iterator;
     typedef ft::mp::const_iterator<value_type> const_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;    
