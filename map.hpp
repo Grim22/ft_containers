@@ -81,15 +81,14 @@ std::pair<map_node<T>*, bool> insert(map_node<T> *&root, T elem)
         return (insert(root->right, elem));
 }
 template <class T>
-map_node<T> *search(map_node<T> *root, T elem)
+map_node<T> *search(map_node<T> *root, typename T::first_type key)
 {
-    if (root == NULL || root->value.first == elem.first)
+    if (root == NULL || root->value.first == key)
         return root;
-
-    if (root->value.first > elem.first)
-        return search(root->left, elem);
+    if (root->value.first > key)
+        return search(root->left, key);
     else
-        return search(root->right, elem);
+        return search(root->right, key);
 }
 template <class T>
 size_t delete_map_node(map_node<T> *&root, typename T::first_type key)
@@ -525,8 +524,15 @@ public:
     }
 
     // modifiers
-    void erase (iterator position);
-    void erase (iterator first, iterator last);
+    void erase (iterator position)
+    {
+        delete_map_node(this->root, position->first);
+    };
+    void erase (iterator first, iterator last)
+    {
+        while (first != last)
+            erase(first++);
+    };
     size_type erase (const key_type& k)
     {
         return (delete_map_node(this->root, k));
@@ -557,6 +563,75 @@ public:
             first++;
         }
     }
+    void swap (map& x)
+    {
+        node_type *tmp;
+        tmp = this->root;
+        this->root = x.root;
+        x.root = tmp;
+    }
+
+    // operations
+    iterator find (const key_type& k)
+    {
+        node_type *node(ft::search(this->root, k));
+        return iterator(node, &this->root);
+    }
+    const_iterator find (const key_type& k) const
+    {
+        node_type *node(ft::search(this->root, k));
+        return const_iterator(node, &this->root);
+    }
+    size_type count (const key_type& k) const
+    {
+        if (search(this->root, k) == NULL)
+            return 0;
+        return 1;
+    }
+    iterator lower_bound (const key_type& k)
+    {
+        iterator it = this->begin();
+        iterator ite = this->end();
+        while (it != ite && it->first < k)
+            it++;
+        return it;
+    }
+    const_iterator lower_bound (const key_type& k) const
+    {
+        const_iterator it = this->begin();
+        const_iterator ite = this->end();
+        while (it != ite && it->first < k)
+            it++;
+        return it;
+    }
+    iterator upper_bound (const key_type& k)
+    {
+        iterator it = this->begin();
+        iterator ite = this->end();
+        while (it != ite && it->first <= k)
+            it++;
+        return it;
+    }
+
+    const_iterator upper_bound (const key_type& k) const
+    {
+        const_iterator it = this->begin();
+        const_iterator ite = this->end();
+        while (it != ite && it->first <= k)
+            it++;
+        return it;
+    }
+    std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+    {
+        return std::make_pair(this->lower_bound(k), this->upper_bound(k));
+    }
+    std::pair<iterator,iterator> equal_range (const key_type& k)
+    {
+        return std::make_pair(this->lower_bound(k), this->upper_bound(k));
+    }
+
+
+
     
 private:
     void delete_postfix(node_type *&root)

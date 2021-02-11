@@ -139,6 +139,7 @@ int main()
     map7[2];
     print(map7);
     map7[3] = 'b';
+    map7[33] = 'k';
     map7[7] = map7[3];
     print(map7);
 
@@ -153,12 +154,86 @@ int main()
     map8.insert(map7.begin(), map7.end());
     print(map8);
 
-    // erase
+    // erase return value
     std::cout << map8.erase(30) << std::endl;
     std::cout << map8.erase(3) << std::endl;
+    // erase iterator
+    print(map8);
+    map8.erase(map8.begin());
+    print(map8);
+    // erase range
+    map8.erase(++map8.begin(), map8.end());
+    print(map8);
 
+    // swap
+    map8.swap(map7);
+    print(map8);
+    print(map7);
 
+    //find
+    it2 = map8.find(7);
+    std::cout << (it2 == map8.end()) << std::endl;
+    std::cout << "---" << std::endl;
+    while (it2 != map8.end())
+    {
+        std::cout << it2->first << std::endl;
+        it2++;
+    }
+    std::cout << "---" << std::endl;
+    
+    it2 = map8.find(82);
+    std::cout << (it2 == map8.end()) << std::endl;
+    std::cout << "---" << std::endl;
 
+    // find const
+    const map<int, char> map9(map8);
+    
+    it4 = map9.find(22);
+    while (it4 != map9.end())
+    {
+        std::cout << it4->first << std::endl;
+        it4++;
+    }
+    std::cout << "---" << std::endl;
 
+    // count
+    std::cout << map9.count(22) << std::endl;
+    std::cout << map9.count(322) << std::endl;
 
+    // upper & lower bounds
+    print(map8);
+    it2 = map8.lower_bound(16);
+    if (it2 != map8.end())
+        std::cout << it2->first << std::endl;
+    it2 = map8.lower_bound(22);
+    if (it2 != map8.end())
+        std::cout << it2->first << std::endl;
+    it2 = map8.lower_bound(160);
+    if (it2 != map8.end())
+        std::cout << it2->first << std::endl;
+    it2 = map8.upper_bound(16);
+    if (it2 != map8.end())
+        std::cout << it2->first << std::endl;
+    it2 = map8.upper_bound(22);
+    if (it2 != map8.end())
+        std::cout << it2->first << std::endl;
+    it2 = map8.upper_bound(160);
+    if (it2 != map8.end())
+        std::cout << it2->first << std::endl;
+    std::cout << "---" << std::endl;
+
+    // equal range
+    typedef map<int, char>::iterator iterator;
+    std::pair<iterator, iterator> q;
+    q = map8.equal_range(2);
+    std::cout << q.first->first << std::endl;
+    std::cout << q.second->first << std::endl;
+    q = map8.equal_range(-1);
+    std::cout << q.first->first << std::endl;
+    std::cout << q.second->first << std::endl;
+    q = map8.equal_range(230);
+    if (q.first != map8.end())
+        std::cout << q.first->first << std::endl;
+    if (q.second != map8.end())
+        std::cout << q.second->first << std::endl;
 }
