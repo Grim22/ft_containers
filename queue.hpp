@@ -1,6 +1,6 @@
 
-#ifndef STACK_HPP
-# define STACK_HPP
+#ifndef QUEUE_HPP
+# define QUEUE_HPP
 
 #include <iostream>
 #include <deque>
@@ -9,7 +9,7 @@ namespace ft
 {
 
 template<class T, class Container = std::deque<T> >
-class stack
+class queue
 {
 public:
     typedef T value_type;
@@ -20,8 +20,8 @@ private:
     container_type c;
 
 public:
-    explicit stack (const container_type& ctnr = container_type()): c(ctnr) {};
-    ~stack() {};
+    explicit queue (const container_type& ctnr = container_type()): c(ctnr) {};
+    ~queue() {};
 
     void push (const value_type& val)
     {
@@ -29,7 +29,7 @@ public:
     }
     void pop()
     {
-        c.pop_back();
+        c.pop_front();
     };
     size_type size() const
     {
@@ -39,58 +39,66 @@ public:
     {
         return c.empty();
     }
-    value_type& top()
+    value_type& front()
+    {
+        return c.front();
+    };
+    const value_type& front() const
+    {
+        return c.front();
+    }
+    value_type& back()
     {
         return c.back();
     };
-    const value_type& top() const
+    const value_type& back() const
     {
         return c.back();
     }
 
     template <class U, class Cont>
-    friend bool operator== (const stack<U, Cont>& lhs, const stack<U, Cont>& rhs);
+    friend bool operator== (const queue<U, Cont>& lhs, const queue<U, Cont>& rhs);
     template <class U, class Cont>
-    friend bool operator!= (const stack<U, Cont>& lhs, const stack<U, Cont>& rhs);
+    friend bool operator!= (const queue<U, Cont>& lhs, const queue<U, Cont>& rhs);
     template <class U, class Cont>
-    friend bool operator<= (const stack<U, Cont>& lhs, const stack<U, Cont>& rhs);
+    friend bool operator<= (const queue<U, Cont>& lhs, const queue<U, Cont>& rhs);
     template <class U, class Cont>
-    friend bool operator< (const stack<U, Cont>& lhs, const stack<U, Cont>& rhs);
+    friend bool operator< (const queue<U, Cont>& lhs, const queue<U, Cont>& rhs);
     template <class U, class Cont>
-    friend bool operator>= (const stack<U, Cont>& lhs, const stack<U, Cont>& rhs);
+    friend bool operator>= (const queue<U, Cont>& lhs, const queue<U, Cont>& rhs);
     template <class U, class Cont>
-    friend bool operator> (const stack<U, Cont>& lhs, const stack<U, Cont>& rhs);
+    friend bool operator> (const queue<U, Cont>& lhs, const queue<U, Cont>& rhs);
 
 
 };
 
 template <class T, class Container>
-  bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+  bool operator== (const queue<T,Container>& lhs, const queue<T,Container>& rhs)
   {
       return (lhs.c == rhs.c);
   };
 template <class T, class Container>
-  bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+  bool operator!= (const queue<T,Container>& lhs, const queue<T,Container>& rhs)
   {
       return (lhs.c != rhs.c);
   }
 template <class T, class Container>
-  bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+  bool operator<  (const queue<T,Container>& lhs, const queue<T,Container>& rhs)
   {
       return (lhs.c < rhs.c);
   }
 template <class T, class Container>
-  bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+  bool operator<= (const queue<T,Container>& lhs, const queue<T,Container>& rhs)
   {
       return (lhs.c <= rhs.c);
   }
 template <class T, class Container>
-  bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+  bool operator>  (const queue<T,Container>& lhs, const queue<T,Container>& rhs)
   {
       return (lhs.c > rhs.c);
   }
 template <class T, class Container>
-  bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+  bool operator>= (const queue<T,Container>& lhs, const queue<T,Container>& rhs)
   {
       return (lhs.c >= rhs.c);
   }
