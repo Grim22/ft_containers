@@ -108,6 +108,10 @@ public:
     // member types
     typedef T value_type; // 1st param of template
     typedef unsigned long size_type;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
 
 private:
     typedef node<T> node_type;
