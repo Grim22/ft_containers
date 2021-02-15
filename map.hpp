@@ -65,37 +65,37 @@ struct map_node
 // helper functions for BST
 // Rq: as they are recursive and/or use a reference to pointer to map_node as argument, there is no need to put them inside the map_node class
 
-template <class T>
-std::pair<map_node<T>*, bool> insert(map_node<T> *&root, T elem)
+template <class T, class compare>
+std::pair<map_node<T>*, bool> insert(map_node<T> *&root, T elem, compare comp)
 {
     if (root == nullptr)
     {
         root = new map_node<T>(elem);
         return std::make_pair(root, true);
     }
-    if (root->value.first == elem.first)
+    if (!comp(root->value.first, elem.first) && !comp(elem.first, root->value.first)) // ==
         return std::make_pair(root, false);
-    else if (root->value.first > elem.first)
-        return (insert(root->left, elem));
+    else if (comp(root->value.first, elem.first)) // root->value.first < elem.first
+        return (insert(root->right, elem, comp));
     else
-        return (insert(root->right, elem));
+        return (insert(root->left, elem, comp)); // >
 }
-template <class T>
-map_node<T> *search(map_node<T> *root, typename T::first_type key)
+template <class T, class compare>
+map_node<T> *search(map_node<T> *root, typename T::first_type key, compare comp)
 {
-    if (root == NULL || root->value.first == key)
+    if (root == NULL || (!comp(root->value.first, key) && !comp(key, root->value.first))) // == or NULL
         return root;
-    if (root->value.first > key)
-        return search(root->left, key);
+    if (comp(root->value.first, key)) // root->value.first < key
+        return search(root->right, key, comp);
     else
-        return search(root->right, key);
+        return search(root->left, key, comp); // >
 }
-template <class T>
-size_t delete_map_node(map_node<T> *&root, typename T::first_type key)
+template <class T, class compare>
+size_t delete_map_node(map_node<T> *&root, typename T::first_type key, compare comp)
 {
      if (root == NULL)
          return 0;
-    if (root->value.first == key)
+    if (!comp(root->value.first, key) && !comp(key, root->value.first)) // ==
     {
         // case #1: root has no child: delete root and set is to NULL
         if (root->left == NULL && root->right == NULL)
@@ -149,10 +149,10 @@ size_t delete_map_node(map_node<T> *&root, typename T::first_type key)
             return 1;
         }
     }
-    if (root->value.first > key)
-        return (delete_map_node(root->left, key));
+    if (comp(root->value.first, key)) // root->value.first < key
+        return (delete_map_node(root->right, key, comp));
     else
-        return (delete_map_node(root->right, key));
+        return (delete_map_node(root->left, key, comp));
 }
 template <class T>
 void delete_postfix(map_node<T> *&root)
@@ -204,7 +204,7 @@ namespace mp
             {
                 return &this->ptr->value;
             };
-            iterator& operator++() // preincrement (++a)
+            iterator& operator++() 
             {
                 if (this->ptr == NULL) // past_the_end or before_the_begining -> go to first elem
                 {
@@ -433,14 +433,14 @@ public:
     {
         while (first != last)
         {
-            ft::insert(this->root, *first);
+            ft::insert(this->root, *first, this->cmp);
             first++;
         }
     }
-    map (const map& x): root(NULL) // will create an unbalanced tree, as elements are inserted sorted
+    map (const map& x): root(NULL), cmp(x.cmp) // will create an unbalanced tree, as elements are inserted sorted
     {
         for (const_iterator it = x.begin(); it != x.end(); it++)
-            ft::insert(this->root, *it);
+            ft::insert(this->root, *it, this->cmp);
     }
     ~map() 
     {
@@ -449,8 +449,9 @@ public:
     map& operator= (const map& x)
     {
         this->clear();
+        this->cmp = x.cmp;
         for (const_iterator it = x.begin(); it != x.end(); it++)
-            ft::insert(this->root, *it);
+            ft::insert(this->root, *it, this->cmp);
         return *this;
     };
 
@@ -528,7 +529,7 @@ public:
     // modifiers
     void erase (iterator position)
     {
-        delete_map_node(this->root, position->first);
+        delete_map_node(this->root, position->first, this->cmp);
     };
     void erase (iterator first, iterator last)
     {
@@ -537,7 +538,7 @@ public:
     };
     size_type erase (const key_type& k)
     {
-        return (delete_map_node(this->root, k));
+        return (delete_map_node(this->root, k, this->cmp));
     };
     void clear(void)
     {
@@ -546,7 +547,7 @@ public:
 
     pair_iterator insert (const value_type& val)
     {
-        std::pair<node_type*, bool> p = ft::insert(this->root, val);
+        std::pair<node_type*, bool> p = ft::insert(this->root, val, this->cmp);
         iterator it(p.first, &this->root);
         return pair_iterator(it, p.second);
     };
@@ -561,7 +562,7 @@ public:
     {
         while (first != last)
         {
-            ft::insert(this->root, *first);
+            ft::insert(this->root, *first, this->cmp);
             first++;
         }
     }
@@ -576,17 +577,17 @@ public:
     // operations
     iterator find (const key_type& k)
     {
-        node_type *node(ft::search(this->root, k));
+        node_type *node(ft::search(this->root, k, this->cmp));
         return iterator(node, &this->root);
     }
     const_iterator find (const key_type& k) const
     {
-        node_type *node(ft::search(this->root, k));
+        node_type *node(ft::search(this->root, k, this->cmp));
         return const_iterator(node, &this->root);
     }
     size_type count (const key_type& k) const
     {
-        if (search(this->root, k) == NULL)
+        if (search(this->root, k, cmp) == NULL)
             return 0;
         return 1;
     }

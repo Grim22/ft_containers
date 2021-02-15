@@ -48,6 +48,23 @@ class my_less_class
 };
 
 template<class T>
+class my_less_class_with_state
+{
+    private:
+    int state;
+    public:
+    my_less_class_with_state(): state(0) {};
+    my_less_class_with_state(int state): state(state) {};
+    bool operator()(T a, T b) const
+    {
+        if (state >= 0)
+            return (a < b);
+        else
+            return (a > b);
+    }
+};
+
+template<class T>
 class my_reverse_less_class
 {
     public:
@@ -266,35 +283,57 @@ int main()
         std::cout << q.second->first << std::endl;
     std::cout << "---" << std::endl;
 
-    // key_comp # 1 - class
+    // key_comp given as a class ("function object")
 
-    map<char,int, my_less_class<char> > mymap; // comp given as a class ("function object")
-    map<char,int, my_less_class<char> >::key_compare mycomp = mymap.key_comp();
-    mymap['a']=100;
-    mymap['b']=200;
-    mymap['c']=300;
-    std::cout << "mymap contains:\n";
-    char highest = mymap.rbegin()->first;     // key value of last element
-    map<char,int>::iterator it = mymap.begin();
-    do {
-        std::cout << it->first << " => " << it->second << '\n';
-    } while ( mycomp((*it++).first, highest) );
-    std::cout << '\n';
+    // class with no state 
+    my_less_class<char> my_less1;
+    map<char,int, my_less_class<char> > mymap4;
+    map<char,int, my_less_class<char> > mymap(my_less1); 
+    // "my_less1" parameter is not relevant: comparison object is the same in my_map (my_less1) vs my_map4 (my_less_class<char>()), as my_less_class has no "state": the () is the same for all instances of the class;
+    
+    // class with state
+    my_less_class_with_state<char> my_state_less(-1);
+    map<char, int, my_less_class_with_state<char> > mymap5;
+    map<char, int, my_less_class_with_state<char> > mymap6(my_state_less);
+    // "my_state_less" param is relevant, as comparison object will not be the same in my_map5 vs my_map6
 
-    // key_comp # 1 - function pointer
+    // test that operator= does modify this->cmp
+    map<char,int, my_less_class_with_state<char> >::key_compare mycomp5 = mymap5.key_comp();
+    map<char,int, my_less_class_with_state<char> >::key_compare mycomp6 = mymap6.key_comp();
+    std::cout << "5 " << mycomp5('a', 'b') << std::endl;
+    std::cout << "6 " << mycomp6('a', 'b') << std::endl;
+    mymap5 = mymap6;
+    mycomp5 = mymap5.key_comp();
+    std::cout << "5 " << mycomp5('a', 'b') << std::endl;
 
-    map<char,int, bool(*)(char, char)> mymap3(my_less); // comp given as a function ("function pointer")
+    // map<char,int, my_less_class<char> >::key_compare mycomp = mymap.key_comp();
+    // mymap['a']=100;
+    // mymap['b']=200;
+    // mymap['c']=300;
+    // std::cout << "mymap contains:\n";
+    // char highest = mymap.rbegin()->first;     // key value of last element
+    // map<char,int>::iterator it = mymap6.begin();
+    // do {
+    //     std::cout << it->first << " => " << it->second << '\n';
+    // } while ( mycomp((*it++).first, highest) );
+    // std::cout << '\n';
+
+    // key_comp given as a function pointer
+
+    map<char,int, bool(*)(char, char)> mymap3(my_less);
     map<char,int, bool(*)(char, char) >::key_compare mycomp3 = mymap3.key_comp();
-    mymap3['a']=100;
-    mymap3['b']=200;
-    mymap3['c']=300;
-    std::cout << "mymap3 contains:\n";
-    highest = mymap3.rbegin()->first;     // key value of last element
-    it = mymap3.begin();
-    do {
-        std::cout << it->first << " => " << it->second << '\n';
-    } while ( mycomp3((*it++).first, highest) );
-    std::cout << '\n';
+
+
+    // mymap3['a']=100;
+    // mymap3['b']=200;
+    // mymap3['c']=300;
+    // std::cout << "mymap3 contains:\n";
+    // highest = mymap3.rbegin()->first;     // key value of last element
+    // it = mymap3.begin();
+    // do {
+    //     std::cout << it->first << " => " << it->second << '\n';
+    // } while ( mycomp3((*it++).first, highest) );
+    // std::cout << '\n';
     
     // // key_comp # 2 - class DOESNT WORK
 
