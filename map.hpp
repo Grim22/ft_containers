@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <utility> // pair
-#include <functional> // less
+#include <functional> // less, binary_function
 
 #include "reverse_iterator.hpp"
 
@@ -70,7 +70,7 @@ struct map_node
 template <class T, class compare>
 std::pair<map_node<T>*, bool> insert_map_node(map_node<T> *&root, T elem, compare comp)
 {
-    if (root == nullptr)
+    if (root == NULL)
     {
         root = new map_node<T>(elem);
         return std::make_pair(root, true);
@@ -410,6 +410,25 @@ public:
     typedef value_type* pointer;
     typedef const value_type* const_pointer;
 
+    // nested class to compare two value_types based on their "key" field
+    // Notice that value_compare has no public constructor, therefore no objects can be directly created from this nested class outside map members
+    // value compare objects are created upon call to value_comp member function (see below)
+    class value_compare: public std::binary_function<value_type, value_type, bool>
+    {
+        friend class map;
+    protected:
+        compare comp;
+        value_compare(compare c) : comp(c) {}  // constructed with map's comparison object
+    public:
+        typedef bool result_type;
+        typedef value_type first_argument_type;
+        typedef value_type second_argument_type;
+        bool operator() (const value_type& x, const value_type& y) const
+        {
+            return comp(x.first, y.first);
+        }
+    };
+
 private:
     typedef map_node<value_type> node_type;
     node_type *root;
@@ -613,7 +632,6 @@ public:
             it++;
         return it;
     }
-
     const_iterator upper_bound (const key_type& k) const
     {
         const_iterator it = this->begin();
@@ -635,6 +653,10 @@ public:
     key_compare key_comp() const
     {
         return this->cmp;
+    }
+    value_compare value_comp() const
+    {
+        return value_compare(this->cmp);
     }
 
 private:

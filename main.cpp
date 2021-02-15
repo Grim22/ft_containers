@@ -357,4 +357,13 @@ int main()
     map<char,int, bool(*)(char, char) >::key_compare mycomp3 = mymap3.key_comp();
     std::cout << "5 " << mycomp3('a', 'b') << std::endl;
 
+    // value comp
+    map<char, int, my_less_class<char> >::value_compare val = mymap4.value_comp();
+    std::cout << val(make_pairs('a', 3), make_pairs('b', 4)) << std::endl;
+    std::cout << val(make_pairs('b', 3), make_pairs('c', 4)) << std::endl;
+    mymap4.insert(make_pairs('m', 3));
+    mymap4.insert(make_pairs('c', 3));
+    std::cout << val(*mymap4.begin(), *++mymap4.begin()) << std::endl;
+    std::cout << val(*++mymap4.begin(), *mymap4.begin()) << std::endl;
+
 }
