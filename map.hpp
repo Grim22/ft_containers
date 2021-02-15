@@ -173,7 +173,7 @@ namespace mp
     // iterators defined below:
     // - store the root of the BST + a pointer to the node 
     // - are "circular", in the sense that iterating (++ / --) on iterator with NULL ptr (corresponding to the element past the end / before the start) will go to the first/last element of the BST
-    template <class T>
+    template <class T, class compare>
     class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
         public:
@@ -184,14 +184,16 @@ namespace mp
             node_type *ptr;
             node_type *const *root; // pointer on this->root (so when this->root is updated, it is also updated)
             // rq:: node_type *const *root means that root is a pointer to a const pointer: *root cannot be changed (we dont need to change it)
+            compare cmp;
         public:
             iterator(): ptr(NULL), root(NULL){};
-            iterator(node_type *ptr, node_type *const *root): ptr(ptr), root(root) {};
-            iterator(const iterator &copy): ptr(copy.ptr), root(copy.root) {};
+            iterator(node_type *ptr, node_type *const *root, compare cmp): ptr(ptr), root(root), cmp(cmp) {};
+            iterator(const iterator &copy): ptr(copy.ptr), root(copy.root), cmp(copy.cmp) {};
             iterator &operator=(const iterator &rhs)
             {
                 this->ptr = rhs.ptr;
                 this->root = rhs.root;
+                this->cmp = rhs.cmp;
                 return *this;
             };
             ~iterator() {};
@@ -224,9 +226,9 @@ namespace mp
                 typename T::first_type key(this->ptr->value.first);
                 node_type *ret(NULL); // will store the successor (or NULL if no successor if found)
                 // std::cout << "go down" << std::endl;
-                while (tmp->value.first != key)
+                while (this->cmp(key, tmp->value.first) || this->cmp(tmp->value.first, key))
                 {
-                    if (tmp->value.first > key) // key is left -> update ret
+                    if (this->cmp(key, tmp->value.first)) // key is left (key < tmp->value.first) -> update ret
                     {
                         ret = tmp;
                         tmp = tmp->left;
@@ -260,9 +262,9 @@ namespace mp
                 typename T::first_type key(this->ptr->value.first);
                 node_type *ret(NULL);
                 // std::cout << "go down" << std::endl;
-                while (tmp->value.first != key)
+                while (this->cmp(key, tmp->value.first) ||this->cmp(tmp->value.first, key))
                 {
-                    if (tmp->value.first < key) 
+                    if (!this->cmp(key, tmp->value.first)) 
                     {
                         ret = tmp;
                         tmp = tmp->right;
@@ -289,7 +291,7 @@ namespace mp
             }
     };
 
-    template <class T>
+    template <class T, class compare>
     class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
         typedef map_node<T> node_type;
@@ -298,15 +300,17 @@ namespace mp
         public:
             const node_type *ptr; // diff (1)
             node_type *const *root; 
+            compare cmp;
         public:
             const_iterator(): ptr(NULL), root(NULL){};
-            const_iterator(node_type *ptr, node_type*const *root): ptr(ptr), root(root) {};
-            const_iterator(const const_iterator &copy): ptr(copy.ptr), root(copy.root) {};
-            const_iterator(const iterator<T> &copy): ptr(copy.ptr), root(copy.root) {}; // diff (4)
+            const_iterator(node_type *ptr, node_type*const *root, compare cmp): ptr(ptr), root(root), cmp(cmp) {};
+            const_iterator(const const_iterator &copy): ptr(copy.ptr), root(copy.root), cmp(copy.cmp) {};
+            const_iterator(const iterator<T, compare> &copy): ptr(copy.ptr), root(copy.root), cmp(copy.cmp) {}; // diff (4)
             const_iterator &operator=(const const_iterator &rhs)
             {
                 this->ptr = rhs.ptr;
                 this->root = rhs.root;
+                this->cmp = rhs.cmp;
                 return *this;
             };
             ~const_iterator() {};
@@ -336,9 +340,9 @@ namespace mp
                 typename T::first_type key(this->ptr->value.first);
                 node_type *ret(NULL); 
                 // std::cout << "go down" << std::endl;
-                while (tmp->value.first != key)
+                while (this->cmp(key, tmp->value.first) || this->cmp(tmp->value.first, key))
                 {
-                    if (tmp->value.first > key) 
+                    if (this->cmp(key, tmp->value.first)) // key is left (key < tmp->value.first) -> update ret
                     {
                         ret = tmp;
                         tmp = tmp->left;
@@ -372,9 +376,9 @@ namespace mp
                 typename T::first_type key(this->ptr->value.first);
                 node_type *ret(NULL); 
                 // std::cout << "go down" << std::endl;
-                while (tmp->value.first != key)
+                while (this->cmp(key, tmp->value.first) || this->cmp(tmp->value.first, key))
                 {
-                    if (tmp->value.first < key) 
+                    if (!this->cmp(key, tmp->value.first)) 
                     {
                         ret = tmp;
                         tmp = tmp->right;
@@ -419,8 +423,8 @@ private:
     key_compare cmp; // given at construction, as template parameter. if no template param, defaults to std::less<key>
 
 public:
-    typedef ft::mp::iterator<value_type> iterator;
-    typedef ft::mp::const_iterator<value_type> const_iterator;
+    typedef ft::mp::iterator<value_type, key_compare> iterator;
+    typedef ft::mp::const_iterator<value_type, key_compare> const_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;    
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
     typedef std::pair<iterator, bool> pair_iterator; // return type of insert
@@ -459,22 +463,22 @@ public:
     iterator begin()
     {
         if (this->root == NULL)
-            return iterator(NULL, NULL);
-        return iterator(this->root->search_min(), &this->root);
+            return iterator(NULL, NULL, this->cmp);
+        return iterator(this->root->search_min(), &this->root, this->cmp);
     }
     const_iterator begin() const
     {
         if (this->root == NULL)
-            return const_iterator(NULL, NULL);
-        return const_iterator(this->root->search_min(), &this->root);
+            return const_iterator(NULL, NULL, this->cmp);
+        return const_iterator(this->root->search_min(), &this->root, this->cmp);
     }
     iterator end()
     {
-        return iterator(NULL, &this->root);
+        return iterator(NULL, &this->root, this->cmp);
     }
     const_iterator end() const
     {
-        return const_iterator(NULL, &this->root);
+        return const_iterator(NULL, &this->root, this->cmp);
     }
     reverse_iterator rbegin()
     {
@@ -548,7 +552,7 @@ public:
     pair_iterator insert (const value_type& val)
     {
         std::pair<node_type*, bool> p = ft::insert(this->root, val, this->cmp);
-        iterator it(p.first, &this->root);
+        iterator it(p.first, &this->root, this->cmp);
         return pair_iterator(it, p.second);
     };
     iterator insert (iterator position, const value_type& val)
@@ -578,12 +582,12 @@ public:
     iterator find (const key_type& k)
     {
         node_type *node(ft::search(this->root, k, this->cmp));
-        return iterator(node, &this->root);
+        return iterator(node, &this->root, this->cmp);
     }
     const_iterator find (const key_type& k) const
     {
         node_type *node(ft::search(this->root, k, this->cmp));
-        return const_iterator(node, &this->root);
+        return const_iterator(node, &this->root, this->cmp);
     }
     size_type count (const key_type& k) const
     {

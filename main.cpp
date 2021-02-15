@@ -115,7 +115,7 @@ int main()
     map5.erase(7); // root
     print(map5);
 
-    // iterator ++ & --
+    // // iterator ++ & --
     map<int, char>::iterator it2 = map3.begin();
     map3.erase(10); // root node is erased -> doesnt alter it2
     print(map3);
@@ -283,7 +283,7 @@ int main()
         std::cout << q.second->first << std::endl;
     std::cout << "---" << std::endl;
 
-    // key_comp given as a class ("function object")
+    // // key_comp given as a class ("function object")
 
     // class with no state 
     my_less_class<char> my_less1;
@@ -306,48 +306,55 @@ int main()
     mycomp5 = mymap5.key_comp();
     std::cout << "5 " << mycomp5('a', 'b') << std::endl;
 
-    // map<char,int, my_less_class<char> >::key_compare mycomp = mymap.key_comp();
-    // mymap['a']=100;
-    // mymap['b']=200;
-    // mymap['c']=300;
-    // std::cout << "mymap contains:\n";
-    // char highest = mymap.rbegin()->first;     // key value of last element
-    // map<char,int>::iterator it = mymap6.begin();
-    // do {
-    //     std::cout << it->first << " => " << it->second << '\n';
-    // } while ( mycomp((*it++).first, highest) );
-    // std::cout << '\n';
+    // test insert/delete/search and iterator when cmp not less
+    mymap6.insert(make_pairs('m', 3));
+    mymap6.insert(make_pairs('c', 3));
+    mymap6.insert(make_pairs('r', 3));
+    mymap6.insert(make_pairs('o', 3));
+    mymap6.insert(make_pairs('p', 3));
+
+    map<char, int, my_less_class_with_state<char> >::iterator it = mymap6.begin();
+    std::cout << it->first << std::endl;
+    it++;
+    std::cout << it->first << std::endl;
+    it++;
+    std::cout << it->first << std::endl;
+    it++;
+    std::cout << it->first << std::endl;
+    it++;
+    std::cout << it->first << std::endl;
+    std::cout << "---" << std::endl;
+    it = mymap6.end();
+    it--;
+    std::cout << it->first << std::endl;
+    it--;
+    std::cout << it->first << std::endl;
+    it--;
+    std::cout << it->first << std::endl;
+    it--;
+    std::cout << it->first << std::endl;
+    it--;
+    std::cout << it->first << std::endl;
+    std::cout << "---" << std::endl;
+
+    std::cout << mymap6.find('m')->first << std::endl;
+    std::cout << mymap6.find('o')->first << std::endl;
+    std::cout << mymap6.find('p')->first << std::endl;
+    std::cout << mymap6.find('r')->first << std::endl;
+    std::cout << mymap6.find('c')->first << std::endl;
+    std::cout << "---" << std::endl;
+    std::cout << mymap6.size() << std::endl;
+    mymap6.erase('o');
+    mymap6.erase('p');
+    mymap6.erase('m');
+    std::cout << mymap6.size() << std::endl;
+    mymap6.clear();
+    std::cout << mymap6.size() << std::endl;
 
     // key_comp given as a function pointer
 
     map<char,int, bool(*)(char, char)> mymap3(my_less);
     map<char,int, bool(*)(char, char) >::key_compare mycomp3 = mymap3.key_comp();
-
-
-    // mymap3['a']=100;
-    // mymap3['b']=200;
-    // mymap3['c']=300;
-    // std::cout << "mymap3 contains:\n";
-    // highest = mymap3.rbegin()->first;     // key value of last element
-    // it = mymap3.begin();
-    // do {
-    //     std::cout << it->first << " => " << it->second << '\n';
-    // } while ( mycomp3((*it++).first, highest) );
-    // std::cout << '\n';
-    
-    // // key_comp # 2 - class DOESNT WORK
-
-    // map<char,int, my_reverse_less_class<char> > mymap2;
-    // map<char,int, my_reverse_less_class<char> >::key_compare mycomp2 = mymap2.key_comp();
-    // mymap2['a']=100;
-    // mymap2['b']=200;
-    // mymap2['c']=300;
-    // std::cout << "mymap contains:\n";
-    // highest = mymap2.rbegin()->first;     // key value of last element
-    // it = mymap2.begin();
-    // do {
-    //     std::cout << it->first << " => " << it->second << '\n';
-    // } while ( mycomp2((*it++).first, highest) );
-    // std::cout << '\n';
+    std::cout << "5 " << mycomp3('a', 'b') << std::endl;
 
 }
