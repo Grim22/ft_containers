@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "enable_if.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -108,6 +109,10 @@ public:
     // member types
     typedef T value_type; // 1st param of template
     typedef unsigned long size_type;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
 
 private:
     typedef node<T> node_type;
@@ -117,8 +122,8 @@ public:
     
     typedef iterator<T> iterator;
     typedef const_iterator<T> const_iterator;
-    typedef std::reverse_iterator<iterator> reverse_iterator;    
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
+    typedef ft::reverse_iterator<iterator> reverse_iterator;    
+    typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;    
 
 private:
 
