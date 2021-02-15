@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <utility> // pair
+#include <functional> // less
 
 
 // 00072   // Red-black tree class, designed for use in implementing STL
@@ -23,7 +24,6 @@
 
 namespace ft
 {
-
 template <class T>
 struct map_node
 {
@@ -403,18 +403,20 @@ namespace mp
 }
 
 
-template<class key, class T>
+template<class key, class T, class compare = std::less<key> >
 class map
 {
 public:
     typedef key key_type; // 1st param of template
     typedef T mapped_type; // 2st param of template
     typedef std::pair<const key, T> value_type;
+    typedef compare key_compare;
     typedef unsigned long size_type;
 
 private:
     typedef map_node<value_type> node_type;
     node_type *root;
+    key_compare cmp; // given at construction, as template parameter. if no template param, defaults to std::less<key>
 
 public:
     typedef ft::mp::iterator<value_type> iterator;
@@ -425,9 +427,9 @@ public:
 
 public:
     // constructors & destructor
-    explicit map (): root(NULL) {};
+    explicit map (const key_compare& comp = key_compare()): root(NULL), cmp(comp) {};
     template <class InputIterator> 
-    map(InputIterator first, InputIterator last): root(NULL)
+    map(InputIterator first, InputIterator last, const key_compare& comp = key_compare()): root(NULL), cmp(comp)
     {
         while (first != last)
         {
@@ -630,6 +632,11 @@ public:
         return std::make_pair(this->lower_bound(k), this->upper_bound(k));
     }
 
+    // observers
+    key_compare key_comp() const
+    {
+        return this->cmp;
+    }
 
 
     

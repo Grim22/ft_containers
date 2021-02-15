@@ -31,6 +31,32 @@ std::pair<U,V> make_pairs(U u, V v)
     return std::pair<U, V>(u, v);
 }
 
+template<class T>
+bool my_less(T a, T b)
+{
+    return (a < b);
+}
+
+template<class T>
+class my_less_class
+{
+    public:
+    bool operator()(T a, T b) const
+    {
+        return (a < b);
+    }
+};
+
+template<class T>
+class my_reverse_less_class
+{
+    public:
+    bool operator()(T a, T b) const
+    {
+        return (a > b);
+    }
+};
+
 int main()
 {
     // insert
@@ -128,7 +154,9 @@ int main()
     std::cout << map6.empty() << std::endl;
     print(map6);
 
-    // max size: not the same as std, as our structure is differents from std's
+    // max size: not the same as std, as our structure is differents from std's:
+    // our node has 3 attributes: value + left + right
+    // stl node (rb_tree) has 2 additional attributes: parent and color
     // std::cout << map6.max_size() << std::endl;
 
     // operator[]
@@ -236,4 +264,51 @@ int main()
         std::cout << q.first->first << std::endl;
     if (q.second != map8.end())
         std::cout << q.second->first << std::endl;
+    std::cout << "---" << std::endl;
+
+    // key_comp # 1 - class
+
+    map<char,int, my_less_class<char> > mymap; // comp given as a class ("function object")
+    map<char,int, my_less_class<char> >::key_compare mycomp = mymap.key_comp();
+    mymap['a']=100;
+    mymap['b']=200;
+    mymap['c']=300;
+    std::cout << "mymap contains:\n";
+    char highest = mymap.rbegin()->first;     // key value of last element
+    map<char,int>::iterator it = mymap.begin();
+    do {
+        std::cout << it->first << " => " << it->second << '\n';
+    } while ( mycomp((*it++).first, highest) );
+    std::cout << '\n';
+
+    // key_comp # 1 - function pointer
+
+    map<char,int, bool(*)(char, char)> mymap3(my_less); // comp given as a function ("function pointer")
+    map<char,int, bool(*)(char, char) >::key_compare mycomp3 = mymap3.key_comp();
+    mymap3['a']=100;
+    mymap3['b']=200;
+    mymap3['c']=300;
+    std::cout << "mymap3 contains:\n";
+    highest = mymap3.rbegin()->first;     // key value of last element
+    it = mymap3.begin();
+    do {
+        std::cout << it->first << " => " << it->second << '\n';
+    } while ( mycomp3((*it++).first, highest) );
+    std::cout << '\n';
+    
+    // // key_comp # 2 - class DOESNT WORK
+
+    // map<char,int, my_reverse_less_class<char> > mymap2;
+    // map<char,int, my_reverse_less_class<char> >::key_compare mycomp2 = mymap2.key_comp();
+    // mymap2['a']=100;
+    // mymap2['b']=200;
+    // mymap2['c']=300;
+    // std::cout << "mymap contains:\n";
+    // highest = mymap2.rbegin()->first;     // key value of last element
+    // it = mymap2.begin();
+    // do {
+    //     std::cout << it->first << " => " << it->second << '\n';
+    // } while ( mycomp2((*it++).first, highest) );
+    // std::cout << '\n';
+
 }
