@@ -5,6 +5,8 @@
 #include <utility> // pair
 #include <functional> // less
 
+#include "reverse_iterator.hpp"
+
 
 // 00072   // Red-black tree class, designed for use in implementing STL
 // 00073   // associative containers (set, multiset, map, and multimap). The
@@ -66,7 +68,7 @@ struct map_node
 // Rq: as they are recursive and/or use a reference to pointer to map_node as argument, there is no need to put them inside the map_node class
 
 template <class T, class compare>
-std::pair<map_node<T>*, bool> insert(map_node<T> *&root, T elem, compare comp)
+std::pair<map_node<T>*, bool> insert_map_node(map_node<T> *&root, T elem, compare comp)
 {
     if (root == nullptr)
     {
@@ -76,19 +78,19 @@ std::pair<map_node<T>*, bool> insert(map_node<T> *&root, T elem, compare comp)
     if (!comp(root->value.first, elem.first) && !comp(elem.first, root->value.first)) // ==
         return std::make_pair(root, false);
     else if (comp(root->value.first, elem.first)) // root->value.first < elem.first
-        return (insert(root->right, elem, comp));
+        return (insert_map_node(root->right, elem, comp));
     else
-        return (insert(root->left, elem, comp)); // >
+        return (insert_map_node(root->left, elem, comp)); // >
 }
 template <class T, class compare>
-map_node<T> *search(map_node<T> *root, typename T::first_type key, compare comp)
+map_node<T> *search_map_node(map_node<T> *root, typename T::first_type key, compare comp)
 {
     if (root == NULL || (!comp(root->value.first, key) && !comp(key, root->value.first))) // == or NULL
         return root;
     if (comp(root->value.first, key)) // root->value.first < key
-        return search(root->right, key, comp);
+        return search_map_node(root->right, key, comp);
     else
-        return search(root->left, key, comp); // >
+        return search_map_node(root->left, key, comp); // >
 }
 template <class T, class compare>
 size_t delete_map_node(map_node<T> *&root, typename T::first_type key, compare comp)
@@ -154,19 +156,6 @@ size_t delete_map_node(map_node<T> *&root, typename T::first_type key, compare c
     else
         return (delete_map_node(root->left, key, comp));
 }
-template <class T>
-void delete_postfix(map_node<T> *&root)
-{
-    if (root == NULL)
-        return ;
-    if (root->left)
-        delete_postfix(root->left);
-    if (root->right)
-        delete_postfix(root->right);
-    delete root;
-    root = NULL;
-}
-
 
 namespace mp
 {
@@ -416,6 +405,10 @@ public:
     typedef std::pair<const key, T> value_type;
     typedef compare key_compare;
     typedef unsigned long size_type;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
 
 private:
     typedef map_node<value_type> node_type;
@@ -425,8 +418,9 @@ private:
 public:
     typedef ft::mp::iterator<value_type, key_compare> iterator;
     typedef ft::mp::const_iterator<value_type, key_compare> const_iterator;
-    typedef std::reverse_iterator<iterator> reverse_iterator;    
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef ft::reverse_iterator<iterator> reverse_iterator;    
+    typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+    // typedef typename std::iterator_traits<iterator>::difference_type difference_type;
     typedef std::pair<iterator, bool> pair_iterator; // return type of insert
 
 public:
@@ -437,14 +431,14 @@ public:
     {
         while (first != last)
         {
-            ft::insert(this->root, *first, this->cmp);
+            insert_map_node(this->root, *first, this->cmp);
             first++;
         }
     }
     map (const map& x): root(NULL), cmp(x.cmp) // will create an unbalanced tree, as elements are inserted sorted
     {
         for (const_iterator it = x.begin(); it != x.end(); it++)
-            ft::insert(this->root, *it, this->cmp);
+            insert_map_node(this->root, *it, this->cmp);
     }
     ~map() 
     {
@@ -455,7 +449,7 @@ public:
         this->clear();
         this->cmp = x.cmp;
         for (const_iterator it = x.begin(); it != x.end(); it++)
-            ft::insert(this->root, *it, this->cmp);
+            insert_map_node(this->root, *it, this->cmp);
         return *this;
     };
 
@@ -551,7 +545,7 @@ public:
 
     pair_iterator insert (const value_type& val)
     {
-        std::pair<node_type*, bool> p = ft::insert(this->root, val, this->cmp);
+        std::pair<node_type*, bool> p = insert_map_node(this->root, val, this->cmp);
         iterator it(p.first, &this->root, this->cmp);
         return pair_iterator(it, p.second);
     };
@@ -566,7 +560,7 @@ public:
     {
         while (first != last)
         {
-            ft::insert(this->root, *first, this->cmp);
+            insert_map_node(this->root, *first, this->cmp);
             first++;
         }
     }
@@ -581,17 +575,17 @@ public:
     // operations
     iterator find (const key_type& k)
     {
-        node_type *node(ft::search(this->root, k, this->cmp));
+        node_type *node(search_map_node(this->root, k, this->cmp));
         return iterator(node, &this->root, this->cmp);
     }
     const_iterator find (const key_type& k) const
     {
-        node_type *node(ft::search(this->root, k, this->cmp));
+        node_type *node(ft::search_map_node(this->root, k, this->cmp));
         return const_iterator(node, &this->root, this->cmp);
     }
     size_type count (const key_type& k) const
     {
-        if (search(this->root, k, cmp) == NULL)
+        if (search_map_node(this->root, k, cmp) == NULL)
             return 0;
         return 1;
     }
@@ -643,8 +637,6 @@ public:
         return this->cmp;
     }
 
-
-    
 private:
     void delete_postfix(node_type *&root)
     {
@@ -657,66 +649,6 @@ private:
         delete root;
         root = NULL;
     }
-    // // iterator
-    // ft::list<T>::iterator begin();
-    // ft::list<T>::iterator end();
-    // const_iterator begin() const;
-    // const_iterator end() const;
-    // reverse_iterator rbegin();
-    // const_reverse_iterator rbegin() const;
-    // reverse_iterator rend();
-    // const_reverse_iterator rend() const;
-
-    // //capacity
-    // bool empty() const;
-    // size_type size() const;
-    // size_type max_size() const;
-
-    // // element access
-    // T &front();
-    // const T &front() const;
-    // T &back();
-    // const T &back() const;
-
-    // // modifiers
-    // void push_back(const T& val);
-    // void pop_back();
-    // void push_front (const value_type& val);
-    // void pop_front();
-    // void clear();
-    // void swap (list& x);
-    // void resize (size_type n, value_type val = value_type());
-
-    // void assign (size_type n, const value_type& val);
-    // // void assign (iterator first, iterator last);
-    // template<class inputiterator> // not ready either
-    // void assign (inputiterator first, typename enable_if<!is_integral<inputiterator>::val, inputiterator>::type last);
-
-    // iterator insert (iterator position, const value_type& val);
-    // void insert (iterator position, size_type n, const value_type& val);
-    // template<class inputiterator>
-    // void insert (iterator position, inputiterator first, typename enable_if<!is_integral<inputiterator>::val, inputiterator>::type last);
-    // iterator erase (iterator position);
-    // iterator erase (iterator first, iterator last);
-
-
-    // //operations
-    // void remove (const value_type& val);
-    // template <class Predicate>
-    // void remove_if (Predicate pred);
-    // void unique();
-    // template <class BinaryPredicate>
-    // void unique (BinaryPredicate binary_pred);
-    // void sort();
-    // template <class Compare>
-    // void sort (Compare comp);
-    // void splice (iterator position, list& x);
-    // void splice (iterator position, list& x, iterator i);
-    // void splice (iterator position, list& x, iterator first, iterator last);
-    // void reverse();
-    // void merge (list& x);
-    // template <class Compare>
-    // void merge (list& x, Compare comp);
 };
 
 } // end of namespace ft scope
