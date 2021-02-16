@@ -366,4 +366,20 @@ int main()
     std::cout << val(*mymap4.begin(), *++mymap4.begin()) << std::endl;
     std::cout << val(*++mymap4.begin(), *mymap4.begin()) << std::endl;
 
+    // relational op
+
+    std::cout << "---" << std::endl;
+    std::cout << (map7 == map8) << std::endl;
+    std::cout << (map7 != map8) << std::endl;
+    std::cout << (map7 <= map8) << std::endl;
+    std::cout << (map7 >= map8) << std::endl;
+    std::cout << (map7 < map8) << std::endl;
+    std::cout << (map7 > map8) << std::endl;
+
+    // non member swap
+
+    swap(map7, map8);
+    print(map7);
+    print(map8);
+
 }

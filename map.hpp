@@ -283,6 +283,7 @@ namespace mp
     template <class T, class compare>
     class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
     {
+        public:
         typedef map_node<T> node_type;
         typedef T value_type;
 
@@ -673,6 +674,67 @@ private:
     }
 };
 
+template <class Key, class T, class Compare>
+bool operator== ( const map<Key,T,Compare>& lhs, const map<Key,T,Compare>& rhs )
+{
+    typename ft::map<Key, T, Compare>::const_iterator it_l = lhs.begin();
+    typename ft::map<Key, T, Compare>::const_iterator it_r = rhs.begin();
+    while (it_l != lhs.end() && it_r != rhs.end())
+    {
+        if (*it_l++ != *it_r++)
+            return false;
+    }
+    return true;
+}
+template <class Key, class T, class Compare>
+bool operator!= ( const map<Key,T,Compare>& lhs, const map<Key,T,Compare>& rhs )
+{
+    return (!(lhs == rhs));
+}
+template <class Key, class T, class Compare>
+bool operator< ( const map<Key,T,Compare>& lhs, const map<Key,T,Compare>& rhs )
+{
+    typename ft::map<Key, T, Compare>::const_iterator it_l = lhs.begin();
+    typename ft::map<Key, T, Compare>::const_iterator it_r = rhs.begin();
+    while (it_l != lhs.end() && it_r != rhs.end())
+    {
+        if (*it_l == *it_r)
+        {
+            it_l++;
+            it_r++;
+        }
+        else
+            return (*it_l < *it_r);
+    }
+    // so far all elements compare equal
+    // 3 cases:
+    // 1. it_l == end && it_r == end -> equal ==> return FALSE
+    // 2. it_l == end only ==> l is shorther ==> return TRUE
+    // 3. it_r == end only ==> r is shorter ==> return FALSE
+    if (it_r != rhs.end())
+        return true;
+    return false;
+}
+template <class Key, class T, class Compare>
+bool operator<= ( const map<Key,T,Compare>& lhs, const map<Key,T,Compare>& rhs )
+{
+    return (lhs == rhs || lhs < rhs );
+}
+template <class Key, class T, class Compare>
+bool operator> ( const map<Key,T,Compare>& lhs, const map<Key,T,Compare>& rhs )
+{
+    return (! (lhs <= rhs) );
+}
+template <class Key, class T, class Compare>
+bool operator>= ( const map<Key,T,Compare>& lhs, const map<Key,T,Compare>& rhs )
+{
+    return (! (lhs < rhs) );
+}
+template <class Key, class T, class Compare>
+void swap (map<Key,T,Compare>& x, map<Key,T,Compare>& y)
+{
+    x.swap(y);
+}
 } // end of namespace ft scope
 
 #endif
