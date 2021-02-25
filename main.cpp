@@ -211,7 +211,22 @@ int main()
     print(map8);
 
     // swap
+    map8.insert(make_pairs(8, 'z'));
+    it2 = map7.begin();
+    it3 = map8.begin();
     map8.swap(map7);
+    while (it2 != map8.end())
+    {
+        std::cout << it2->first << std::endl;
+        it2++;
+    }
+    std::cout << "---" << std::endl;
+    while (it3 != map7.end())
+    {
+        std::cout << it3->first << std::endl;
+        it3++;
+    }
+    std::cout << "---" << std::endl;
     print(map8);
     print(map7);
 

@@ -432,7 +432,7 @@ public:
 
 private:
     typedef map_node<value_type> node_type;
-    node_type *root;
+    node_type **root; // we store a node **root instead of a node *root, just for the sake of member function swap: a swap must not change the pointer root of our existing iterators
     key_compare cmp; // given at construction, as template parameter. if no template param, defaults to std::less<key>
 
 public:
@@ -445,54 +445,60 @@ public:
 
 public:
     // constructors & destructor
-    explicit map (const key_compare& comp = key_compare()): root(NULL), cmp(comp) {};
-    template <class InputIterator> 
-    map(InputIterator first, InputIterator last, const key_compare& comp = key_compare()): root(NULL), cmp(comp)
+    explicit map (const key_compare& comp = key_compare()): root(new node_type*), cmp(comp) 
     {
+        *this->root = NULL;
+    };
+    template <class InputIterator> 
+    map(InputIterator first, InputIterator last, const key_compare& comp = key_compare()): root(new node_type*), cmp(comp)
+    {
+        *this->root = NULL;
         while (first != last)
         {
-            insert_map_node(this->root, *first, this->cmp);
+            insert_map_node(*this->root, *first, this->cmp);
             first++;
         }
     }
-    map (const map& x): root(NULL), cmp(x.cmp) // will create an unbalanced tree, as elements are inserted sorted
+    map (const map& x): root(new node_type*), cmp(x.cmp) // will create an unbalanced tree, as elements are inserted sorted
     {
+        *this->root = NULL;
         for (const_iterator it = x.begin(); it != x.end(); it++)
-            insert_map_node(this->root, *it, this->cmp);
+            insert_map_node(*this->root, *it, this->cmp);
     }
     ~map() 
     {
         this->clear();
+        delete this->root;
     };
     map& operator= (const map& x)
     {
         this->clear();
         this->cmp = x.cmp;
         for (const_iterator it = x.begin(); it != x.end(); it++)
-            insert_map_node(this->root, *it, this->cmp);
+            insert_map_node(*this->root, *it, this->cmp);
         return *this;
     };
 
     // iterator
     iterator begin()
     {
-        if (this->root == NULL)
+        if (*this->root == NULL)
             return iterator(NULL, NULL, this->cmp);
-        return iterator(this->root->search_min(), &this->root, this->cmp);
+        return iterator((*this->root)->search_min(), this->root, this->cmp);
     }
     const_iterator begin() const
     {
-        if (this->root == NULL)
+        if (*this->root == NULL)
             return const_iterator(NULL, NULL, this->cmp);
-        return const_iterator(this->root->search_min(), &this->root, this->cmp);
+        return const_iterator((*this->root)->search_min(), this->root, this->cmp);
     }
     iterator end()
     {
-        return iterator(NULL, &this->root, this->cmp);
+        return iterator(NULL, this->root, this->cmp);
     }
     const_iterator end() const
     {
-        return const_iterator(NULL, &this->root, this->cmp);
+        return const_iterator(NULL, this->root, this->cmp);
     }
     reverse_iterator rbegin()
     {
@@ -547,7 +553,7 @@ public:
     // modifiers
     void erase (iterator position)
     {
-        delete_map_node(this->root, position->first, this->cmp);
+        delete_map_node(*this->root, position->first, this->cmp);
     };
     void erase (iterator first, iterator last)
     {
@@ -556,17 +562,17 @@ public:
     };
     size_type erase (const key_type& k)
     {
-        return (delete_map_node(this->root, k, this->cmp));
+        return (delete_map_node(*this->root, k, this->cmp));
     };
     void clear(void)
     {
-        this->delete_postfix(this->root);
+        this->delete_postfix(*this->root);
     }
 
     pair_iterator insert (const value_type& val)
     {
-        std::pair<node_type*, bool> p = insert_map_node(this->root, val, this->cmp);
-        iterator it(p.first, &this->root, this->cmp);
+        std::pair<node_type*, bool> p = insert_map_node(*this->root, val, this->cmp);
+        iterator it(p.first, this->root, this->cmp);
         return pair_iterator(it, p.second);
     };
     iterator insert (iterator position, const value_type& val)
@@ -580,13 +586,13 @@ public:
     {
         while (first != last)
         {
-            insert_map_node(this->root, *first, this->cmp);
+            insert_map_node(*this->root, *first, this->cmp);
             first++;
         }
     }
     void swap (map& x)
     {
-        node_type *tmp;
+        node_type **tmp;
         tmp = this->root;
         this->root = x.root;
         x.root = tmp;
@@ -595,17 +601,17 @@ public:
     // operations
     iterator find (const key_type& k)
     {
-        node_type *node(search_map_node(this->root, k, this->cmp));
-        return iterator(node, &this->root, this->cmp);
+        node_type *node(search_map_node(*this->root, k, this->cmp));
+        return iterator(node, this->root, this->cmp);
     }
     const_iterator find (const key_type& k) const
     {
-        node_type *node(ft::search_map_node(this->root, k, this->cmp));
-        return const_iterator(node, &this->root, this->cmp);
+        node_type *node(ft::search_map_node(*this->root, k, this->cmp));
+        return const_iterator(node, this->root, this->cmp);
     }
     size_type count (const key_type& k) const
     {
-        if (search_map_node(this->root, k, cmp) == NULL)
+        if (search_map_node(*this->root, k, cmp) == NULL)
             return 0;
         return 1;
     }
