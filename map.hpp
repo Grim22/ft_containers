@@ -286,6 +286,8 @@ namespace mp
         public:
         typedef map_node<T> node_type;
         typedef T value_type;
+        typedef const T* pointer;
+        typedef const T& reference;
 
         public:
             const node_type *ptr; // diff (1)
