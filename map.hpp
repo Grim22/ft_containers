@@ -432,7 +432,7 @@ public:
 
 private:
     typedef map_node<value_type> node_type;
-    node_type **root; // we store a node **root instead of a node *root, just for the sake of member function swap: a swap must not change the pointer root of our existing iterators
+    node_type **root; // we store a node **root instead of a node *root, just for the sake of member function swap: a swap must not change the pointer root of our existing iterators   
     key_compare cmp; // given at construction, as template parameter. if no template param, defaults to std::less<key>
 
 public:
@@ -506,7 +506,7 @@ public:
     };
     const_reverse_iterator rbegin() const
     {
-        return reverse_iterator(this->end());
+        return const_reverse_iterator(this->end());
     };
     reverse_iterator rend()
     {
@@ -514,7 +514,7 @@ public:
     };
     const_reverse_iterator rend() const
     {
-        return reverse_iterator(this->begin());
+        return const_reverse_iterator(this->begin());
     };
 
     
