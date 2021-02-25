@@ -281,13 +281,11 @@ namespace mp
     };
 
     template <class T, class compare>
-    class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
+    class const_iterator: public std::iterator<std::bidirectional_iterator_tag, const T> // has typedefs (cf iterator_traits cplusplus)
     {
         public:
         typedef map_node<T> node_type;
         typedef T value_type;
-        typedef const T* pointer;
-        typedef const T& reference;
 
         public:
             const node_type *ptr; // diff (1)

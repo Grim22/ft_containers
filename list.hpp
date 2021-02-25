@@ -50,7 +50,7 @@ class iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has 
 };
 
 template<class T>
-class const_iterator: public std::iterator<std::bidirectional_iterator_tag, T> // has typedefs (cf iterator_traits cplusplus)
+class const_iterator: public std::iterator<std::bidirectional_iterator_tag, const T> // has typedefs (cf iterator_traits cplusplus)
 {
     typedef node<T> node_type;
     
