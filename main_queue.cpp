@@ -16,7 +16,7 @@ using namespace NAMESPACE;
 
 int main()
 {
-    // default stack(no container argument)
+    // default queue (no container argument)
 
     queue<int> st;
     st.push(4);
