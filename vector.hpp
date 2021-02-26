@@ -8,6 +8,7 @@
 #include <stdexcept> // out of range error, lenght_error
 
 #include "enable_if.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -474,8 +475,8 @@ public:
     typedef vec::iterator<const T*> const_iterator;
     // typedef vec::iterator<T> iterator;
     // typedef vec::const_iterator<T> const_iterator;
-    typedef std::reverse_iterator<iterator> reverse_iterator;    
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;    
+    typedef ft::reverse_iterator<iterator> reverse_iterator;    
+    typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;    
 
 private:
     T *base;

@@ -14,6 +14,8 @@ class reverse_iterator
     typedef typename std::iterator_traits<iterator>::reference reference;
     typedef typename std::iterator_traits<iterator>::pointer pointer;
     typedef typename std::iterator_traits<iterator>::difference_type difference_type;
+    typedef typename std::iterator_traits<iterator>::iterator_category iterator_category;
+    typedef typename std::iterator_traits<iterator>::value_type value_type;
     // typedef iterator_category ;
 
     private:
@@ -49,6 +51,24 @@ class reverse_iterator
         ++(*this);
         return tmp;
     }
+    reverse_iterator operator+ (difference_type n) const
+    {
+        return reverse_iterator(this->base_it - n);
+    }
+    reverse_iterator operator- (difference_type n) const
+    {
+        return reverse_iterator(this->base_it + n);
+    }
+    reverse_iterator& operator+= (difference_type n)
+    {
+        this->base_it -= n;
+        return *this;
+    }
+    reverse_iterator& operator-= (difference_type n)
+    {
+        this->base_it += n;
+        return *this;
+    }
     reverse_iterator& operator--()
     {
         this->base_it++;
@@ -77,7 +97,7 @@ bool operator!= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<I
 {
     return (lhs.base() != rhs.base());
 }
-template <class Iterator1, class Iterator2>
+template <class Iterator1, class Iterator2> // to allow comparison btw const_reverse_it and reverse_it
 bool operator!= (const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs)
 {
     return (lhs.base() != rhs.base());
@@ -102,6 +122,16 @@ bool operator> (const reverse_iterator<Iterator>& lhs, const reverse_iterator<It
 {
     return (lhs.base() > rhs.base());
 }
+template <class Iterator>
+reverse_iterator<Iterator> operator+ (typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator>& rev_it)
+{
+    return reverse_iterator<Iterator>(rev_it.base() - n);
+};
+template <class Iterator>
+reverse_iterator<Iterator> operator- (typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator>& rev_it)
+{
+    return reverse_iterator<Iterator>(rev_it.base() + n);
+};
 
 };
 #endif
