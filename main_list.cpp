@@ -3,8 +3,13 @@
 #include <list>
 #include <cmath> // fabs
 
-using namespace std;
-// using namespace ft;
+#ifndef STD
+# define NAMESPACE ft
+#else
+# define NAMESPACE std
+#endif
+
+using namespace NAMESPACE;
 
 void displaylst(list<int> lst)
 {
